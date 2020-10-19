@@ -27,3 +27,7 @@
      font-size: 15px;
      font-weight: bold;
  }
+ 
+ .slim-padding-bottom {
+     padding-bottom: 10px;
+ }
