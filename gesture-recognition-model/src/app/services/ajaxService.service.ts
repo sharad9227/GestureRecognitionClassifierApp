@@ -16,7 +16,22 @@ export class AjaxService {
         return this.http.post(`http://localhost:8084/testjpa_war_exploded/users/register`, validUser);
     }
 
+    loginUser(validUser): Observable<any> {
+      return this.http.post(`http://localhost:8084/testjpa_war_exploded/users/login`, validUser);
+    }
+
+
+
     deleteUser(id: number): Observable<any>{
         return this.http.delete(`/users/${id}`);
     }
+
+
+
+
+
+
+
+
+
 }

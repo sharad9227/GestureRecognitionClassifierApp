@@ -16,16 +16,15 @@ import { appRoutingModule } from './app.routing';
 import {MatInputModule} from '@angular/material/input';
 import {MatButtonModule } from '@angular/material/button';
 import { User } from './models/ValidUserComponent';
-
-
-
-
+import { LoginSuccessComponent } from './components/login-success/login-success.component';
+ import { DynamicScriptLoaderService } from './services/dynamicScriptLoadService.service';
 
 @NgModule({
   declarations: [
     AppComponent,
     SignUpComponent,
-    LoginComponent
+    LoginComponent,
+    LoginSuccessComponent
   ],
   imports: [
     BrowserModule,
@@ -37,7 +36,7 @@ import { User } from './models/ValidUserComponent';
     HttpClientModule,
     appRoutingModule
   ],
-  providers: [AjaxService, User],
+  providers: [AjaxService, User, DynamicScriptLoaderService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

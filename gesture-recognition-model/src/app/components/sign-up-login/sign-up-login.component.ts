@@ -30,24 +30,27 @@ export class SignUpComponent implements OnInit {
   // tslint:disable-next-line:typedef
   onSubmit(form: NgForm)
   {
-
-    this.submittedValues.password  = form.value.password;
-    this.submittedValues.confirmPassword = form.value.confirmPassword;
-    if (form.valid && form.value.acceptedTerms)
+   if (form.valid && form.value.acceptedTerms)
       {
          if ( this.submittedValues.password ===  this.submittedValues.confirmPassword)
          {
              alert('true:form valid');
              this.submittedValues.userType = 'Normal';
              this.signUpService.signUpUser(this.submittedValues).subscribe(data => {
-              this.responseData = data;
+             // this.responseData = data;
               alert(data.message);
-              if (data.status === 200)
+              if (data != null && data.status === 200)
               {
 
                 this.router.navigate(['/login']);
               }
-          });
+              else{
+                alert('error with code ' + data.status + 'Message' + data.message);
+              }
+          },
+          error => {
+            alert('Internal server error with code ' + error.status + 'Message' + error.message);
+               });
          }
          else {
               alert('password is not valid');

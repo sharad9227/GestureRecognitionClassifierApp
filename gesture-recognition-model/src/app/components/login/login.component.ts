@@ -14,6 +14,7 @@ export class LoginComponent implements OnInit {
   submitted = false;
   returnUrl: string;
   userdata = new User();
+  responseData: User = new User();
   //creating private model for data security
   private submittedValues = this.userdata;
 
@@ -21,7 +22,7 @@ export class LoginComponent implements OnInit {
   /*primary role of class constructors in Angular is dependency injection */
   constructor(private route: ActivatedRoute,
               private router: Router,
-              private signUpService: AjaxService) { }
+              private loginService: AjaxService) { }
 
   /*
   callback method that is invoked immediately after the default
@@ -37,6 +38,30 @@ export class LoginComponent implements OnInit {
   // tslint:disable-next-line:typedef
   onSubmit(form: NgForm){
     this.submitted = true;
+    if (form.valid)
+    {
+       this.loginService.loginUser(this.submittedValues).subscribe(data => {
+
+            if (data != null)
+            {
+              if (data.responseObj.userId > 0 && (data.responseObj.user_first_name != null || data.responseObj.user_first_name !== ''))
+              {
+                this.responseData.id = data.responseObj.userId;
+                this.responseData.userFirstName = data.responseObj.user_first_name;
+                alert('Login Successful: Welcome: ' + this.responseData.userFirstName);
+              }
+              else{
+                alert('The username or email is incorrect.Please check your credentials and try again.');
+              }
+            }
+          },
+
+           error => {
+            alert('Internal server error with code ' + error.status + 'Message' + error.message);
+           });
+
+
+
 
 
 
@@ -49,3 +74,4 @@ export class LoginComponent implements OnInit {
 }
 
 
+}
