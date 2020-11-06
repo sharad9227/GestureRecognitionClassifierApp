@@ -1,54 +1,38 @@
 <!-- Bootstrap general template copied from "https://www.tutorialrepublic.com/codelab.php?topic=bootstrap&file=simple-login-form"-->
 
-<!DOCTYPE html>
-<html lang="en">
 
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Gesture Recognizer</title>
-</head>
-
-<body>
-    <div class="login-form">
-        <form #form="ngForm" (ngSubmit)="onSubmit(form)" novalidate>
-            <h2 class="text-center">Sign In</h2>
+<div class="login-form">
+    <form #form="ngForm" (ngSubmit)="onSubmit(form)" novalidate>
+        <h2 class="text-center">Sign In</h2>
 
 
-            <mat-form-field color="primary" class="col-md-12">
-                <mat-label>Email</mat-label>
-                <input matInput type="email" [(ngModel)]="userdata.email" name="email" #email="ngModel" placeholder="abc@xyz.com" required="required">
-                <mat-error *ngIf="email.invalid && (email.dirty || email.touched)">
-                    <mat-error *ngIf=" email.errors.required">
-                        Email is required.
-                    </mat-error>
+        <mat-form-field color="primary" class="col-md-12">
+            <mat-label>Email</mat-label>
+            <input matInput type="email" [(ngModel)]="userdata.email" name="email" #email="ngModel" placeholder="abc@xyz.com" required="required">
+            <mat-error *ngIf="email.invalid && (email.dirty || email.touched)">
+                <mat-error *ngIf=" email.errors.required">
+                    Email is required.
                 </mat-error>
-            </mat-form-field>
+            </mat-error>
+        </mat-form-field>
 
-            <mat-form-field color="primary" class="col-md-12 slim-padding-bottom">
-                <input matInput type="password" [(ngModel)]="userdata.password" name="password" #password="ngModel" placeholder="Password" required="required">
-                <mat-error *ngIf="password.invalid && (password.dirty || password.touched)">
-                    <mat-error *ngIf="password.errors.required">
-                        Password is required.
-                    </mat-error>
+        <mat-form-field color="primary" class="col-md-12 slim-padding-bottom">
+            <input matInput type="password" [(ngModel)]="userdata.password" name="password" #password="ngModel" placeholder="Password" required="required">
+            <mat-error *ngIf="password.invalid && (password.dirty || password.touched)">
+                <mat-error *ngIf="password.errors.required">
+                    Password is required.
                 </mat-error>
-            </mat-form-field>
+            </mat-error>
+        </mat-form-field>
 
 
-            <div class="form-group">
-                <button type="submit" class="btn btn-primary btn-block">Sign In</button>
-            </div>
-            <div class="clearfix">
-                <label class="float-left form-check-label"><input type="checkbox"> Remember me</label>
-                <a href="#" class="float-right">Forgot Password?</a>
-            </div>
-        </form>
-        <p class="text-center"><a routerLink="/register">Create an Account</a></p>
-    </div>
-
-
-
-
-</body>
-
-</html>
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary btn-block">Sign In</button>
+        </div>
+        <div class="clearfix">
+            <label class="float-left form-check-label"><input type="checkbox"> Remember me</label>
+            <a href="#" class="float-right">Forgot Password?</a>
+        </div>
+    </form>
+    <p class="text-center"><a routerLink="/register">Create an Account</a></p>
+</div>

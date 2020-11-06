@@ -1,17 +1,17 @@
-<head>
+<div id="video-container">
+    <video controls #poseVideo class="layer video-props" playsinline></video>
+    <canvas #Canvas id="pose-canvas" height="{{videoConfiguration.height}}" width="{{videoConfiguration.width}}" class="layer"></canvas>
+    <div id="action" class="layer">{{action}}</div>
+</div>
+<div class="layer-media">
+    <video height="{{videoConfiguration.height}}" width="{{videoConfiguration.width}}" #mediaTarget controls autoplay>
+         <source  src="../../../assets/video/walker.webm">
+    </video>
+    <!-- <div style="width: 560px; height: 315px; float: none; clear: both; margin: 2px auto;">
+        <iframe #iframe width="560" height="315" src="https://www.youtube.com/embed/A8gDQ-x1Fko" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    </div> -->
+    <!-- <iframe  src="https://www.youtube.com/embed/AASd5ewKNSw?enablejsapi=1&html5=1" frameborder="0" allowfullscreen></iframe> -->
+    <iframe #iframe controls width="640" height="360" src="https://web.microsoftstream.com/embed/video/c5af2d8e-5443-45ab-9685-0006acf4ba72?autoplay=false&amp;showinfo=true" allowfullscreen style="border:none;"></iframe>
+</div>
 
-    <script type="module" src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-core"></script>
-    <script type="module" src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-converter"></script>
-    <script type="module" src="https://cdn.jsdelivr.net/npm/@tensorflow-models/handpose"></script>
-
-    <script type="module" src="../assets/js/loadedsketch.js"></script>
-
-</head>
-
-<body>
-    <div id="video-container">
-        <video controls id="pose-video" class="layer" playsinline></video>
-        <canvas id="pose-canvas" class="layer"></canvas>
-        <div id="pose-result" class="layer"></div>
-    </div>
-</body>
+<app-youtube-player-component #videoYouTube [videoId]="vid" [videoState]="videoState"></app-youtube-player-component>

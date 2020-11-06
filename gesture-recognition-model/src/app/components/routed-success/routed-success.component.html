@@ -1,0 +1,62 @@
+<mat-sidenav-container class="mat-container" (click)="getMouseClick($event)">
+    <mat-sidenav class="navbarspacing" mode="push" [opened]="show">
+
+
+        <ul class="link-items">
+            <li class="navbar-align-center">
+                <button mat-fab class="dimension">
+                    <fa-icon class="links-color" [icon]="['fas', 'sign-language']"></fa-icon>
+              </button>
+                <span *ngIf="show" class="links-color">  Default Gesture</span>
+
+
+            </li>
+            <!-- custom gesture -->
+            <li class="navbar-align-center">
+                <button mat-fab class="dimension">
+                    <fa-icon class="links-color" [icon]="['fas', 'tools']"></fa-icon>
+                  </button>
+                <span *ngIf="show" class="links-color">  Custom Gesture</span>
+
+            </li>
+            <li class="navbar-align-center">
+                <button mat-fab class="dimension">
+                    <fa-icon class="links-color" [icon]="['fas', 'user-circle']"></fa-icon>
+                  </button>
+                <span *ngIf="show" class="links-color">  User Profile</span>
+
+            </li>
+
+            <li class="navbar-align-center">
+                <mat-button-toggle *ngIf="show" (change)="toggle()">
+                    <fa-icon class="links-color" [icon]="['fas', 'angle-left']"></fa-icon>
+                </mat-button-toggle>
+
+            </li>
+
+        </ul>
+
+
+    </mat-sidenav>
+
+    <mat-sidenav-content>
+
+
+
+        <h3>Welcome {{loggedInUser}}</h3>
+        <!-- <div class="main-container"> -->
+        <div class="sidenav-align">
+
+            <mat-button-toggle style="top:50%" *ngIf="!show " (change)="toggle()">
+                <fa-icon class="links-color" [icon]="['fas', 'angle-right']"></fa-icon>
+            </mat-button-toggle>
+
+            <app-login-success></app-login-success>
+            <!-- </div> -->
+        </div>
+
+
+    </mat-sidenav-content>
+
+
+</mat-sidenav-container>

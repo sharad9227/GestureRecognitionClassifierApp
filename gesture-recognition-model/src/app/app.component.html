@@ -1,10 +1,10 @@
-<!-- nav https://jasonwatmore.com/post/2020/04/28/angular-9-user-registration-and-login-example-tutorial-->
-<nav class="navbar navbar-expand navbar-dark bg-dark">
-    <div class="navbar-nav">
-        <a class="nav-item nav-link" routerLink="/">Home</a>
-        <a class="nav-item nav-link" (click)="logout()">Logout</a>
-
-    </div>
+<nav class="navbar navbar-dark bg-dark nav-link">
+    <span>
+        <a class="block-display" routerLink="/">Home</a>
+        </span>
+    <span class="float-right">
+        <a class="block-display" (click)="logout()">Logout</a>
+</span>
 </nav>
-<!-- Copied till here-->
+
 <router-outlet></router-outlet>

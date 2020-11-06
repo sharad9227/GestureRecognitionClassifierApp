@@ -35,7 +35,7 @@ export class LoginComponent implements OnInit {
   };
 
   /*getting form submission data */
-  // tslint:disable-next-line:typedef
+
   onSubmit(form: NgForm){
     this.submitted = true;
     if (form.valid)
@@ -48,6 +48,8 @@ export class LoginComponent implements OnInit {
               {
                 this.responseData.id = data.responseObj.userId;
                 this.responseData.userFirstName = data.responseObj.user_first_name;
+                localStorage.setItem('loggedInUser',this.responseData.userFirstName);
+                this.router.navigate(['/routed-success']);
                 alert('Login Successful: Welcome: ' + this.responseData.userFirstName);
               }
               else{

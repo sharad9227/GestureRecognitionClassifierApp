@@ -2,15 +2,102 @@
 
 @import "../node_modules/font-awesome/css/font-awesome.css";
 @import "../node_modules/bootstrap/dist/css/bootstrap.css";
-html,
-body {
-    height: 100%;
-}
-
 body {
     margin: 0;
+    padding: 0;
     font-family: Roboto, "Helvetica Neue", sans-serif;
+    overflow: hidden;
+    font-family: Arial, sans-serif;
+    color: #ffffff;
 }
 
 
 /*# sourceMappingURL=bootstrap.css.map */
+
+
+/*Adding custom styles*/
+
+.no-padding {
+    padding-right: 0;
+    padding-left: 0;
+}
+
+.block-display {
+    display: block;
+    padding: 0.5rem 0.5rem;
+}
+
+:root {
+    --textPrimaryColor: #ffffff;
+    --textSecondaryColor: #ececec;
+    --bgPrimaryColor: #23a78a;
+    --bgSecondaryColor: #acacc8;
+}
+
+
+/*Css for custom panel expansion*/
+
+.mat-expansion-panel-body {
+    width: 135px !important;
+    height: 20px !important;
+    flex-direction: column;
+}
+
+.mat-panel-alignment {
+    transform: rotate(-90deg);
+    position: relative;
+    /* margin-top: 1px; */
+    top: 40.7vh;
+    width: 94vh;
+    right: 23%;
+}
+
+.navbarspacing {
+    padding: 0;
+    position: fixed;
+    transition: width 200ms ease-in-out;
+}
+
+.navbar-align-center {
+    padding: 2rem;
+    margin: 0;
+    display: flex;
+    align-items: center;
+}
+
+.link-items {
+    padding: 0;
+    margin: 1rem;
+    text-align: center;
+    font-size: 1.5rem;
+}
+
+.mat-container {
+    position: static;
+    height: 94vh;
+    padding: 0;
+}
+
+
+/* .i {
+   background-size: 20px 30px;
+} */
+
+.links-color {
+    color: #236aa7b0;
+    font-size: 47px;
+}
+
+.sidenav-align {
+    display: flex;
+}
+
+.main-container {
+    width: 15%;
+}
+
+.dimension {
+    background-color: #ffd400ad !important;
+    width: 70px !important;
+    height: 70px !important;
+}
