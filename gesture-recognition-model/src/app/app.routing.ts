@@ -1,4 +1,5 @@
 import { Routes, RouterModule } from '@angular/router';
+import { CustomGestureComponent } from './components/custom-gesture/custom-gesture.component';
 import { LoginSuccessComponent } from './components/login-success/login-success.component';
 
 import { LoginComponent } from './components/login/login.component';
@@ -11,6 +12,7 @@ const routes: Routes = [
     { path: 'register', component: SignUpComponent },
     { path: 'login-success', component: LoginSuccessComponent},
     { path:'routed-success',component: RoutedSuccessComponent},
+    { path:'custom-gesture',component: CustomGestureComponent},
     // otherwise redirect to login
     { path: '', component: LoginComponent}
 ];

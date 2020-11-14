@@ -1,0 +1,118 @@
+.grid-container {
+    display: grid;
+    height: 90vh;
+    grid-template-columns: 2.4fr 1.6fr;
+    grid-template-rows: 0.2fr 3.4fr 0.3fr;
+    /* grid-gap: 1px; */
+    grid-template-areas: "header header" "column1 column2" "footer footer"
+}
+
+* {
+    padding: 1%;
+}
+
+header {
+    grid-area: header;
+    border-style: double;
+    border-color: rgba(128, 160, 43, 0.801);
+    ;
+}
+
+footer {
+    grid-area: footer;
+    border-style: double;
+    border-color: rgba(128, 160, 43, 0.801);
+}
+
+.column1 {
+    grid-area: column1;
+    border-style: double;
+    border-color: rgba(128, 160, 43, 0.801);
+    ;
+}
+
+.column2 {
+    grid-area: column2;
+    border-style: double;
+    border-color: rgba(128, 160, 43, 0.801);
+    ;
+}
+
+.webcam-container {
+    display: flex;
+    height: 70% !important;
+}
+
+.button-container-2 {
+    flex: 2;
+    width: auto;
+    height: auto;
+    border: 5px #333 solid;
+    justify-content: center;
+}
+
+.button-container-1 {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    justify-content: space-evenly;
+}
+
+.center {
+    justify-content: space-between;
+}
+
+#webcam {
+    float: left;
+    width: auto;
+    margin-right: 2%;
+    text-align: center;
+    color: #1967D2;
+    box-shadow: 0px 3px 1px -2px rgba(0, 0, 0, 0.2), 0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 1px 5px 0px rgba(0, 0, 0, 0.12);
+    border-radius: 4px;
+    font-weight: bolder;
+    cursor: pointer;
+    display: inline-grid;
+    border-color: black;
+    padding: 0;
+}
+
+.stop {
+    width: auto;
+    text-align: center;
+    color: #1967D2;
+    box-shadow: 0px 3px 1px -2px rgba(0, 0, 0, 0.2), 0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 1px 5px 0px rgba(0, 0, 0, 0.12);
+    border-radius: 4px;
+    font-weight: bolder;
+    cursor: pointer;
+    display: inline-grid;
+    border-color: black;
+    padding: 0;
+}
+
+#span-webcam {
+    font-size: 12px;
+    text-transform: capitalize;
+    white-space: nowrap;
+    margin-right: 2%;
+}
+
+.video-props {
+    overflow: hidden;
+    border-radius: 5px;
+}
+
+.buttons-css {
+    color: #236aa7b0;
+    font-size: 33px;
+}
+
+.action-container {
+    display: flex;
+    height: 30%;
+}
+
+.convas-config {
+    display: flex;
+    border: 5px #333 solid;
+}

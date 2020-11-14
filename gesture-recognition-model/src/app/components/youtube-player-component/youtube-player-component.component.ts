@@ -42,7 +42,7 @@ ngOnInit(): void {
     }
 
 else if(vd=="threeFingers" || vd=="fourFingers"){
-alert(vd);
+// alert(vd);
   this.volumeControl(vd);
 }
 
@@ -66,10 +66,10 @@ alert(vd);
       volumeLevel=volumeLevel+20;
 
       this.youtubeplayer.setVolume(volumeLevel);
-      alert(volumeLevel+"increased");
+     // alert(volumeLevel+"increased");
     }
     else if (volumeLevel<=0 && v=="threeFingers"){
-      alert("volume is at lowest.cannot decrease vol");
+      //alert("volume is at lowest.cannot decrease vol");
 
     }
     else if(volumeLevel<100 && v=="threeFingers"){
@@ -77,7 +77,7 @@ alert(vd);
       volumeLevel=volumeLevel-20;
 
       this.youtubeplayer.setVolume(volumeLevel);
-      alert(volumeLevel+"decreased");
+     // alert(volumeLevel+"decreased");
     }
     else{
       alert(volumeLevel);

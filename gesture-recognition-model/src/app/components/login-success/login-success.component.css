@@ -3,13 +3,20 @@ body {
     padding: 0;
 }
 
-#video-container {
+.container {
+    display: flex;
+    justify-content: space-between;
+    margin: 0;
+    max-width: -webkit-fill-available;
+}
+
+#webcam-props {
     width: 640px;
     height: 480px;
     position: relative;
 }
 
-.layer {
+.video-props {
     position: absolute;
     left: 2%;
     width: 100%;
@@ -17,8 +24,6 @@ body {
 }
 
 #pose-canvas {
-    width: 640px;
-    height: 480px;
     transform: scaleX(-1);
 }
 
@@ -29,8 +34,13 @@ body {
     padding: 20px 30px 0 0;
 }
 
-.layer-media {
+.media {
     position: relative;
     left: 2%;
     height: 100%;
+    display: contents;
+}
+
+.slim-padding {
+    padding-left: 2%;
 }

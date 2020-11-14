@@ -3,11 +3,13 @@ import { AfterViewInit, Component, ElementRef, EventEmitter, HostListener, OnIni
 import * as fp from 'fingerpose';
 //import {run} from './sketch';
 import * as handpose from '@tensorflow-models/handpose';
-import * as thumbsDownGesture from './../../models/gestureSet/thumbsDownGesture';
+import * as volDownGesture from '../../models/gestureSet/volDownGesture';
+import * as volUpGesture from '../../models/gestureSet/volUpGesture';
 import * as peaceGesture from './../../models/gestureSet/twoUpGesture';
 import * as indexUpGesture from './../../models/gestureSet/indexUpGesture';
 import * as threeFingersUpGesture from'./../../models/gestureSet/threeUpGesture';
 import * as fourFingersUpGesture  from'./../../models/gestureSet/fourUpGesture';
+import * as stopGesture  from'./../../models/gestureSet/stopGesture';
 //import * as fp from 'fingerpose';
 
 @Component({
@@ -18,102 +20,59 @@ import * as fourFingersUpGesture  from'./../../models/gestureSet/fourUpGesture';
 export class LoginSuccessComponent implements OnInit,AfterViewInit {
   //own
 
-    @ViewChild('poseVideo') videoplayer: ElementRef;
+    @ViewChild('webcamFeed') videoplayer: ElementRef;
     @ViewChild('iframe') iframe: ElementRef;
     @ViewChild('mediaTarget') targetMedia:ElementRef;
     @ViewChild('Canvas') canvasElement:ElementRef;
     @ViewChild('videoYouTube') mediaElement:any;
 
-  videoConfiguration = {  width: 640, height: 480, fps: 20 };
- action='';
- vid='H9154xIoYTA';
 
-//output
- result={'name':'','confidence':0.0};
- videoState="initial";
-//own
-     actions = {
-       'no_gesture':'No hands',
-      'thumbs_up': '👍',
-      'peaceGesture': 'Play',
-      'thumbs_down' : '👎︎',
-      'index_up':'Pause',
-      'threeFingers':'three',
-      'fourFingers':'four'
-          };
-//own
- pointsMap = {
-  palmBase :[0],
-  thumb: [1, 2, 3, 4],
-  indexFinger: [5, 6, 7, 8],
-  middleFinger: [9, 10, 11, 12],
-  ringFinger: [13, 14, 15, 16],
-  pinky: [17, 18, 19, 20]
-}
+       public webcamConfig;
+       public volControl:number;
+       public action='';
+       public vid='H9154xIoYTA';
+      //output
+      public result={'name':'','confidence':0.0 };
+      public videoState="initial";
+      public estimator;
+      public videoConfiguration = {  width: 640, height: 480, fps: 20 };
 
-
-  constructor(element:ElementRef){
-
-  }
-  ngOnInit(): void {
-    console.log(this.targetMedia);
-  }
-
-  async initWebCam(frameWidth, frameheight, fps) {
-  const constraints = {
-      audio: false,
-      video: {
-          facingMode: 'user',
-          width:{
-            min:640,
-            max:frameWidth
-          },
-
-          height:{
-            min:240,
-            max:frameheight,
-          },
-          frameRate: { max: fps }
-      }
-  };
-//own
-  const webcamFeed: any = this.videoplayer.nativeElement;
-  webcamFeed.width = frameWidth;
-  webcamFeed.height = frameheight;
-
-  // get video stream ::own
-  const feedData = await navigator.mediaDevices.getUserMedia(constraints).then((feedData)=>
-  {
-    webcamFeed.srcObject = feedData;
-  })
-  .catch((error)=>{
-    alert("Something went wrong."+error);
-  });
+      //own
+       actions = {
+                  'no_gesture':'No hands',
+                  'vol_up': '👆',
+                  'peaceGesture': 'Play',
+                  'vol_down' : '👇',
+                  'stopGesture':'Pause',
+                  'threeFingers':'three',
+                  'fourFingers':'four',
+                  'index_up':'choose',
+                  'no_recognition':'Not Gesture'
+                };
+        //own
+       public  pointsMap = {
+          palmBase :[0],
+          thumb: [1, 2, 3, 4],
+          indexFinger: [5, 6, 7, 8],
+          middleFinger: [9, 10, 11, 12],
+          ringFinger: [13, 14, 15, 16],
+          pinky: [17, 18, 19, 20]
+        }
 
 
-  const promise= new  Promise<any>((resolve) =>{
-    setTimeout(()=>{resolve(webcamFeed)},50);
-  });
+        constructor(element:ElementRef){
 
-  promise.then((streamData)=> {
-    webcamFeed.onloadedmetadata=streamData;
-  })
-  .catch((error)=>{
-    alert("Something went wrong."+error);
-  });
+        }
+          ngOnInit(): void {
+            console.log(this.targetMedia);
 
-  return promise;
-
-
-}
+          }
 
 async GestureEstimationFunction() {
-
-  const video: any = this.videoplayer.nativeElement;
+  this.webcamConfig= this.videoplayer.nativeElement;
   const canvas: any = this.canvasElement.nativeElement;
   const ctx = canvas.getContext('2d');
 
-  const resultLayer: any = document.querySelector('#pose-result');
 
 
   const gestures = [
@@ -121,7 +80,10 @@ async GestureEstimationFunction() {
       fp.Gestures.ThumbsUpGesture,
       indexUpGesture.default,
       threeFingersUpGesture.default,
-      fourFingersUpGesture.default
+      fourFingersUpGesture.default,
+      volUpGesture.default,
+      volDownGesture.default,
+      stopGesture.default
   ];
    //referenced fingerpose https://www.npmjs.com/package/fingerpose :Usage section
   const GE = new fp.GestureEstimator(gestures);
@@ -131,17 +93,21 @@ async GestureEstimationFunction() {
   // main estimation loop
 
 
-  const est = async () => {
+   this.estimator = async () => {
 
       // clear canvas overlay
       ctx.clearRect(0, 0, this.videoConfiguration.width, this.videoConfiguration.height);
       // get hand landmarks from video
       /* referenced fingerpose https://www.npmjs.com/package/fingerpose */
-      const predictions = await model.estimateHands(video, true);
+      const predictions = await model.estimateHands(this.webcamConfig, true);
        /* referenced fingerpose https://www.npmjs.com/package/fingerpose */
 
+
+       //setting default no hand gesture
        this.result.name='no_gesture';
        this.action=this.actions[this.result.name];
+
+
       if(predictions.length>0 && predictions[0].handInViewConfidence>0.98)
       {
         //since handpose can detect only one hand at a time ,length is at max 1 denoted by predictions[0]
@@ -160,7 +126,7 @@ async GestureEstimationFunction() {
               const lineX =landmarks[item+1][0];
               const lineY=landmarks[item+1][1];
               console.log(predictions[0].handInViewConfidence);
-             this.drawLines(ctx, jointPoints[0], jointPoints[1], 5, 'blue',moveX,moveY,lineX,lineY);
+             this.drawLines(ctx, jointPoints[0], jointPoints[1], 5, 'blue', moveX, moveY, lineX, lineY);
 
             }
            });
@@ -182,29 +148,11 @@ async GestureEstimationFunction() {
 
             /* referenced fingerpose https://www.npmjs.com/package/fingerpose */
 
-            }
+             }
 
+                  this.actionMapper(this.result.name);
 
-              if(this.result.name=="peaceGesture")
-              {
-                console.log(this.targetMedia);
-                    this.videoState="onReady";
-                    this.iframe.nativeElement.contentWindow.document.addEventListener()
-                    this.targetMedia.nativeElement.play();
-              }
-              else if(this.result.name=="index_up")
-              {
-              this.videoState="onPause";
-              this.targetMedia.nativeElement.pause();
-              }
-              else if(this.result.name=="threeFingers" || this.result.name=="fourFingers")
-              {
-                this.videoState=this.result.name;
-              }
-              else{
-
-              }
-            }
+     }
               else
               {
                 if(this.result.name=='')
@@ -217,12 +165,68 @@ async GestureEstimationFunction() {
 
 
 // calling async function after every 50 seconds
-setInterval(() => { est(); }, 50);
+setInterval(() => { this.estimator(); }, 50);
 };
 
-est();
+this.estimator();
 console.log('Starting predictions');
 }
+
+
+
+public actionMapper(res){
+
+  switch(res) {
+          case "peaceGesture": {
+            this.videoState="onReady";
+            //  this.iframe.nativeElementcontentWindow.document.addEventListener()
+            this.targetMedia.nativeElement.play();
+            break;
+          }
+          case "stopGesture": {
+            this.videoState="onPause";
+            this.targetMedia.nativeElement.pause();
+            break;
+          }
+          case "vol_down": {
+
+            //implement slider
+            this.targetMedia.nativeElement.volume = 0.25;
+            this.volControl=this.targetMedia.nativeElement.volume;
+            alert("vol low"+this.volControl);
+            this.videoState=this.result.name;
+            break;
+          }
+          case "vol_up": {
+
+            //implement slider
+            this.targetMedia.nativeElement.volume = 1;
+            this.volControl=this.targetMedia.nativeElement.volume;
+
+            this.videoState=this.result.name;
+            break;
+          }
+          default: {
+            this.result.name='no_recognition';
+            this.result.confidence=0.0;
+            this.action=this.actions[this.result.name];
+            break;
+          }
+}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 //own
     public drawLines(ctx, x, y, r, color,mx1,my1,l1,l2) {
@@ -239,18 +243,66 @@ console.log('Starting predictions');
 
 
  ngAfterViewInit(){
- this.initWebCam(this.videoConfiguration.width,this.videoConfiguration.height,this.videoConfiguration.fps).then(video => {
-    video.play();
-    video.addEventListener("loadeddata", ()=> {
-     this.GestureEstimationFunction();
-    });
-  })
-  .catch((error)=>{
-    alert("Some problem occurred with webcam.Please  try again.")
-  })
+  const constraints = {
+    audio: false,
+    video: {
+        facingMode: 'user',
+        width:{
+          min:480,
+          max:640
+        },
+
+        height:{
+          min:240,
+          max:480,
+        },
+        frameRate: { max: 20 }
+    }
+};
+//own
+        const webcamFeed: any = this.videoplayer.nativeElement;
+        webcamFeed.width=640;
+        webcamFeed.height=480;
+
+// get video stream ::own
+        const feedData =  navigator.mediaDevices.getUserMedia(constraints).then((feedData)=>
+        {
+          webcamFeed.srcObject = feedData;
+         // webcamFeed.play();
+         // this.GestureEstimationFunction();
+        })
+        .catch((error)=>{
+          alert("Something went wrong."+error);
+        });
 
 
-}
+      const promise= new  Promise<any>((resolve) =>{
+        setTimeout(()=>{resolve(webcamFeed)},50);
+      });
+
+        promise.then((streamData)=> {
+          webcamFeed.onloadedmetadata=streamData;
+        })
+        .catch((error)=>{
+          alert("Something went wrong."+error);
+        });
+
+      promise.then((v)=> {
+
+        v.play();
+        v.addEventListener("loadeddata", ()=> {
+        this.GestureEstimationFunction();
+        });
+
+      })
+
+
+
+ }
+
+
+
+
 
 
 }

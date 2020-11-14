@@ -29,7 +29,7 @@ loggedInUser;
   {
     //undefined for outside clicks and not specific button click or any element click
 
-   if(event!=undefined && this.show && event.srcElement.type==undefined)
+   if(event!=undefined && this.show && event.srcElement.type==undefined && event.srcElement.parentNode.nodeName!='svg' && event.srcElement.parentNode.nodeName!='FA-ICON')
    {
     this.show=false;
 

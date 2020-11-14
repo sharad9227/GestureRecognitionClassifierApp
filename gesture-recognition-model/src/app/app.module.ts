@@ -1,6 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { SignUpComponent } from './components/sign-up-login/sign-up-login.component';
@@ -13,21 +12,25 @@ import { appRoutingModule } from './app.routing';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 //Material Inputs
 
-import {MatInputModule} from '@angular/material/input';
-import {MatButtonModule } from '@angular/material/button';
-import {MatExpansionModule} from '@angular/material/expansion';
-import {MatSidenavModule} from '@angular/material/sidenav';
-import {MatButtonToggleModule} from '@angular/material/button-toggle';
 import { User } from './models/ValidUserComponent';
 import { LoginSuccessComponent } from './components/login-success/login-success.component';
  import { DynamicScriptLoaderService } from './services/dynamicScriptLoadService.service';
 import { RoutedSuccessComponent } from './components/routed-success/routed-success.component';
 import {  FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import { fas } from '@fortawesome/free-solid-svg-icons';
+//imports from angular material
 import {MatIconModule} from '@angular/material/icon';
+import {MatSelectModule} from '@angular/material/select';
+import {MatInputModule} from '@angular/material/input';
+import {MatButtonModule } from '@angular/material/button';
+import {MatExpansionModule} from '@angular/material/expansion';
+import {MatSidenavModule} from '@angular/material/sidenav';
+import {MatButtonToggleModule} from '@angular/material/button-toggle';
 //youtube module for embedding videos
 import {YouTubePlayerModule} from '@angular/youtube-player';
-import {YoutubePlayerComponent} from './components/youtube-player-component/youtube-player-component.component'
+import {YoutubePlayerComponent} from './components/youtube-player-component/youtube-player-component.component';
+import { CustomGestureComponent } from './components/custom-gesture/custom-gesture.component';
+import { CommonVideoComponent } from './components/common-video/common-video.component'
 @NgModule({
   declarations: [
     AppComponent,
@@ -35,7 +38,9 @@ import {YoutubePlayerComponent} from './components/youtube-player-component/yout
     LoginComponent,
     LoginSuccessComponent,
     RoutedSuccessComponent,
-    YoutubePlayerComponent
+    YoutubePlayerComponent,
+    CustomGestureComponent,
+    CommonVideoComponent
   ],
   imports: [
     BrowserModule,
@@ -47,6 +52,7 @@ import {YoutubePlayerComponent} from './components/youtube-player-component/yout
     HttpClientModule,
     appRoutingModule,
     MatExpansionModule,
+    MatSelectModule,
     MatSidenavModule,
     FontAwesomeModule,
     MatButtonToggleModule,
