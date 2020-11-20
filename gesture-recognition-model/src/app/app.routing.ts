@@ -11,10 +11,21 @@ const routes: Routes = [
     { path: 'login', component: LoginComponent },
     { path: 'register', component: SignUpComponent },
     { path: 'login-success', component: LoginSuccessComponent},
-    { path:'routed-success',component: RoutedSuccessComponent},
+
+    {
+      path:'home',
+    component: RoutedSuccessComponent,
+    children:[
+      { path: 'login-success', component: LoginSuccessComponent},
+      { path:'custom-gesture',component: CustomGestureComponent}
+    ]
+
+  },
     { path:'custom-gesture',component: CustomGestureComponent},
     // otherwise redirect to login
     { path: '', component: LoginComponent}
+
+
 ];
 
 export const appRoutingModule = RouterModule.forRoot(routes);

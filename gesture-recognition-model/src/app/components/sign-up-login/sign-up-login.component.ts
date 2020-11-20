@@ -53,7 +53,7 @@ export class SignUpComponent implements OnInit {
                });
          }
          else {
-              alert('password is not valid');
+              alert('password and confirm password are not same');
          }
      }
      else{

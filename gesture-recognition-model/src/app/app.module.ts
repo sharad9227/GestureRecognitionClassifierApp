@@ -14,7 +14,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 import { User } from './models/ValidUserComponent';
 import { LoginSuccessComponent } from './components/login-success/login-success.component';
- import { DynamicScriptLoaderService } from './services/dynamicScriptLoadService.service';
+ import { SharedService } from './services/shared.service';
 import { RoutedSuccessComponent } from './components/routed-success/routed-success.component';
 import {  FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import { fas } from '@fortawesome/free-solid-svg-icons';
@@ -30,7 +30,8 @@ import {MatButtonToggleModule} from '@angular/material/button-toggle';
 import {YouTubePlayerModule} from '@angular/youtube-player';
 import {YoutubePlayerComponent} from './components/youtube-player-component/youtube-player-component.component';
 import { CustomGestureComponent } from './components/custom-gesture/custom-gesture.component';
-import { CommonVideoComponent } from './components/common-video/common-video.component'
+import { CommonVideoComponent } from './components/common-video/common-video.component';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -59,11 +60,10 @@ import { CommonVideoComponent } from './components/common-video/common-video.com
     MatIconModule,
     YouTubePlayerModule
   ],
-  providers: [AjaxService,
+  providers: [
+    AjaxService,
      User,
-     DynamicScriptLoaderService,
-     //referred  https://www.npmjs.com/package/angular-youtube-player single line
-
+     SharedService
   ],
   bootstrap: [AppComponent]
 })

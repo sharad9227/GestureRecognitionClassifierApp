@@ -26,9 +26,11 @@ const volUpGesture = new fp.GestureDescription('vol_up');
 
   // do this for all other fingers
   volUpGesture.addCurl(fp.Finger.Middle, fp.FingerCurl.FullCurl, 1.0);
+  volUpGesture.addDirection(fp.Finger.Middle,fp.FingerDirection.DiagonalUpLeft,0);
+  volUpGesture.addDirection(fp.Finger.Middle,fp.FingerDirection.DiagonalUpRight,0)
   volUpGesture.addCurl(fp.Finger.Ring, fp.FingerCurl.FullCurl, 1.0);
   volUpGesture.addCurl(fp.Finger.Pinky, fp.FingerCurl.FullCurl, 1.0);
-  volUpGesture.setWeight(fp.Finger.Index,2);
+  volUpGesture.setWeight(fp.Finger.Index,1);
 
 
 

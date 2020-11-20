@@ -1,29 +1,29 @@
-<mat-sidenav-container class="mat-container" (click)="getMouseClick($event)">
-    <mat-sidenav class="navbarspacing" mode="push" [opened]="show">
+<mat-sidenav-container class="mat-container">
+    <mat-sidenav #navbar class="navbarspacing" mode="side" opened="false">
 
 
         <ul class="link-items">
             <li class="navbar-align-center">
-                <button mat-fab class="dimension">
+                <button (click)="defaultClick()" mat-fab class="dimension">
                     <fa-icon class="links-color" [icon]="['fas', 'sign-language']"></fa-icon>
               </button>
-                <span *ngIf="show" class="links-color">  Default Gesture</span>
+                <span class="links-color">  Default Gesture</span>
 
 
             </li>
             <!-- custom gesture -->
             <li class="navbar-align-center">
-                <button mat-fab class="dimension">
+                <button (click)="customClick()" mat-fab class="dimension">
                     <fa-icon class="links-color" [icon]="['fas', 'tools']"></fa-icon>
                   </button>
-                <span *ngIf="show" class="links-color">  Custom Gesture</span>
+                <span class="links-color">  Custom Gesture</span>
 
             </li>
             <li class="navbar-align-center">
                 <button mat-fab class="dimension">
                     <fa-icon class="links-color" [icon]="['fas', 'user-circle']"></fa-icon>
                   </button>
-                <span *ngIf="show" class="links-color">  User Profile</span>
+                <span class="links-color">  User Profile</span>
 
             </li>
 
@@ -45,14 +45,11 @@
 
         <h3>Welcome {{loggedInUser}}</h3>
         <!-- <div class="main-container"> -->
-        <div class="sidenav-align">
+        <div>
 
-            <mat-button-toggle style="top:50%" *ngIf="!show " (change)="toggle()">
-                <fa-icon class="links-color" [icon]="['fas', 'angle-right']"></fa-icon>
-                <!-- <mat-icon >home</mat-icon> -->
-            </mat-button-toggle>
 
-            <app-login-success class="login-success-align-items-row"></app-login-success>
+            <router-outlet></router-outlet>
+            <!-- <app-login-success class="login-success-align-items-row"></app-login-success> -->
             <!-- </div> -->
         </div>
 

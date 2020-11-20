@@ -3,15 +3,17 @@
 
     <div id="webcam-props">
         <video controls #webcamFeed class="video-props"></video>
-        <canvas #Canvas id="pose-canvas" height="{{videoConfiguration.height}}" width="{{videoConfiguration.width}}" class="video-props"></canvas>
         <div id="action" class="video-props">{{action}}</div>
+        <canvas #Canvas height="{{videoConfiguration.height}}" width="{{videoConfiguration.width}}" class="video-props"></canvas>
+
 
     </div>
 
-    <div class="media">
+    <div [hidden]='!loadLocalVideo' class="media">
         <video preload="auto" class="slim-padding" height="{{videoConfiguration.height}}" width="{{videoConfiguration.width}}" #mediaTarget controls> -->
                 <source  src="../../../assets/video/high.mp4">
             </video>
+
         <!-- <div style="width: 560px; height: 315px; float: none; clear: both; margin: 2px auto;">
                 <iframe #iframe width="560" height="315" src="https://www.youtube.com/embed/A8gDQ-x1Fko" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
             </div> -->
@@ -23,4 +25,6 @@
 
 
 </div>
-<app-youtube-player-component #videoYouTube [videoId]="vid" [videoState]="videoState"></app-youtube-player-component>
+<div [hidden]='!loadIframe'>
+    <app-youtube-player-component #videoYouTube [videoId]="vid" [videoState]="videoState"></app-youtube-player-component>
+</div>

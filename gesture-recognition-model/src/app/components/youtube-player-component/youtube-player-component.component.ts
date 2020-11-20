@@ -41,10 +41,10 @@ ngOnInit(): void {
        this.onPause();
     }
 
-else if(vd=="threeFingers" || vd=="fourFingers"){
-// alert(vd);
-  this.volumeControl(vd);
-}
+        else if(vd=="vol_up" || vd=="vol_down"){
+        // alert(vd);
+          this.volumeControl(vd);
+        }
 
   }
   onReady() {
@@ -60,19 +60,20 @@ else if(vd=="threeFingers" || vd=="fourFingers"){
 
   volumeControl(v:String){
     let volumeLevel:number=this.youtubeplayer.getVolume();
-    if(volumeLevel<100 && v=="fourFingers")
+    if(volumeLevel<100 && v=="vol_up")
     {
       volumeLevel=this.youtubeplayer.getVolume();
+
       volumeLevel=volumeLevel+20;
 
       this.youtubeplayer.setVolume(volumeLevel);
      // alert(volumeLevel+"increased");
     }
-    else if (volumeLevel<=0 && v=="threeFingers"){
+    else if (volumeLevel<=0 && v=="vol_down"){
       //alert("volume is at lowest.cannot decrease vol");
 
     }
-    else if(volumeLevel<100 && v=="threeFingers"){
+    else if(volumeLevel<100 && v=="vol_down"){
       volumeLevel=this.youtubeplayer.getVolume();
       volumeLevel=volumeLevel-20;
 

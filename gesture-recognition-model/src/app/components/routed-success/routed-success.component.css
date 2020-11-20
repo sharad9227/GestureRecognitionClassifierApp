@@ -1,5 +1,5 @@
 .mat-sidenav-container {
-    background-image: linear-gradient(120deg, #a6c0fe 0%, #f68084 100%);
+    background-image: linear-gradient(to top, #a8edea 0%, #fed6e3 100%);
 }
 
 .login-success-align-items-row {
@@ -9,5 +9,5 @@
     /* WebKit-based browsers will ignore this. */
     width: -webkit-fill-available;
     /* Mozilla-based browsers will ignore this. */
-    width: fill-available;
+    width: stretch;
 }

@@ -1,39 +1,58 @@
-import { Component, HostListener, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit, Renderer2, ViewChild } from '@angular/core';
+import { MatSidenav } from '@angular/material/sidenav';
+import { ActivatedRoute, Router } from '@angular/router';
 import { fonts } from '@fortawesome/fontawesome-free/';
+import threeFingersUpGesture from 'src/app/models/gestureSet/threeUpGesture';
+import {SharedService} from '../../services/shared.service'
 @Component({
   selector: 'app-routed-success',
   templateUrl: './routed-success.component.html',
   styleUrls: ['./routed-success.component.css']
 })
 export class RoutedSuccessComponent implements OnInit {
-fonts=fonts;
-show=false;
-openPanel=false;
-loggedInUser;
-  constructor() {
+  @ViewChild('navbar')  sidePanel :MatSidenav;
+  fonts=fonts;
+  show=false;
+  openPanel=false;
+  loggedInUser;
 
+  constructor(private renderer: Renderer2, public navService:SharedService ,private route:Router,private activatedRoute:ActivatedRoute) {
+   // this.renderer.setStyle(document.body, 'background-image', ' linear-gradient(to top, #a8edea 0%, #fed6e3 100%) !important');
    }
 
 
   ngOnInit(): void {
     this.loggedInUser=localStorage.getItem('loggedInUser');
+
     console.log(this.show);
   }
-  toggle() {
 
-    this.show = !this.show;
 
-  }
 
-  getMouseClick(event)
+
+
+  ngAfterViewInit()
   {
-    //undefined for outside clicks and not specific button click or any element click
+    this.navService.getMenuToggle().subscribe(()=>
+    {
+        this.sidePanel.toggle();
+    });
+    this.sidePanel.close();
 
-   if(event!=undefined && this.show && event.srcElement.type==undefined && event.srcElement.parentNode.nodeName!='svg' && event.srcElement.parentNode.nodeName!='FA-ICON')
-   {
-    this.show=false;
-
-   }
   }
+
+
+defaultClick()
+{
+      this.route.navigate(['login-success'],{relativeTo:this.activatedRoute});
+}
+
+customClick()
+
+{
+  this.route.navigate(['custom-gesture'],{relativeTo:this.activatedRoute});
+}
+
+
 
 }

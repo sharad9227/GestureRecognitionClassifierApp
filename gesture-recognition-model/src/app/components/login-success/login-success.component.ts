@@ -1,7 +1,5 @@
 import { AfterViewInit, Component, ElementRef, EventEmitter, HostListener, OnInit, ViewChild ,Output, Input} from '@angular/core';
- import {DynamicScriptLoaderService} from '../../services/dynamicScriptLoadService.service';
 import * as fp from 'fingerpose';
-//import {run} from './sketch';
 import * as handpose from '@tensorflow-models/handpose';
 import * as volDownGesture from '../../models/gestureSet/volDownGesture';
 import * as volUpGesture from '../../models/gestureSet/volUpGesture';
@@ -10,7 +8,9 @@ import * as indexUpGesture from './../../models/gestureSet/indexUpGesture';
 import * as threeFingersUpGesture from'./../../models/gestureSet/threeUpGesture';
 import * as fourFingersUpGesture  from'./../../models/gestureSet/fourUpGesture';
 import * as stopGesture  from'./../../models/gestureSet/stopGesture';
+
 //import * as fp from 'fingerpose';
+
 
 @Component({
   selector: 'app-login-success',
@@ -25,8 +25,8 @@ export class LoginSuccessComponent implements OnInit,AfterViewInit {
     @ViewChild('mediaTarget') targetMedia:ElementRef;
     @ViewChild('Canvas') canvasElement:ElementRef;
     @ViewChild('videoYouTube') mediaElement:any;
-
-
+        public interbval;
+        public webcamFeed;
        public webcamConfig;
        public volControl:number;
        public action='';
@@ -35,8 +35,13 @@ export class LoginSuccessComponent implements OnInit,AfterViewInit {
       public result={'name':'','confidence':0.0 };
       public videoState="initial";
       public estimator;
+      public loadLocalVideo=false;
+      public loadIframe=false;
       public videoConfiguration = {  width: 640, height: 480, fps: 20 };
-
+       xcor=[];
+       ycor=[];
+       xcor1=[];
+       ycor1=[];
       //own
        actions = {
                   'no_gesture':'No hands',
@@ -46,8 +51,7 @@ export class LoginSuccessComponent implements OnInit,AfterViewInit {
                   'stopGesture':'Pause',
                   'threeFingers':'three',
                   'fourFingers':'four',
-                  'index_up':'choose',
-                  'no_recognition':'Not Gesture'
+                  'index_up':'choose'
                 };
         //own
        public  pointsMap = {
@@ -87,20 +91,20 @@ async GestureEstimationFunction() {
   ];
    //referenced fingerpose https://www.npmjs.com/package/fingerpose :Usage section
   const GE = new fp.GestureEstimator(gestures);
-  // load handpose model
+ /* referenced below line  tensorflow preloaded model https://www.npmjs.com/package/@tensorflow-models/handpose*/
   const model = await handpose.load();
- //referenced fingerpose https://www.npmjs.com/package/fingerpose
+
   // main estimation loop
 
 
    this.estimator = async () => {
 
-      // clear canvas overlay
+       //Erasing the whole canvas
       ctx.clearRect(0, 0, this.videoConfiguration.width, this.videoConfiguration.height);
       // get hand landmarks from video
-      /* referenced fingerpose https://www.npmjs.com/package/fingerpose */
-      const predictions = await model.estimateHands(this.webcamConfig, true);
-       /* referenced fingerpose https://www.npmjs.com/package/fingerpose */
+     /* referenced below line tensorflow preloaded model https://www.npmjs.com/package/@tensorflow-models/handpose  https://github.com/tensorflow/tfjs-models/blob/master/handpose/src/index.ts*/
+      const predictions = await model.estimateHands(this.webcamConfig, false);
+
 
 
        //setting default no hand gesture
@@ -112,6 +116,14 @@ async GestureEstimationFunction() {
       {
         //since handpose can detect only one hand at a time ,length is at max 1 denoted by predictions[0]
         const handPoints = predictions[0].annotations;
+        const height=predictions[0].boundingBox.bottomRight[1]-predictions[0].boundingBox.topLeft[1];
+        const width=predictions[0].boundingBox.bottomRight[0]-predictions[0].boundingBox.topLeft[0];
+        ctx.strokeRect(predictions[0].boundingBox.topLeft[0],predictions[0].boundingBox.topLeft[1],width,height);
+        ctx.strokeStyle = 'green';
+        this.xcor.push(predictions[0].boundingBox.topLeft[0]);
+        this.ycor.push(predictions[0].boundingBox.topLeft[1]);
+
+
 
         Object.entries(handPoints).forEach(element => {
           let temp= element[0];
@@ -125,13 +137,21 @@ async GestureEstimationFunction() {
               const moveY=landmarks[item][1];
               const lineX =landmarks[item+1][0];
               const lineY=landmarks[item+1][1];
-              console.log(predictions[0].handInViewConfidence);
-             this.drawLines(ctx, jointPoints[0], jointPoints[1], 5, 'blue', moveX, moveY, lineX, lineY);
+              //  console.log(predictions[0].handInViewConfidence);
+
+              //creating rectangle box around hand
+
+             this.drawLines(ctx, jointPoints[0], jointPoints[1], 'blue', moveX, moveY, lineX, lineY);
 
             }
            });
 
           });
+
+
+
+
+
 
           // now estimate gestures based on landmarks
           // using a minimum confidence of 7.5 (out of 10)
@@ -141,31 +161,134 @@ async GestureEstimationFunction() {
           if (est.gestures.length > 0) {
 
               // find gesture with highest confidence
-              this.result = est.gestures.reduce((p, c) => {
-                  return (p.confidence > c.confidence) ? p : c;
-              });
+              this.result = est.gestures.reduce((p, c) => {return (p.confidence > c.confidence) ? p : c;});
               this.action = this.actions[this.result.name];
 
             /* referenced fingerpose https://www.npmjs.com/package/fingerpose */
 
              }
-
+              if(this.result && this.result.name!="no_gesture")
+            {
                   this.actionMapper(this.result.name);
-
-     }
-              else
-              {
-                if(this.result.name=='')
-                {
-                  this.result.name='no_gesture';
-                  this.result.confidence=0.0;
-                  this.action=this.actions[this.result.name];
-                }
-              }
+            }
 
 
-// calling async function after every 50 seconds
-setInterval(() => { this.estimator(); }, 50);
+
+
+                // if(this.xcor.length!=0 && this.ycor.length!=0)
+                // {
+                //     //values are not empty and have populated
+                //     let xcortemp=this.xcor[0];
+                //     let xcorlast=this.xcor[this.xcor.length-1];
+                //     let ycortemp=this.ycor[0];
+                //     let ycorlast=this.ycor[this.ycor.length-1];
+                //     let descending=false;
+                //     let ascending =false;
+                //     let descCounter=0;
+                //     let ascCounter=0;
+                    // for(let i=0;i<this.xcor.length-1;i++)
+                    // {
+
+                    //   if(this.xcor.length>10)
+                    //   {
+                    //     const difference=this.xcor[i+1] - this.xcor[i];
+                    //       console.log(difference);
+                    //       if(difference>30 && xcortemp>0  )
+                    //       {
+                    //         descending=true;
+                    //         descCounter++;
+
+                    //         console.log(true);
+                    //       }
+                    //   else if(difference<-30){
+                    //           console.log(false);
+                    //           ascCounter++;
+                    //           ascending=true;
+                    //    }
+
+                       //do not use
+                //       else if(difference<20 && xcortemp>0)
+                //       {
+                //         descCounter--;
+                //         descending=false;
+                //       }
+                //       else if(difference>-20 && difference<0){
+                //         console.log(false);
+                //         ascCounter--;
+                //         ascending=false;
+                //  }
+
+
+
+                  //    }
+                  // }
+
+
+                      // if(ascCounter<descCounter)
+                      // {
+                      //  alert("Horizontal Swipe from right to left");
+                      // }
+                      // else{
+                      //   if(descCounter<ascCounter)
+                      //   {
+                      //    alert("Horizontal Swipe from left to right");
+                      //   }
+
+                      // }
+
+              //  }
+  }
+
+                //     if(xcortemp>0 && xcorlast<0)
+                //     {
+                //      // alert("Horizontal Swipe from left to right");
+                //     }
+                //     else if (xcortemp<0 && xcorlast>0)
+                //     {
+                //   //    alert("Horizontal Swipe from right to left");
+                //     }
+                //    else if(ycortemp>0 && ycorlast<0)
+                //     {
+                //   //    alert("Vertical Swipe from down to up");
+                //     }
+                //     else if (ycortemp<0 && ycorlast>0)
+                //     {
+                //       alert("Vertical Swipe from up to down");
+                //     }
+                //     // else if(ycortemp>0 && ycorlast<0 && xcortemp>0 && xcorlast<0 )
+                //     // {
+                //     //   alert("Horizontal Swipe from left to right");
+                //     // }
+                //     // else if (ycortemp<0 && ycorlast>0 && xcortemp<0 && xcorlast>0)
+                //     // {
+                //     //   alert("Horizontal Swipe from right to left");
+                //     // }
+                //   }
+                //     else {
+                //           console.log(this.xcor+"x");
+                //           console.log(this.ycor+"Y");
+                //           this.xcor=[];
+                //           this.ycor=[];
+                // }
+                else {
+
+                          //  this.xcor=[];
+                          //  this.ycor=[];
+
+                            if(this.result.name=='')
+                            {
+                              this.result.name='no_gesture';
+                              this.result.confidence=0.0;
+                              this.action=this.actions[this.result.name];
+                            }
+                  }
+
+
+
+
+
+// calling async function after every 50 milliseconds
+this.interbval=setInterval(() => { this.estimator(); }, 100);
 };
 
 this.estimator();
@@ -178,65 +301,84 @@ public actionMapper(res){
 
   switch(res) {
           case "peaceGesture": {
-            this.videoState="onReady";
+            if(this.loadLocalVideo)
+            {
+              this.targetMedia.nativeElement.play();
+            }
+           else if(this.loadIframe) {
+             alert("play");
+              this.videoState="onReady";
+            }
             //  this.iframe.nativeElementcontentWindow.document.addEventListener()
-            this.targetMedia.nativeElement.play();
             break;
           }
           case "stopGesture": {
+            if(this.loadLocalVideo)
+              {
+               this.targetMedia.nativeElement.pause();
+              }
+             else if(this.loadIframe) {
+               alert("pause");
             this.videoState="onPause";
-            this.targetMedia.nativeElement.pause();
+            }
             break;
           }
           case "vol_down": {
 
             //implement slider
-            this.targetMedia.nativeElement.volume = 0.25;
-            this.volControl=this.targetMedia.nativeElement.volume;
-            alert("vol low"+this.volControl);
-            this.videoState=this.result.name;
+            if(this.loadLocalVideo)
+            {
+              this.targetMedia.nativeElement.volume = this.targetMedia.nativeElement.volume - 0.25;
+              this.volControl=this.targetMedia.nativeElement.volume;
+            }
+            else if(this.loadIframe){
+              this.videoState=this.result.name;
+            }
             break;
           }
           case "vol_up": {
 
             //implement slider
-            this.targetMedia.nativeElement.volume = 1;
+            if(this.loadLocalVideo)
+            {
+            this.targetMedia.nativeElement.volume = this.targetMedia.nativeElement.volume + 0.25;
             this.volControl=this.targetMedia.nativeElement.volume;
-
+            }
+            else if(this.loadIframe){
             this.videoState=this.result.name;
+            }
+            break;
+          }
+          case "index_up"  :{
+              this.loadLocalVideo =true;
+              this.loadIframe=false;
+              break;
+          }
+
+
+          case "threeFingers" :{
+            this.loadIframe = true;
+            this.loadLocalVideo =false;
             break;
           }
           default: {
-            this.result.name='no_recognition';
-            this.result.confidence=0.0;
-            this.action=this.actions[this.result.name];
+
             break;
           }
 }
 }
-
-
-
-
-
-
-
-
-
-
-
 
 
 
 //own
-    public drawLines(ctx, x, y, r, color,mx1,my1,l1,l2) {
+    public drawLines(ctx, x, y, color,mx1,my1,l1,l2) {
     ctx.beginPath();
     ctx.lineWidth = 2;
     ctx.moveTo(mx1,my1);
     ctx.lineTo(l1, l2);
     ctx.stroke();
     ctx.beginPath();
-    ctx.arc(x, y, r, 0, 3 * Math.PI);
+    ctx.fillRect(x-4, y-4, 6,6);
     ctx.fillStyle = color;
     ctx.fill();
   }
@@ -246,9 +388,8 @@ public actionMapper(res){
   const constraints = {
     audio: false,
     video: {
-        facingMode: 'user',
         width:{
-          min:480,
+          min:320,
           max:640
         },
 
@@ -260,41 +401,20 @@ public actionMapper(res){
     }
 };
 //own
-        const webcamFeed: any = this.videoplayer.nativeElement;
-        webcamFeed.width=640;
-        webcamFeed.height=480;
+        this.webcamFeed = this.videoplayer.nativeElement;
+        this.webcamFeed.width=640;
+        this. webcamFeed.height=480;
 
 // get video stream ::own
-        const feedData =  navigator.mediaDevices.getUserMedia(constraints).then((feedData)=>
+        navigator.mediaDevices.getUserMedia(constraints).then((feedData)=>
         {
-          webcamFeed.srcObject = feedData;
-         // webcamFeed.play();
-         // this.GestureEstimationFunction();
+          this.webcamFeed.srcObject = feedData;
+          this.webcamFeed.play();
+          this.GestureEstimationFunction();
         })
         .catch((error)=>{
           alert("Something went wrong."+error);
         });
-
-
-      const promise= new  Promise<any>((resolve) =>{
-        setTimeout(()=>{resolve(webcamFeed)},50);
-      });
-
-        promise.then((streamData)=> {
-          webcamFeed.onloadedmetadata=streamData;
-        })
-        .catch((error)=>{
-          alert("Something went wrong."+error);
-        });
-
-      promise.then((v)=> {
-
-        v.play();
-        v.addEventListener("loadeddata", ()=> {
-        this.GestureEstimationFunction();
-        });
-
-      })
 
 
 
@@ -302,6 +422,16 @@ public actionMapper(res){
 
 
 
+ ngOnDestroy() {
+  clearInterval(this.interbval);
+  if(this.webcamFeed.srcObject.active)
+  {
+    const videoTrack = this.webcamFeed.srcObject.getTracks();
+    videoTrack[0].stop;
+    this.webcamFeed.srcObject=null;
+
+  }
+ }
 
 
 

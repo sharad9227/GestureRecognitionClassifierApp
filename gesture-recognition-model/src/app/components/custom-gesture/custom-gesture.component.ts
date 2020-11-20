@@ -175,8 +175,8 @@ export class CustomGestureComponent implements OnInit,AfterViewInit {
          const logits = this.mobileNetFeatureExtractor.infer(this.videoplayer.nativeElement);
          KNNClassifier.addExample(logits, this.actionSelected.label);
          console.log(this.actionSelected.label+"added");
-         let fileName = 'model.json';
-         KNNClassifier.save(fileName);
+         let fileName = 'file.json';
+        // KNNClassifier.save(fileName);
         });
 
        // KNNClassifier.addExample(logits, this.actionSelected.label);
