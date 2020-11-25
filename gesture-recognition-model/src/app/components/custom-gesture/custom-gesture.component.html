@@ -19,7 +19,7 @@
                 <div>
                     <div>
                         <button id="sampleClick" mat-raised-button>
-                                    <label style="    margin-top: 8px;">   Click to Add Samples  </label>
+                                    <label style="margin-top: 8px;">   Click to Add Samples  </label>
                                   </button>
                     </div>
                 </div>
@@ -27,9 +27,10 @@
             </div>
 
             <div class="button-container-2">
-                <div style="padding:0">
-                    <video style="padding:0" controls #webcamFeed class="video-props" playsinline></video>
-                </div>
+
+                <video style="padding:0" controls #webcamFeed class="video-props" playsinline></video>
+
+
             </div>
 
 
@@ -67,7 +68,7 @@
 
 
 
-    <div style="padding: 0%" id="column2">
+    <div style="padding: 0%" class="column2">
         <div>
             <span style="padding: 0%">Training Samples </span>
             <label style="padding: 0%" *ngIf="actionSelected!=undefined && actionSelected.value!==''"> for {{actionSelected.action}} </label>

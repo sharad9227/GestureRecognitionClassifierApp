@@ -1,5 +1,6 @@
 import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import * as p5 from "p5";
+import { SharedService } from 'src/app/services/shared.service';
 import {GestureActions} from '../../interface/customGestureInterface';
 
 declare let ml5: any;
@@ -40,7 +41,7 @@ export class CustomGestureComponent implements OnInit,AfterViewInit {
       @ViewChild('webcamFeed') videoplayer: ElementRef;
       @ViewChild('Canvas') canvasElement:ElementRef;
 
-      constructor(public elementRef: ElementRef) {}
+      constructor(public elementRef: ElementRef,private sharedService:SharedService) {}
         ngOnInit(): void {
           alert("in init");
           let features = ml5.featureExtractor('MobileNet', model);
@@ -56,7 +57,7 @@ export class CustomGestureComponent implements OnInit,AfterViewInit {
             //click handling for dropdown select
             this.elementRef.nativeElement.querySelector('#sampleClick').addEventListener('click', this.addImages.bind(this));
 
-
+          this.sharedService.openSideNavDrawer(true);
           function model(){
          //   let vd=this.videoplayer.nativeElement;
          //   console.log('model ready  in init'+vd);

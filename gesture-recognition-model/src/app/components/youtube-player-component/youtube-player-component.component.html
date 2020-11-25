@@ -1,2 +1,20 @@
-<p>youtube-player-component works!</p>
-<youtube-player #youtubeplayer [videoId]="videoId"></youtube-player>
+<div class="container">
+
+    <div class="row1">
+        <div style="border: 5px #333 solid;">
+            <span>Please enter your Youtube ID :- </span>
+
+            <input type="text" [(ngModel)]="videoId" name="videoId" placeholder="Enter ID  here" required="required">
+        </div>
+        <div>
+            <div>
+                <button id="sampleClick" mat-raised-button>
+                        <label style="    margin-top: 8px;">   Load Video  </label>
+                      </button>
+            </div>
+        </div>
+    </div>
+
+
+    <youtube-player #youtubeplayer [videoId]="videoId"></youtube-player>
+</div>

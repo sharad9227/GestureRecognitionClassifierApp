@@ -4,6 +4,9 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import { ActivatedRoute, Router } from '@angular/router';
 import { User } from '../../models/ValidUserComponent';
 import {AjaxService} from '../../services/ajaxService.service';
+
+import Swal from 'sweetalert2';
+import { errorFormInput } from 'src/app/interface/errorFormInput';
 @Component({
   selector: 'app-sign-up-login',
   templateUrl: './sign-up-login.component.html',
@@ -17,6 +20,21 @@ export class SignUpComponent implements OnInit {
   userdata = new User();
   //creating private model for data security
   private submittedValues = this.userdata;
+  public error:errorFormInput ={ errCode:0, errMessage:'' };
+  //popup
+  popUpModalSuccess = Swal.mixin({
+    toast:true,
+    position:'center',
+    timer: 2000,
+    showCloseButton:false
+  });
+  popUpModalError =Swal.mixin({
+    toast:true,
+    position:'center',
+    showCloseButton:true
+
+  });
+
 //  submittedValues :Object = { password :'', confirmPassword:''};
   constructor(
               private route: ActivatedRoute,
@@ -49,15 +67,46 @@ export class SignUpComponent implements OnInit {
               }
           },
           error => {
-            alert('Internal server error with code ' + error.status + 'Message' + error.message);
-               });
+
+                this.error.errCode=error.error.status;
+
+                this.popUpModalError.fire({
+                  icon: 'error',
+                  title: error.error.message
+                })
+
+
+
+           })
          }
          else {
-              alert('password and confirm password are not same');
+          this.error.errMessage="Password and Confirm password do not match";
+          this.popUpModalError.fire({
+            icon: 'error',
+            title: this.error.errMessage
+          })
+             // alert('password and confirm password are not same');
          }
      }
      else{
-       alert('There are errors in the form, you cannot submit');
+        //form control invalid
+        let invalidControls= form.controls;
+        let invalidFields=[];
+        for(let item in invalidControls)
+        {
+          if(invalidControls[item].status=="INVALID")
+            {
+              invalidFields.push(item);
+           }
+        }
+
+
+       this.error.errMessage='Please fill the fields : ' + invalidFields +' fields and try again.'
+       this.popUpModalError.fire({
+        icon: 'error',
+        title: this.error.errMessage
+       })
+
      }
   }
 

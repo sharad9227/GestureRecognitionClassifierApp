@@ -13,7 +13,7 @@ indexUpFinger.addDirection(fp.Finger.Middle,fp.FingerDirection.DiagonalUpLeft,0)
 indexUpFinger.addDirection(fp.Finger.Middle,fp.FingerDirection.DiagonalUpRight,0)
 indexUpFinger.addCurl(fp.Finger.Ring, fp.FingerCurl.FullCurl, 1.0);
 indexUpFinger.addCurl(fp.Finger.Pinky, fp.FingerCurl.FullCurl, 1.0);
-indexUpFinger.setWeight(fp.Finger.Index, 1);
+indexUpFinger.setWeight(fp.Finger.Index, 1.5);
 
 
 export default indexUpFinger;

@@ -12,21 +12,36 @@ import { SharedService } from './services/shared.service';
 export class AppComponent {
 
   title = 'gesture-recognition-model';
-
+  showSideNav=false;
   constructor(
     private router: Router,
-    private sharedService:SharedService
+    private sharedService:SharedService,
+    private navService:SharedService
 ){}
+
+ngOnInit():void{
+
+    this.navService.closeSideNavDrawer().subscribe((res)=>{
+      this.showSideNav=res;
+      alert(this.showSideNav);
+    });
+
+}
 
 
 
 logout() {
   localStorage.removeItem('loggedInUser');
    this.router.navigate(['/login']);
+   this.navService.openSideNavDrawer(false);
 }
 toggle(){
     this.sharedService.setMenuToggle();
 }
+
+
+
+
 
 
 }

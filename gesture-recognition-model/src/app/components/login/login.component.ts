@@ -6,6 +6,7 @@ import { User } from '../../models/ValidUserComponent';
 import {errorFormInput} from '../../interface/errorFormInput';
 //modal import from https://sweetalert2.github.io/#download
 import Swal from 'sweetalert2';
+import { SharedService } from 'src/app/services/shared.service';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -40,7 +41,8 @@ export class LoginComponent implements OnInit {
   /*primary role of class constructors in Angular is dependency injection */
   constructor(private route: ActivatedRoute,
               private router: Router,
-              private loginService: AjaxService) { }
+              private loginService: AjaxService,
+              private sharedService:SharedService) { }
 
   /*
   callback method that is invoked immediately after the default
@@ -71,6 +73,7 @@ export class LoginComponent implements OnInit {
                   icon: 'success',
                   title: 'Signed in successfully'
                 })
+                this.sharedService.openSideNavDrawer(true);
                 this.router.navigate(['/home']);
 
 
@@ -81,7 +84,7 @@ export class LoginComponent implements OnInit {
                 this.error.errMessage=data.message;
                 this.popUpModalError.fire({
                   icon: 'error',
-                  title: 'Some Error occurred'+ this.error.errMessage
+                  title:  this.error.errMessage
                 })
               }
             }
@@ -90,7 +93,7 @@ export class LoginComponent implements OnInit {
               this.error.errMessage=data.message;
               this.popUpModalError.fire({
                 icon: 'error',
-                title: 'Some Error occurred'+ this.error.errMessage
+                title: this.error.errMessage
               })
 
             }
@@ -99,7 +102,11 @@ export class LoginComponent implements OnInit {
           },
 
            error => {
-            alert('Internal server error with code ' + error.status + 'Message' + error.message);
+                this.error.errCode=error.error.status;
+                this.popUpModalError.fire({
+                  icon: 'error',
+                  title: error.error.message
+                })
            });
       }
 //form not valid

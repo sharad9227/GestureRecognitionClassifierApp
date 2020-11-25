@@ -6,16 +6,30 @@
 }
 
 #webcam-props {
-    width: 640px;
-    height: 480px;
+    width: 38em;
+    height: 29em;
     position: relative;
+    border: 5px #333 solid;
 }
 
 .video-props {
     position: absolute;
-    left: 2%;
     width: 100%;
     height: 100%;
+    padding: 1%;
+}
+
+.local-video-props {
+    position: absolute;
+    margin: auto;
+    top: 15%;
+    right: 15%;
+    background-position: center;
+}
+
+.webcam-container {
+    width: auto;
+    height: auto;
 }
 
 #action {
@@ -28,10 +42,24 @@
 .media {
     position: relative;
     left: 2%;
-    height: 100%;
+    height: 0;
+    /* aspect ratio */
+    padding-bottom: 75%;
+    overflow: hidden;
     display: contents;
+}
+
+.media video {
+    position: relative;
+    width: 40%;
+    height: 50%;
 }
 
 .slim-padding {
     padding-bottom: 5%;
+}
+
+.utubeContainer {
+    justify-items: flex-end;
+    margin-left: 50%;
 }

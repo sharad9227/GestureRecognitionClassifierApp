@@ -2,10 +2,21 @@
 
 
     <div id="webcam-props">
-        <video controls #webcamFeed class="video-props"></video>
-        <div id="action" class="video-props">{{action}}</div>
-        <canvas #Canvas height="{{videoConfiguration.height}}" width="{{videoConfiguration.width}}" class="video-props"></canvas>
 
+
+        <div>
+            <div class="webcam-container">
+                <video controls #webcamFeed class="video-props"></video>
+            </div>
+
+        </div>
+
+        <div>
+            <div id="action" class="video-props">{{action}}</div>
+        </div>
+        <div>
+            <canvas #Canvas height="{{videoConfiguration.height}}" width="{{videoConfiguration.width}}" class="video-props"></canvas>
+        </div>
 
     </div>
 
@@ -13,6 +24,8 @@
         <video preload="auto" class="slim-padding" height="{{videoConfiguration.height}}" width="{{videoConfiguration.width}}" #mediaTarget controls> -->
                 <source  src="../../../assets/video/high.mp4">
             </video>
+
+        <div id="action" class="local-video-props">{{localAction}}</div>
 
         <!-- <div style="width: 560px; height: 315px; float: none; clear: both; margin: 2px auto;">
                 <iframe #iframe width="560" height="315" src="https://www.youtube.com/embed/A8gDQ-x1Fko" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
@@ -22,9 +35,14 @@
 
 
     </div>
-
+    <!-- <div>
+        <button id="stop" class="stop">
+    <fa-icon class="buttons-css" [icon]="['fas', 'stop']"> </fa-icon>
+    <label id="span-webcam">Stop Webcam </label>
+   </button>
+    </div> -->
 
 </div>
-<div [hidden]='!loadIframe'>
-    <app-youtube-player-component #videoYouTube [videoId]="vid" [videoState]="videoState"></app-youtube-player-component>
+<div [hidden]='!loadIframe' class="utubeContainer">
+    <app-youtube-player-component #videoYouTube [videoState]="videoState"></app-youtube-player-component>
 </div>

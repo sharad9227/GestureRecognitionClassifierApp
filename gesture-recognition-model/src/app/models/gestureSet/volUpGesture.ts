@@ -31,7 +31,7 @@ const volUpGesture = new fp.GestureDescription('vol_up');
   volUpGesture.addCurl(fp.Finger.Ring, fp.FingerCurl.FullCurl, 1.0);
   volUpGesture.addCurl(fp.Finger.Pinky, fp.FingerCurl.FullCurl, 1.0);
   volUpGesture.setWeight(fp.Finger.Index,1);
-
+  volUpGesture.setWeight(fp.Finger.Thumb,0.5);
 
 
 

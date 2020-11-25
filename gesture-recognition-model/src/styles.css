@@ -68,10 +68,11 @@ html {
 }
 
 .navbar-align-center {
-    padding: 2rem;
+    padding: 1rem;
     margin: 0;
     display: flex;
     align-items: center;
+    padding-left: 0;
 }
 
 .link-items {
@@ -83,7 +84,7 @@ html {
 
 .mat-container {
     position: static;
-    height: 94vh;
+    height: 90vh;
     padding: 0;
 }
 
@@ -94,7 +95,7 @@ html {
 
 .links-color {
     color: #236aa7b0;
-    font-size: 47px;
+    font-size: 31px;
 }
 
 .sidenav-align {
@@ -107,6 +108,6 @@ html {
 
 .dimension {
     background-color: #ffd400ad !important;
-    width: 70px !important;
-    height: 70px !important;
+    width: 32px !important;
+    height: 58px !important;
 }

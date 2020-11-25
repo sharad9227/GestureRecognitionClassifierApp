@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, EventEmitter, HostListener, OnInit, ViewChild ,Output, Input} from '@angular/core';
+import { AfterViewInit, Component, ElementRef, EventEmitter, HostListener, OnInit, ViewChild ,Output, Input, NgZone} from '@angular/core';
 import * as fp from 'fingerpose';
 import * as handpose from '@tensorflow-models/handpose';
 import * as volDownGesture from '../../models/gestureSet/volDownGesture';
@@ -8,7 +8,8 @@ import * as indexUpGesture from './../../models/gestureSet/indexUpGesture';
 import * as threeFingersUpGesture from'./../../models/gestureSet/threeUpGesture';
 import * as fourFingersUpGesture  from'./../../models/gestureSet/fourUpGesture';
 import * as stopGesture  from'./../../models/gestureSet/stopGesture';
-
+import { Observable } from 'rxjs';
+import { interval } from 'rxjs';
 //import * as fp from 'fingerpose';
 
 
@@ -25,19 +26,24 @@ export class LoginSuccessComponent implements OnInit,AfterViewInit {
     @ViewChild('mediaTarget') targetMedia:ElementRef;
     @ViewChild('Canvas') canvasElement:ElementRef;
     @ViewChild('videoYouTube') mediaElement:any;
+    public model;
+    public constraints;
         public interbval;
         public webcamFeed;
        public webcamConfig;
        public volControl:number;
        public action='';
-       public vid='H9154xIoYTA';
+       public localAction='';
+       public vid='Y8ETNh_IQjs';
       //output
       public result={'name':'','confidence':0.0 };
       public videoState="initial";
       public estimator;
       public loadLocalVideo=false;
       public loadIframe=false;
-      public videoConfiguration = {  width: 640, height: 480, fps: 20 };
+      public videoConfiguration = {  width: 640, height: 480, fps: 10 };
+      acontroller = new AbortController();
+      signal=this.acontroller.signal;
        xcor=[];
        ycor=[];
        xcor1=[];
@@ -53,6 +59,19 @@ export class LoginSuccessComponent implements OnInit,AfterViewInit {
                   'fourFingers':'four',
                   'index_up':'choose'
                 };
+
+        localVideoActions ={
+          'peaceGesture': '▶️',
+          'stopGesture':'⏸️',
+          'vol_up': '🔊',
+          'vol_down' : '🔉',
+          'no_gesture':'',
+          'threeFingers':'',
+          'fourFingers':'',
+          'index_up':''
+        }
+
+
         //own
        public  pointsMap = {
           palmBase :[0],
@@ -64,13 +83,44 @@ export class LoginSuccessComponent implements OnInit,AfterViewInit {
         }
 
 
-        constructor(element:ElementRef){
+        constructor(private element:ElementRef,private zone:NgZone){
 
         }
           ngOnInit(): void {
             console.log(this.targetMedia);
+           // this.element.nativeElement.querySelector('#stop').addEventListener('click', this.stopWebcam.bind(this));
+          }
+
+          stopWebcam()
+
+          {
+            this.interbval.unsubscribe();
+            this.acontroller.abort();
+
+;
+
+                  this.webcamFeed.pause();
+                  if(this.webcamFeed.srcObject.active)
+                    {
+                      const stream = this.webcamFeed.srcObject;
+                      const tracks = stream.getTracks();
+
+                      tracks.forEach(function(track) {
+                        track.stop();
+                      });
+
+                      this.webcamFeed.srcObject = null;
+
+                    }
+
+
+            this.interbval.unsubscribe();
+            this.interbval=0;
+
 
           }
+
+
 
 async GestureEstimationFunction() {
   this.webcamConfig= this.videoplayer.nativeElement;
@@ -92,25 +142,25 @@ async GestureEstimationFunction() {
    //referenced fingerpose https://www.npmjs.com/package/fingerpose :Usage section
   const GE = new fp.GestureEstimator(gestures);
  /* referenced below line  tensorflow preloaded model https://www.npmjs.com/package/@tensorflow-models/handpose*/
-  const model = await handpose.load();
+  this.model = await handpose.load();
 
   // main estimation loop
 
 
-   this.estimator = async () => {
+  const asyncFunction = async (signal)=>  {
 
        //Erasing the whole canvas
       ctx.clearRect(0, 0, this.videoConfiguration.width, this.videoConfiguration.height);
       // get hand landmarks from video
      /* referenced below line tensorflow preloaded model https://www.npmjs.com/package/@tensorflow-models/handpose  https://github.com/tensorflow/tfjs-models/blob/master/handpose/src/index.ts*/
-      const predictions = await model.estimateHands(this.webcamConfig, false);
+      const predictions = await this.model.estimateHands(this.webcamConfig, false);
 
 
 
        //setting default no hand gesture
        this.result.name='no_gesture';
        this.action=this.actions[this.result.name];
-
+       this.localAction=this.localVideoActions[this.result.name];
 
       if(predictions.length>0 && predictions[0].handInViewConfidence>0.98)
       {
@@ -163,11 +213,11 @@ async GestureEstimationFunction() {
               // find gesture with highest confidence
               this.result = est.gestures.reduce((p, c) => {return (p.confidence > c.confidence) ? p : c;});
               this.action = this.actions[this.result.name];
-
+              this.localAction=this.localVideoActions[this.result.name];
             /* referenced fingerpose https://www.npmjs.com/package/fingerpose */
 
              }
-              if(this.result && this.result.name!="no_gesture")
+              if(this.result)
             {
                   this.actionMapper(this.result.name);
             }
@@ -280,18 +330,24 @@ async GestureEstimationFunction() {
                               this.result.name='no_gesture';
                               this.result.confidence=0.0;
                               this.action=this.actions[this.result.name];
+                              this.localAction=this.localVideoActions[this.result.name];
                             }
                   }
 
 
+                      signal.addEventListener('abort',() => {
+                            this.interbval.unsubscribe();
+
+                          });
 
 
 
-// calling async function after every 50 milliseconds
-this.interbval=setInterval(() => { this.estimator(); }, 100);
+
+// calling async function after every 100 milliseconds
+
 };
 
-this.estimator();
+this.interbval = interval(100).subscribe(() => { asyncFunction(this.signal); });
 console.log('Starting predictions');
 }
 
@@ -306,7 +362,7 @@ public actionMapper(res){
               this.targetMedia.nativeElement.play();
             }
            else if(this.loadIframe) {
-             alert("play");
+
               this.videoState="onReady";
             }
             //  this.iframe.nativeElementcontentWindow.document.addEventListener()
@@ -318,7 +374,7 @@ public actionMapper(res){
                this.targetMedia.nativeElement.pause();
               }
              else if(this.loadIframe) {
-               alert("pause");
+
             this.videoState="onPause";
             }
             break;
@@ -363,6 +419,7 @@ public actionMapper(res){
           }
           default: {
 
+            this.videoState='';
             break;
           }
 }
@@ -385,7 +442,7 @@ public actionMapper(res){
 
 
  ngAfterViewInit(){
-  const constraints = {
+  this.constraints = {
     audio: false,
     video: {
         width:{
@@ -406,31 +463,51 @@ public actionMapper(res){
         this. webcamFeed.height=480;
 
 // get video stream ::own
-        navigator.mediaDevices.getUserMedia(constraints).then((feedData)=>
+    if(navigator.mediaDevices)
+    {
+         navigator.mediaDevices.getUserMedia(this.constraints).then((feedData)=>
         {
           this.webcamFeed.srcObject = feedData;
-          this.webcamFeed.play();
-          this.GestureEstimationFunction();
+         this.webcamFeed.play();
+         this.GestureEstimationFunction();
         })
         .catch((error)=>{
-          alert("Something went wrong."+error);
-        });
+          if(error.name ==='NotAllowedError')
+          alert("Please allow access to your webcam in order to experience gesture control");
 
+        else
+          alert("Something went wrong" +error.name);
+        });
+      }
+      else
+      {
+        alert("camera not switched on");
+      }
 
 
  }
 
 
 
- ngOnDestroy() {
-  clearInterval(this.interbval);
-  if(this.webcamFeed.srcObject.active)
-  {
-    const videoTrack = this.webcamFeed.srcObject.getTracks();
-    videoTrack[0].stop;
-    this.webcamFeed.srcObject=null;
+  ngOnDestroy() {
 
-  }
+
+
+          // if(this.webcamFeed.srcObject.active)
+          //   {
+          //     const stream = this.webcamFeed.srcObject;
+          //     const tracks = stream.getTracks();
+
+          //     tracks.forEach(function(track) {
+          //       track.stop();
+          //     });
+
+          //     this.webcamFeed.srcObject = null;
+
+          //   }
+
+
+
  }
 
 

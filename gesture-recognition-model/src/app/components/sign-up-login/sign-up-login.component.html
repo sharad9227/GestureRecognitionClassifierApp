@@ -6,7 +6,7 @@
 
         <div class="row">
             <!-- Template-driven forms-->
-            <mat-form-field color="primary" appearance="legacy" class="col-sm-6">
+            <mat-form-field color="primary" appearance="legacy" class="col-md-6" style="padding-bottom: 2%;">
                 <input matInput type="text" [(ngModel)]="userdata.userFirstName" name="userFirstName" #userFirstName="ngModel" placeholder="First Name" maxlength="30" minlength="3" required="required">
 
                 <mat-error *ngIf="userFirstName.invalid && (userFirstName.dirty || userFirstName.touched)">
@@ -26,7 +26,7 @@
 
 
 
-            <mat-form-field color="primary" class="col-sm-6">
+            <mat-form-field color="primary" class="col-md-6" style="padding-bottom: 2%;">
                 <input matInput type="text" [(ngModel)]="userdata.userLastName" name="userLastName" #userLastName="ngModel" placeholder="Last Name" maxlength="30" minlength="3">
 
                 <mat-error *ngIf="userLastName.invalid && (userLastName.dirty || userLastName.touched)">

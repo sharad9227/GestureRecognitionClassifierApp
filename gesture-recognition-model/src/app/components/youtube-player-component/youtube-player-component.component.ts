@@ -7,16 +7,17 @@ import { Component, Input, OnChanges, OnInit, ViewChild } from '@angular/core';
 })
 export class YoutubePlayerComponent implements OnInit,OnChanges {
   @ViewChild('youtubeplayer') youtubeplayer: any;
-
-
-  @Input() videoId: string;
+  videoId: string;
   @Input() videoState:string;
-  set id(id: string) {
-    this.videoId = id;
-    console.log(this.videoId);
-  }
+
+
+
+
   constructor() { }
+
+
   ngOnChanges():void{
+
  this.selectState(this.videoState);
 
 
@@ -73,12 +74,13 @@ ngOnInit(): void {
       //alert("volume is at lowest.cannot decrease vol");
 
     }
-    else if(volumeLevel<100 && v=="vol_down"){
+    else if(volumeLevel<=100 && v=="vol_down"){
       volumeLevel=this.youtubeplayer.getVolume();
-      volumeLevel=volumeLevel-20;
 
+      alert(volumeLevel+"decreased");
+      volumeLevel=volumeLevel-20;
       this.youtubeplayer.setVolume(volumeLevel);
-     // alert(volumeLevel+"decreased");
+      alert(volumeLevel+"decreased");
     }
     else{
       alert(volumeLevel);

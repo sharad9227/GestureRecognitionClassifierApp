@@ -6,6 +6,7 @@ import { BehaviorSubject, Observable, Subject } from 'rxjs';
 export class SharedService {
 
    menuToggle = new Subject<boolean>();
+   showSideNavDrawer = new BehaviorSubject<boolean>(false);
 
 setMenuToggle(){
   this.menuToggle.next();
@@ -13,4 +14,17 @@ setMenuToggle(){
 getMenuToggle(): Observable<any> {
   return this.menuToggle.asObservable();
 }
+
+
+openSideNavDrawer(isOpen:boolean){
+this.showSideNavDrawer.next(isOpen);
+}
+
+closeSideNavDrawer() :Observable<any>{
+  return this.showSideNavDrawer.asObservable();
+}
+
+
+
+
 }

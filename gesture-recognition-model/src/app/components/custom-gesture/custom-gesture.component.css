@@ -2,13 +2,15 @@ body {
     background-image: linear-gradient(to top, #a8edea 0%, #fed6e3 100%) !important;
 }
 
-.grid-container {
-    display: grid;
-    height: 90vh;
-    grid-template-columns: 2fr 1.6fr;
-    grid-template-rows: 0.2fr 3.4fr 0.3fr;
-    /* grid-gap: 1px; */
-    grid-template-areas: "header header" "column1 column2" "footer footer"
+@media only screen and (max-width:400px) {
+    .grid-container {
+        display: grid;
+        height: 90vh;
+        grid-template-columns: 2fr 1.6fr;
+        grid-template-rows: 0.2fr 3.4fr 0.3fr;
+        /* grid-gap: 1px; */
+        grid-template-areas: "header header" "column1 column2" "footer footer"
+    }
 }
 
 * {

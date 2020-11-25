@@ -1,38 +1,36 @@
 <mat-sidenav-container class="mat-container">
-    <mat-sidenav #navbar class="navbarspacing" mode="side" opened="false">
+    <mat-sidenav style="width: 25%;" #navbar class="navbarspacing" mode="side" opened="false">
 
 
         <ul class="link-items">
             <li class="navbar-align-center">
-                <button (click)="defaultClick()" mat-fab class="dimension">
+                <a (click)="defaultClick()" mat-fab class="dimension">
                     <fa-icon class="links-color" [icon]="['fas', 'sign-language']"></fa-icon>
-              </button>
-                <span class="links-color">  Default Gesture</span>
+                    <span class="links-color">  Universal Control</span>
+                </a>
+
 
 
             </li>
             <!-- custom gesture -->
             <li class="navbar-align-center">
-                <button (click)="customClick()" mat-fab class="dimension">
+                <a (click)="customClick()" mat-fab class="dimension">
                     <fa-icon class="links-color" [icon]="['fas', 'tools']"></fa-icon>
-                  </button>
-                <span class="links-color">  Custom Gesture</span>
+                    <span class="links-color"> Custom Control</span>
+                </a>
+
 
             </li>
             <li class="navbar-align-center">
-                <button mat-fab class="dimension">
+                <a mat-fab class="dimension">
                     <fa-icon class="links-color" [icon]="['fas', 'user-circle']"></fa-icon>
-                  </button>
-                <span class="links-color">  User Profile</span>
 
+                    <span class="links-color">  User Profile</span>
+
+                </a>
             </li>
 
-            <li class="navbar-align-center">
-                <mat-button-toggle *ngIf="show" (change)="toggle()">
-                    <fa-icon class="links-color" [icon]="['fas', 'angle-left']"></fa-icon>
-                </mat-button-toggle>
 
-            </li>
 
         </ul>
 
