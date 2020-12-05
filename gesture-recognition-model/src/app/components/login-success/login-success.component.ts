@@ -10,6 +10,7 @@ import * as fourFingersUpGesture  from'./../../models/gestureSet/fourUpGesture';
 import * as stopGesture  from'./../../models/gestureSet/stopGesture';
 import { Observable } from 'rxjs';
 import { interval } from 'rxjs';
+import { SharedService } from 'src/app/services/shared.service';
 //import * as fp from 'fingerpose';
 
 
@@ -41,7 +42,7 @@ export class LoginSuccessComponent implements OnInit,AfterViewInit {
       public estimator;
       public loadLocalVideo=false;
       public loadIframe=false;
-      public videoConfiguration = {  width: 640, height: 480, fps: 10 };
+      public videoConfiguration = {  width: 640, height: 480};
       acontroller = new AbortController();
       signal=this.acontroller.signal;
        xcor=[];
@@ -55,20 +56,20 @@ export class LoginSuccessComponent implements OnInit,AfterViewInit {
                   'peaceGesture': 'Play',
                   'vol_down' : '👇',
                   'stopGesture':'Pause',
-                  'threeFingers':'three',
+                  'threeFingers':'YoutubeVdo',
                   'fourFingers':'four',
-                  'index_up':'choose'
+                  'index_up':'appVideo'
                 };
 
-        localVideoActions ={
-          'peaceGesture': '▶️',
-          'stopGesture':'⏸️',
-          'vol_up': '🔊',
-          'vol_down' : '🔉',
-          'no_gesture':'',
-          'threeFingers':'',
-          'fourFingers':'',
-          'index_up':''
+       localVideoActions = {
+                  'peaceGesture': '▶️',
+                  'stopGesture':'⏸️',
+                  'vol_up': '🔊',
+                  'vol_down' : '🔉',
+                  'no_gesture':'',
+                  'threeFingers':'',
+                  'fourFingers':'',
+                  'index_up':''
         }
 
 
@@ -83,42 +84,15 @@ export class LoginSuccessComponent implements OnInit,AfterViewInit {
         }
 
 
-        constructor(private element:ElementRef,private zone:NgZone){
+        constructor(private element:ElementRef,private sharedService:SharedService){
 
         }
           ngOnInit(): void {
-            console.log(this.targetMedia);
+        //    this.sharedService.openSideNavDrawer(true);
            // this.element.nativeElement.querySelector('#stop').addEventListener('click', this.stopWebcam.bind(this));
           }
 
-          stopWebcam()
 
-          {
-            this.interbval.unsubscribe();
-            this.acontroller.abort();
-
-;
-
-                  this.webcamFeed.pause();
-                  if(this.webcamFeed.srcObject.active)
-                    {
-                      const stream = this.webcamFeed.srcObject;
-                      const tracks = stream.getTracks();
-
-                      tracks.forEach(function(track) {
-                        track.stop();
-                      });
-
-                      this.webcamFeed.srcObject = null;
-
-                    }
-
-
-            this.interbval.unsubscribe();
-            this.interbval=0;
-
-
-          }
 
 
 
@@ -141,9 +115,8 @@ async GestureEstimationFunction() {
   ];
    //referenced fingerpose https://www.npmjs.com/package/fingerpose :Usage section
   const GE = new fp.GestureEstimator(gestures);
- /* referenced below line  tensorflow preloaded model https://www.npmjs.com/package/@tensorflow-models/handpose*/
   this.model = await handpose.load();
-
+   //referenced fingerpose https://www.npmjs.com/package/fingerpose :Usage section
   // main estimation loop
 
 
@@ -212,9 +185,10 @@ async GestureEstimationFunction() {
 
               // find gesture with highest confidence
               this.result = est.gestures.reduce((p, c) => {return (p.confidence > c.confidence) ? p : c;});
+              /* referenced fingerpose https://www.npmjs.com/package/fingerpose */
               this.action = this.actions[this.result.name];
               this.localAction=this.localVideoActions[this.result.name];
-            /* referenced fingerpose https://www.npmjs.com/package/fingerpose */
+
 
              }
               if(this.result)
@@ -335,9 +309,8 @@ async GestureEstimationFunction() {
                   }
 
 
-                      signal.addEventListener('abort',() => {
-                            this.interbval.unsubscribe();
-
+                        signal.addEventListener('abort',() => {
+                                 this.interbval.unsubscribe();
                           });
 
 
@@ -382,9 +355,10 @@ public actionMapper(res){
           case "vol_down": {
 
             //implement slider
-            if(this.loadLocalVideo)
+            if(this.loadLocalVideo && (this.targetMedia.nativeElement.volume-0.1)>0)
             {
-              this.targetMedia.nativeElement.volume = this.targetMedia.nativeElement.volume - 0.25;
+
+              this.targetMedia.nativeElement.volume = this.targetMedia.nativeElement.volume - 0.1;
               this.volControl=this.targetMedia.nativeElement.volume;
             }
             else if(this.loadIframe){
@@ -395,9 +369,9 @@ public actionMapper(res){
           case "vol_up": {
 
             //implement slider
-            if(this.loadLocalVideo)
+            if(this.loadLocalVideo && (this.targetMedia.nativeElement.volume+0.1)<1)
             {
-            this.targetMedia.nativeElement.volume = this.targetMedia.nativeElement.volume + 0.25;
+            this.targetMedia.nativeElement.volume = this.targetMedia.nativeElement.volume + 0.1;
             this.volControl=this.targetMedia.nativeElement.volume;
             }
             else if(this.loadIframe){
@@ -408,6 +382,7 @@ public actionMapper(res){
           case "index_up"  :{
               this.loadLocalVideo =true;
               this.loadIframe=false;
+              if(this.videoState=="onReady") this.videoState="onPause";
               break;
           }
 
@@ -415,6 +390,7 @@ public actionMapper(res){
           case "threeFingers" :{
             this.loadIframe = true;
             this.loadLocalVideo =false;
+            if(!this.targetMedia.nativeElement.paused) this.targetMedia.nativeElement.pause();
             break;
           }
           default: {
@@ -442,6 +418,7 @@ public actionMapper(res){
 
 
  ngAfterViewInit(){
+  this.sharedService.openSideNavDrawer(true);
   this.constraints = {
     audio: false,
     video: {
@@ -454,7 +431,7 @@ public actionMapper(res){
           min:240,
           max:480,
         },
-        frameRate: { max: 20 }
+        frameRate: { max: 10 }
     }
 };
 //own
@@ -488,25 +465,32 @@ public actionMapper(res){
  }
 
 
+ stopWebcam()
 
+             {
+                this.interbval.unsubscribe();
+                this.acontroller.abort();
+                this.webcamFeed.pause();
+                if(this.webcamFeed.srcObject.active)
+                  {
+                    const stream = this.webcamFeed.srcObject;
+                    const videoTracks = stream.getTracks();
+
+                    videoTracks.forEach(function(track) {
+                      track.stop();
+                    });
+
+                    this.webcamFeed.srcObject = null;
+
+                  }
+                this.interbval.unsubscribe();
+              //  this.interbval=0;
+
+
+                 }
   ngOnDestroy() {
 
-
-
-          // if(this.webcamFeed.srcObject.active)
-          //   {
-          //     const stream = this.webcamFeed.srcObject;
-          //     const tracks = stream.getTracks();
-
-          //     tracks.forEach(function(track) {
-          //       track.stop();
-          //     });
-
-          //     this.webcamFeed.srcObject = null;
-
-          //   }
-
-
+    this.stopWebcam();
 
  }
 

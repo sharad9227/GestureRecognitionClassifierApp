@@ -16,19 +16,19 @@
                         <label id="span-webcam">Stop Webcam </label>
                        </button>
                 </div>
+
                 <div>
-                    <div>
-                        <button id="sampleClick" mat-raised-button>
+                    <button id="sampleClick" mat-raised-button>
                                     <label style="margin-top: 8px;">   Click to Add Samples  </label>
                                   </button>
-                    </div>
                 </div>
+
 
             </div>
 
             <div class="button-container-2">
 
-                <video style="padding:0" controls #webcamFeed class="video-props" playsinline></video>
+                <video width="100%" height=auto style="padding:0" controls #webcamFeed class="video-props" playsinline></video>
 
 
             </div>
@@ -73,7 +73,7 @@
             <span style="padding: 0%">Training Samples </span>
             <label style="padding: 0%" *ngIf="actionSelected!=undefined && actionSelected.value!==''"> for {{actionSelected.action}} </label>
         </div>
-        <div>
+        <div class="center">
             <canvas [ngClass]="canvasEnabled? 'convas-config':''" #Canvas height="200px" width="200px"></canvas>
         </div>
     </div>
@@ -82,7 +82,28 @@
 
 
 
-    <footer>Footer</footer>
+    <footer>
+
+
+        <div class="footer-container">
+
+            <div>
+                <button id="download" mat-raised-button>
+                     <label style="margin-top: 8px;">   Download Model  </label>
+                    </button>
+            </div>
+
+            <div>
+                <button id="export" mat-raised-button>
+                    <label style="margin-top: 8px;">   Export Model  </label>
+                  </button>
+            </div>
+
+
+        </div>
+
+        <input type="file" name="selectFile" id="fileUpload" [hidden]="!showUploadButton">
+    </footer>
 
 
 </div>

@@ -54,5 +54,14 @@ customClick()
 }
 
 
+getMouseClick(event)
+  {
+    //undefined for outside clicks and not specific button click or any element click
 
+   if(event!=undefined &&  this.sidePanel.opened  &&   event.srcElement.type==undefined && (event.srcElement.parentNode!=null && event.srcElement.parentNode.innterText!="Load Video"))
+   {
+    this.sidePanel.toggle();
+
+   }
+  }
 }

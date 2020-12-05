@@ -1,8 +1,10 @@
 import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import * as p5 from "p5";
+import { User } from 'src/app/models/ValidUserComponent';
+import { AjaxService } from 'src/app/services/ajaxService.service';
 import { SharedService } from 'src/app/services/shared.service';
 import {GestureActions} from '../../interface/customGestureInterface';
-
+import {premiumGestureConfig} from '../../models/premiumGestureConfig'
 declare let ml5: any;
 
   @Component({
@@ -14,13 +16,19 @@ export class CustomGestureComponent implements OnInit,AfterViewInit {
   //member variables
       public mobileNetFeatureExtractor;
       public featureClassifier;
+      public knnClassifier;
       public navigator;
       public videoConstraints;
       public webcamFeed;
       public actionSelected;
       public canvas;
+      public logits;
       public snaps=[];
       public canvasEnabled=false;
+      public showUploadButton=false;
+       //creating private model for data security
+      private gestureConfig:premiumGestureConfig =new premiumGestureConfig();
+
       //assigning values
 
      gestureAction: GestureActions[] = [
@@ -41,10 +49,10 @@ export class CustomGestureComponent implements OnInit,AfterViewInit {
       @ViewChild('webcamFeed') videoplayer: ElementRef;
       @ViewChild('Canvas') canvasElement:ElementRef;
 
-      constructor(public elementRef: ElementRef,private sharedService:SharedService) {}
+      constructor(public elementRef: ElementRef,private sharedService:SharedService,private ajaxService:AjaxService,private user:User) {}
         ngOnInit(): void {
-          alert("in init");
-          let features = ml5.featureExtractor('MobileNet', model);
+
+          //let features = ml5.featureExtractor('MobileNet', model);
 
             /*  Section for click handling  */
 
@@ -56,20 +64,29 @@ export class CustomGestureComponent implements OnInit,AfterViewInit {
 
             //click handling for dropdown select
             this.elementRef.nativeElement.querySelector('#sampleClick').addEventListener('click', this.addImages.bind(this));
+            //export button
+            this.elementRef.nativeElement.querySelector('#export').addEventListener('click', this.uploadFile.bind(this));
+            //save button
+            this.elementRef.nativeElement.querySelector('#download').addEventListener('click', this.saveFile.bind(this));
+
 
           this.sharedService.openSideNavDrawer(true);
-          function model(){
-         //   let vd=this.videoplayer.nativeElement;
-         //   console.log('model ready  in init'+vd);
-          }
-          //this.startWebcam();
 
 
+          //initialise knn classifier
+          this.knnClassifier = ml5.KNNClassifier();
+          this.mobileNetFeatureExtractor = ml5.featureExtractor('MobileNet', res => {
+            console.log("feature extractor loaded");
+           //   this.logits = this.mobileNetFeatureExtractor.infer(this.videoplayer.nativeElement);
+           //  this.knnClassifier.addExample(this.logits, this.actionSelected.label);
+            console.log(this.actionSelected.label+"added");
+
+           });
           }
 
 
   ngAfterViewInit(): void {
-    alert("in view");
+
       this.videoConstraints = {
         audio: false,
         video: {
@@ -111,23 +128,7 @@ export class CustomGestureComponent implements OnInit,AfterViewInit {
 
 
 
-    // function modelReady() {
-    //   console.log('model ready!');
-    //   const logits = features.infer(video1);
-    //   console.log(logits);
-    // }
 
-            //draw function
-          //   p5RefObject.draw = () => {
-
-          //    };
-          //  };
-
-          //  new p5(sketch);
-
-          //   });
-
-          // })
       }
 
 
@@ -136,6 +137,7 @@ export class CustomGestureComponent implements OnInit,AfterViewInit {
 
       switchOnWebcam(event)
       {
+
         //navigator source object
         this.navigator = navigator.mediaDevices;
         if(this.navigator){
@@ -158,7 +160,10 @@ export class CustomGestureComponent implements OnInit,AfterViewInit {
       if(this.webcamFeed.srcObject.active)
     {
       const videoTrack = this.webcamFeed.srcObject.getTracks();
-      videoTrack[0].stop;
+
+      videoTrack.forEach(function(tracks) {
+        tracks.stop();
+      });
       this.webcamFeed.srcObject=null;
 
     }
@@ -169,74 +174,54 @@ export class CustomGestureComponent implements OnInit,AfterViewInit {
       {
         this.canvasEnabled=true;
         this.canvas.getContext('2d').drawImage(this.videoplayer.nativeElement, 0, 0, 200, 200);
-
-        let KNNClassifier = ml5.KNNClassifier();
-        this.mobileNetFeatureExtractor = ml5.featureExtractor('MobileNet', res => {
-         console.log("feature extractor loaded");
-         const logits = this.mobileNetFeatureExtractor.infer(this.videoplayer.nativeElement);
-         KNNClassifier.addExample(logits, this.actionSelected.label);
-         console.log(this.actionSelected.label+"added");
-         let fileName = 'file.json';
-        // KNNClassifier.save(fileName);
-        });
-
-       // KNNClassifier.addExample(logits, this.actionSelected.label);
-
-
-
-        // let x=0;
-        // let y=0;
-        // let w=40;
-        // let counter=1;
-
-        // this.snaps.push(this.videoplayer.nativeElement);
-        // console.log(this.snaps);
-        // while(this.iteration<this.snaps.length)
-        // {
-        //   const context = this.canvas.getContext('2d').drawImage(this.snaps[this.iteration], x, y, 80, 60);
-        //   x=x+80;
-        //   this.iteration++;
-        //   //counter++;
-        //   console.log(context);
-        }
+        this.logits = this.mobileNetFeatureExtractor.infer(this.videoplayer.nativeElement);
+        this.knnClassifier.addExample(this.logits, this.actionSelected.label);
       }
 
-    //  let sketch = (p5RefObject: p5) => {
-    //   p5RefObject.draw = () => {
-    //     let i=0;
-    //     let w=40;
-    //     let h=40;
-    //     let x=0;
-    //     let y=0;
-    //     while(i<this.snaps.length)
-    //     {
-    //       p5RefObject.image(this.snaps[i],x,y,w,h);
-    //       p5RefObject.noCanvas();
-    //       x=x+w;
-    //       if(x>x+480)
-    //       {
-    //           x=0;
-    //           y=y+h;
-    //       }
-    //     }
-    //        };
-    //        p5RefObject.setup = () => {
+   }
 
-    //         this.snaps.push(this.videoplayer.nativeElement.get());
-    //       }
+    uploadFile()
+    {
+      let jsonContent,blob,fileReader;
+      this.showUploadButton=true;
+
+      const file = this.elementRef.nativeElement.querySelector('#fileUpload');
+      file.addEventListener('change',()=>{
+         fileReader = new FileReader();
+         fileReader.readAsText(file.files[0]);
 
 
 
 
-    //      };
+         fileReader.onload= ()=>{
+          jsonContent=JSON.parse(fileReader.result);
+          this.gestureConfig.configId = parseInt(localStorage.getItem('configId'));
+          this.gestureConfig.configJsonData = jsonContent;
+          this.ajaxService.updateGestureConfig(this.gestureConfig).subscribe(data =>{
+             if(data!=null && data.message==="Training Model saved Succesfully")
+             {
+               alert("saved success");
+             }
+          }),
 
-    //      new p5(sketch);
-
-    // };
-
-
+            error => {
+               alert("error");
+            }
 
 
+          // blob = new Blob([JSON.stringify(fileReader.result)], {type:"application/json"});
+
+        }
+        console.log(jsonContent);
+      });
+
+
+    }
+
+    saveFile(){
+      let fileName = 'model.json';
+       this.knnClassifier.save(fileName);
+    }
 
 
 

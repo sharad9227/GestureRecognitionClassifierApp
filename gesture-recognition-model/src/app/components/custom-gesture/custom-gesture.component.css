@@ -2,15 +2,13 @@ body {
     background-image: linear-gradient(to top, #a8edea 0%, #fed6e3 100%) !important;
 }
 
-@media only screen and (max-width:400px) {
-    .grid-container {
-        display: grid;
-        height: 90vh;
-        grid-template-columns: 2fr 1.6fr;
-        grid-template-rows: 0.2fr 3.4fr 0.3fr;
-        /* grid-gap: 1px; */
-        grid-template-areas: "header header" "column1 column2" "footer footer"
-    }
+.grid-container {
+    display: grid;
+    height: 90vh;
+    grid-template-columns: 3fr 1fr;
+    grid-template-rows: 0.2fr 3.4fr 0.2fr;
+    /* grid-gap: 1px; */
+    grid-template-areas: "header header" "column1 column2" "footer footer"
 }
 
 * {
@@ -46,12 +44,13 @@ footer {
 
 .webcam-container {
     display: flex;
-    height: 70% !important;
+    height: 78% !important;
 }
 
 .button-container-2 {
     width: auto;
-    height: auto;
+    height: fit-content;
+    flex: 1;
     border: 5px #333 solid;
     justify-content: center;
 }
@@ -64,7 +63,8 @@ footer {
 }
 
 .center {
-    justify-content: space-between;
+    display: flex;
+    justify-content: center;
 }
 
 #webcam {
@@ -120,4 +120,10 @@ footer {
 .convas-config {
     display: flex;
     border: 5px #333 solid;
+}
+
+.footer-container {
+    display: flex;
+    flex: 1;
+    justify-content: center;
 }

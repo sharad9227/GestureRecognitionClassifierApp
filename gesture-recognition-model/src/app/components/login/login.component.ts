@@ -54,7 +54,12 @@ export class LoginComponent implements OnInit {
     //isPageLoad=false;
   };
 
-  /*getting form submission data */
+  /*
+    Checks whether form is valid.
+    If valid, persists the login details in LoginGesture table
+    The router routes to homepage if success
+    Returns appropriate error to user on failure
+  */
 
   onSubmit(form: NgForm){
     this.submitted = true;
@@ -68,6 +73,8 @@ export class LoginComponent implements OnInit {
               {
                 this.responseData.id = data.responseObj.userId;
                 this.responseData.userFirstName = data.responseObj.user_first_name;
+                let configId=data.responseObj.configId;
+                localStorage.setItem('configId',JSON.stringify(configId));
                 localStorage.setItem('loggedInUser',this.responseData.userFirstName);
                 this.popUpModalSuccess.fire({
                   icon: 'success',
@@ -95,10 +102,7 @@ export class LoginComponent implements OnInit {
                 icon: 'error',
                 title: this.error.errMessage
               })
-
             }
-
-
           },
 
            error => {

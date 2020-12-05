@@ -23,7 +23,7 @@ ngOnInit():void{
 
     this.navService.closeSideNavDrawer().subscribe((res)=>{
       this.showSideNav=res;
-      alert(this.showSideNav);
+
     });
 
 }

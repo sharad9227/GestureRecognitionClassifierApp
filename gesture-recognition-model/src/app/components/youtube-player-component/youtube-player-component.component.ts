@@ -1,4 +1,5 @@
 import { Component, Input, OnChanges, OnInit, ViewChild } from '@angular/core';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-youtube-player-component',
@@ -6,12 +7,18 @@ import { Component, Input, OnChanges, OnInit, ViewChild } from '@angular/core';
   styleUrls: ['./youtube-player-component.component.css']
 })
 export class YoutubePlayerComponent implements OnInit,OnChanges {
-  @ViewChild('youtubeplayer') youtubeplayer: any;
   videoId: string;
+  textId:string;
+  @ViewChild('youtubeplayer') youtubeplayer: any;
   @Input() videoState:string;
 
 
-
+  popUpModalInfo = Swal.mixin({
+    toast:true,
+    position:'center',
+    timer: 1000,
+    showCloseButton:false
+  });
 
   constructor() { }
 
@@ -29,6 +36,20 @@ ngOnInit(): void {
   document.body.appendChild(tag);
  //reffered code
 }
+
+public bind()
+{
+  this.videoId=this.textId;
+}
+
+
+
+
+
+
+
+
+
 
   selectState(vd:string){
     if(vd=="onReady")
@@ -68,19 +89,27 @@ ngOnInit(): void {
       volumeLevel=volumeLevel+20;
 
       this.youtubeplayer.setVolume(volumeLevel);
+      this.popUpModalInfo.fire({
+        icon: 'info',
+        title: 'Volume increased ,Volume level:-'+ volumeLevel +'%'
+      })
      // alert(volumeLevel+"increased");
     }
     else if (volumeLevel<=0 && v=="vol_down"){
       //alert("volume is at lowest.cannot decrease vol");
-
+      this.popUpModalInfo.fire({
+        icon: 'info',
+        title: 'Volume lowest,cannot decrease vol level'
+      })
     }
     else if(volumeLevel<=100 && v=="vol_down"){
       volumeLevel=this.youtubeplayer.getVolume();
-
-      alert(volumeLevel+"decreased");
       volumeLevel=volumeLevel-20;
       this.youtubeplayer.setVolume(volumeLevel);
-      alert(volumeLevel+"decreased");
+      this.popUpModalInfo.fire({
+        icon: 'info',
+        title: 'Volume lowered ,Volume level:'+volumeLevel +'%'
+      })
     }
     else{
       alert(volumeLevel);

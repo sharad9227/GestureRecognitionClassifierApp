@@ -46,13 +46,19 @@ export class SignUpComponent implements OnInit {
   /*getting form submission data */
 
   // tslint:disable-next-line:typedef
-  onSubmit(form: NgForm)
-  {
-   if (form.valid && form.value.acceptedTerms)
-      {
-         if ( this.submittedValues.password ===  this.submittedValues.confirmPassword)
+         /*
+          * Checks whether form is valid and whether accepted terms is checked
+          * Checks if password matches with confirmPassword
+          * Shows alerts for invalid form fields
+          * Submits the form if all conditions are satisfied and registers the user
+          */
+         public onSubmit(form: NgForm)
          {
-             alert('true:form valid');
+          if (form.valid && form.value.acceptedTerms)
+           {
+             if ( this.submittedValues.password ===  this.submittedValues.confirmPassword)
+              {
+
              this.submittedValues.userType = 'Normal';
              this.signUpService.signUpUser(this.submittedValues).subscribe(data => {
              // this.responseData = data;
@@ -63,7 +69,11 @@ export class SignUpComponent implements OnInit {
                 this.router.navigate(['/login']);
               }
               else{
-                alert('error with code ' + data.status + 'Message' + data.message);
+
+                this.popUpModalError.fire({
+                  icon: 'error',
+                  title: data.message
+                })
               }
           },
           error => {
@@ -80,7 +90,7 @@ export class SignUpComponent implements OnInit {
            })
          }
          else {
-          this.error.errMessage="Password and Confirm password do not match";
+          this.error.errMessage = "Password and Confirm password do not match";
           this.popUpModalError.fire({
             icon: 'error',
             title: this.error.errMessage

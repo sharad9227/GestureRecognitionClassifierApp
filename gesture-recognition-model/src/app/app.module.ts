@@ -31,6 +31,7 @@ import {YouTubePlayerModule} from '@angular/youtube-player';
 import {YoutubePlayerComponent} from './components/youtube-player-component/youtube-player-component.component';
 import { CustomGestureComponent } from './components/custom-gesture/custom-gesture.component';
 import { CommonVideoComponent } from './components/common-video/common-video.component';
+import { premiumGestureConfig } from './models/premiumGestureConfig';
 
 @NgModule({
   declarations: [
@@ -63,6 +64,7 @@ import { CommonVideoComponent } from './components/common-video/common-video.com
   providers: [
     AjaxService,
      User,
+     premiumGestureConfig,
      SharedService
   ],
   bootstrap: [AppComponent]

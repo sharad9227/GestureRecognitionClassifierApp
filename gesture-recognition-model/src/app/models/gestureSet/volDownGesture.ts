@@ -11,8 +11,9 @@ Full curl - finger curled inside
 */
 volDownGesture.addCurl(fp.Finger.Index, fp.FingerCurl.NoCurl, 1.0);
 volDownGesture.addDirection(fp.Finger.Index, fp.FingerDirection.VerticalDown, 1.0);
-
-
+volDownGesture.addDirection(fp.Finger.Index,fp.FingerDirection.DiagonalUpRight,0);
+volDownGesture.addDirection(fp.Finger.Middle,fp.FingerDirection.DiagonalUpLeft,0);
+volDownGesture.addDirection(fp.Finger.Middle,fp.FingerDirection.DiagonalUpRight,0)
   //Thumb
   volDownGesture.addCurl(fp.Finger.Thumb, fp.FingerCurl.NoCurl, 1.0);
   volDownGesture.addDirection(fp.Finger.Thumb, fp.FingerDirection.HorizontalLeft, 1.0);

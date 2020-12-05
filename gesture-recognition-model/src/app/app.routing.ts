@@ -23,7 +23,7 @@ const routes: Routes = [
   },
     { path:'custom-gesture',component: CustomGestureComponent},
     // otherwise redirect to login
-    { path: '', component: LoginComponent}
+    { path: 'login', component: LoginComponent}
 
 
 ];
