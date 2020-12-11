@@ -23,7 +23,7 @@ export class RoutedSuccessComponent implements OnInit {
 
   ngOnInit(): void {
     this.loggedInUser=localStorage.getItem('loggedInUser');
-
+    this.navService.openSideNavDrawer(true);
     console.log(this.show);
   }
 
@@ -52,6 +52,14 @@ customClick()
 {
   this.route.navigate(['custom-gesture'],{relativeTo:this.activatedRoute});
 }
+
+testClick()
+{
+  this.route.navigate(['custom-gesture/test'],{relativeTo:this.activatedRoute});
+}
+
+
+
 
 
 getMouseClick(event)

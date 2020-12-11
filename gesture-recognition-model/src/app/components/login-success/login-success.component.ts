@@ -29,22 +29,24 @@ export class LoginSuccessComponent implements OnInit,AfterViewInit {
     @ViewChild('videoYouTube') mediaElement:any;
     public model;
     public constraints;
-        public interbval;
-        public webcamFeed;
-       public webcamConfig;
-       public volControl:number;
-       public action='';
-       public localAction='';
-       public vid='Y8ETNh_IQjs';
+    public interbval;
+    public webcamFeed;
+    public webcamConfig;
+    public volControl:number;
+    public action='';
+    public localAction='';
+      // public vid='Y8ETNh_IQjs';
       //output
-      public result={'name':'','confidence':0.0 };
-      public videoState="initial";
-      public estimator;
-      public loadLocalVideo=false;
-      public loadIframe=false;
-      public videoConfiguration = {  width: 640, height: 480};
-      acontroller = new AbortController();
-      signal=this.acontroller.signal;
+    public result={'name':'','confidence':0.0 };
+    public videoState="initial";
+    public estimator;
+    public loadLocalVideo=false;
+    public loadIframe=false;
+    public videoConfiguration = {  width: 640, height: 480};
+    public  abortRequest = new AbortController();
+    public abortSignal=this.abortRequest.signal;
+
+    //co-ordinates for dynamic co-ordinate tracking
        xcor=[];
        ycor=[];
        xcor1=[];
@@ -58,7 +60,8 @@ export class LoginSuccessComponent implements OnInit,AfterViewInit {
                   'stopGesture':'Pause',
                   'threeFingers':'YoutubeVdo',
                   'fourFingers':'four',
-                  'index_up':'appVideo'
+                  'index_up':'appVideo',
+
                 };
 
        localVideoActions = {
@@ -73,7 +76,7 @@ export class LoginSuccessComponent implements OnInit,AfterViewInit {
         }
 
 
-        //own
+        //landmarks array for creative canvas landmark visualization
        public  pointsMap = {
           palmBase :[0],
           thumb: [1, 2, 3, 4],
@@ -99,13 +102,9 @@ export class LoginSuccessComponent implements OnInit,AfterViewInit {
 async GestureEstimationFunction() {
   this.webcamConfig= this.videoplayer.nativeElement;
   const canvas: any = this.canvasElement.nativeElement;
-  const ctx = canvas.getContext('2d');
-
-
-
+  const canvasContext = canvas.getContext('2d');
   const gestures = [
       peaceGesture.default,
-      fp.Gestures.ThumbsUpGesture,
       indexUpGesture.default,
       threeFingersUpGesture.default,
       fourFingersUpGesture.default,
@@ -113,19 +112,16 @@ async GestureEstimationFunction() {
       volDownGesture.default,
       stopGesture.default
   ];
-   //referenced fingerpose https://www.npmjs.com/package/fingerpose :Usage section
+   /*referenced fingerpose https://www.npmjs.com/package/fingerpose :Usage section */
   const GE = new fp.GestureEstimator(gestures);
   this.model = await handpose.load();
-   //referenced fingerpose https://www.npmjs.com/package/fingerpose :Usage section
-  // main estimation loop
+  /*reference end*/
 
-
-  const asyncFunction = async (signal)=>  {
+  const asyncFunction = async (abortSignal)=>  {
 
        //Erasing the whole canvas
-      ctx.clearRect(0, 0, this.videoConfiguration.width, this.videoConfiguration.height);
+      canvasContext.clearRect(0, 0, this.videoConfiguration.width, this.videoConfiguration.height);
       // get hand landmarks from video
-     /* referenced below line tensorflow preloaded model https://www.npmjs.com/package/@tensorflow-models/handpose  https://github.com/tensorflow/tfjs-models/blob/master/handpose/src/index.ts*/
       const predictions = await this.model.estimateHands(this.webcamConfig, false);
 
 
@@ -141,8 +137,8 @@ async GestureEstimationFunction() {
         const handPoints = predictions[0].annotations;
         const height=predictions[0].boundingBox.bottomRight[1]-predictions[0].boundingBox.topLeft[1];
         const width=predictions[0].boundingBox.bottomRight[0]-predictions[0].boundingBox.topLeft[0];
-        ctx.strokeRect(predictions[0].boundingBox.topLeft[0],predictions[0].boundingBox.topLeft[1],width,height);
-        ctx.strokeStyle = 'green';
+        canvasContext.strokeRect(predictions[0].boundingBox.topLeft[0],predictions[0].boundingBox.topLeft[1],width,height);
+        canvasContext.strokeStyle = 'green';
         this.xcor.push(predictions[0].boundingBox.topLeft[0]);
         this.ycor.push(predictions[0].boundingBox.topLeft[1]);
 
@@ -164,7 +160,7 @@ async GestureEstimationFunction() {
 
               //creating rectangle box around hand
 
-             this.drawLines(ctx, jointPoints[0], jointPoints[1], 'blue', moveX, moveY, lineX, lineY);
+             this.drawLines(canvasContext, jointPoints[0], jointPoints[1], 'blue', moveX, moveY, lineX, lineY);
 
             }
            });
@@ -172,20 +168,13 @@ async GestureEstimationFunction() {
           });
 
 
-
-
-
-
-          // now estimate gestures based on landmarks
-          // using a minimum confidence of 7.5 (out of 10)
+          //  estimating gestures upon landmarks
           /* referenced fingerpose https://www.npmjs.com/package/fingerpose */
           const est = GE.estimate(predictions[0].landmarks, 7.5);
-
           if (est.gestures.length > 0) {
-
               // find gesture with highest confidence
               this.result = est.gestures.reduce((p, c) => {return (p.confidence > c.confidence) ? p : c;});
-              /* referenced fingerpose https://www.npmjs.com/package/fingerpose */
+              /*reference end*/
               this.action = this.actions[this.result.name];
               this.localAction=this.localVideoActions[this.result.name];
 
@@ -199,36 +188,36 @@ async GestureEstimationFunction() {
 
 
 
-                // if(this.xcor.length!=0 && this.ycor.length!=0)
-                // {
+                 if(this.xcor.length!=0 && this.ycor.length!=0)
+                  {
                 //     //values are not empty and have populated
-                //     let xcortemp=this.xcor[0];
-                //     let xcorlast=this.xcor[this.xcor.length-1];
-                //     let ycortemp=this.ycor[0];
-                //     let ycorlast=this.ycor[this.ycor.length-1];
-                //     let descending=false;
-                //     let ascending =false;
-                //     let descCounter=0;
-                //     let ascCounter=0;
-                    // for(let i=0;i<this.xcor.length-1;i++)
-                    // {
+                    let xcortemp=this.xcor[0];
+                    let xcorlast=this.xcor[this.xcor.length-1];
+                    let ycortemp=this.ycor[0];
+                    let ycorlast=this.ycor[this.ycor.length-1];
+                    let descending=false;
+                    let ascending =false;
+                    let descCounter=0;
+                    let ascCounter=0;
+                    for(let i=0;i<this.xcor.length-1;i++)
+                    {
 
-                    //   if(this.xcor.length>10)
-                    //   {
-                    //     const difference=this.xcor[i+1] - this.xcor[i];
-                    //       console.log(difference);
-                    //       if(difference>30 && xcortemp>0  )
-                    //       {
-                    //         descending=true;
-                    //         descCounter++;
+                      if(this.xcor.length>10)
+                      {
+                        const difference=this.xcor[i+1] - this.xcor[i];
+                          console.log(difference);
+                          if(difference>30 && xcortemp>0  )
+                          {
+                            descending=true;
+                            descCounter++;
 
                     //         console.log(true);
-                    //       }
-                    //   else if(difference<-30){
-                    //           console.log(false);
-                    //           ascCounter++;
-                    //           ascending=true;
-                    //    }
+                          }
+                      else if(difference<-30){
+                              console.log(false);
+                              ascCounter++;
+                              ascending=true;
+                       }
 
                        //do not use
                 //       else if(difference<20 && xcortemp>0)
@@ -244,23 +233,27 @@ async GestureEstimationFunction() {
 
 
 
-                  //    }
-                  // }
+                     }
+                  }
 
 
-                      // if(ascCounter<descCounter)
-                      // {
-                      //  alert("Horizontal Swipe from right to left");
-                      // }
-                      // else{
-                      //   if(descCounter<ascCounter)
-                      //   {
-                      //    alert("Horizontal Swipe from left to right");
-                      //   }
+                      if(ascCounter<descCounter)
+                      {
+                        //seek backward
+                       alert("Horizontal Swipe from right to left");
+                       this.actionMapper('seekBackward');
+                      }
+                      else{
+                        if(descCounter<ascCounter)
+                        {
+                          //seek forward
+                         alert("Horizontal Swipe from left to right");
+                         this.actionMapper('seekForward');
+                        }
 
-                      // }
+                      }
 
-              //  }
+               }
   }
 
                 //     if(xcortemp>0 && xcorlast<0)
@@ -296,8 +289,8 @@ async GestureEstimationFunction() {
                 // }
                 else {
 
-                          //  this.xcor=[];
-                          //  this.ycor=[];
+                            this.xcor=[];
+                            this.ycor=[];
 
                             if(this.result.name=='')
                             {
@@ -309,7 +302,7 @@ async GestureEstimationFunction() {
                   }
 
 
-                        signal.addEventListener('abort',() => {
+                        abortSignal.addEventListener('abort',() => {
                                  this.interbval.unsubscribe();
                           });
 
@@ -320,7 +313,7 @@ async GestureEstimationFunction() {
 
 };
 
-this.interbval = interval(100).subscribe(() => { asyncFunction(this.signal); });
+this.interbval = interval(100).subscribe(() => { asyncFunction(this.abortSignal); });
 console.log('Starting predictions');
 }
 
@@ -393,6 +386,17 @@ public actionMapper(res){
             if(!this.targetMedia.nativeElement.paused) this.targetMedia.nativeElement.pause();
             break;
           }
+          case "seekForward":{
+            if(this.targetMedia.nativeElement.seekable.length>0){
+              this.targetMedia.nativeElement.currentTime =this.targetMedia.nativeElement.currentTime+ 5;
+            };
+          }
+          case "seekBackward":{
+           if( this.targetMedia.nativeElement.currentTime>5)
+         this.targetMedia.nativeElement.currentTime =this.targetMedia.nativeElement.currentTime- 5;
+          }
+
+
           default: {
 
             this.videoState='';
@@ -469,7 +473,7 @@ public actionMapper(res){
 
              {
                 this.interbval.unsubscribe();
-                this.acontroller.abort();
+                this.abortRequest.abort();
                 this.webcamFeed.pause();
                 if(this.webcamFeed.srcObject.active)
                   {

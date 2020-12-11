@@ -1,0 +1,60 @@
+<div class="grid-container">
+    <header>Testing Phase</header>
+    <div class="column1">
+        <div class="webcam-container">
+
+
+            <div class="button-container-2">
+
+                <video width="100%" height=auto style="padding:0" controls #webcamFeed class="video-props" playsinline></video>
+                <div class="button-container-1">
+                    <div>
+                        <button id="webcam">
+                    <fa-icon class="buttons-css" [icon]="['fas', 'video']"> </fa-icon>
+
+                      <label id="span-webcam">Start Webcam </label>
+                   </button>
+                    </div>
+                    <div>
+                        <button id="stop" class="stop">
+                      <fa-icon class="buttons-css" [icon]="['fas', 'stop']"> </fa-icon>
+                      <label id="span-webcam">Stop Webcam </label>
+                     </button>
+                    </div>
+
+
+
+
+
+                </div>
+            </div>
+
+
+
+
+        </div>
+
+
+
+
+    </div>
+
+    <div class="column2">
+        <div class="app-vdo-container">
+            <div class="media">
+                <video preload="auto" class="slim-padding" height="640" width="480" #mediaTarget controls> -->
+                <source  src="../../../assets/video/high.mp4">
+            </video>
+
+                <div id="action" class="local-video-props">{{localAction}}</div>
+            </div>
+
+        </div>
+    </div>
+    <div class="column3">
+
+
+    </div>
+
+
+</div>

@@ -32,6 +32,7 @@ import {YoutubePlayerComponent} from './components/youtube-player-component/yout
 import { CustomGestureComponent } from './components/custom-gesture/custom-gesture.component';
 import { CommonVideoComponent } from './components/common-video/common-video.component';
 import { premiumGestureConfig } from './models/premiumGestureConfig';
+import { CustomGestureTestingComponent } from './components/custom-gesture-testing/custom-gesture-testing.component';
 
 @NgModule({
   declarations: [
@@ -42,7 +43,8 @@ import { premiumGestureConfig } from './models/premiumGestureConfig';
     RoutedSuccessComponent,
     YoutubePlayerComponent,
     CustomGestureComponent,
-    CommonVideoComponent
+    CommonVideoComponent,
+    CustomGestureTestingComponent
   ],
   imports: [
     BrowserModule,
@@ -63,8 +65,6 @@ import { premiumGestureConfig } from './models/premiumGestureConfig';
   ],
   providers: [
     AjaxService,
-     User,
-     premiumGestureConfig,
      SharedService
   ],
   bootstrap: [AppComponent]

@@ -4,7 +4,8 @@ import { User } from 'src/app/models/ValidUserComponent';
 import { AjaxService } from 'src/app/services/ajaxService.service';
 import { SharedService } from 'src/app/services/shared.service';
 import {GestureActions} from '../../interface/customGestureInterface';
-import {premiumGestureConfig} from '../../models/premiumGestureConfig'
+import {premiumGestureConfig} from '../../models/premiumGestureConfig';
+import Swal from 'sweetalert2';
 declare let ml5: any;
 
   @Component({
@@ -45,11 +46,26 @@ export class CustomGestureComponent implements OnInit,AfterViewInit {
       ];
 
 
+      cofirmUpload =  Swal.mixin({
+        icon:'info',
+        text: "Your will not be able to reverse this action!",
+        showCancelButton: true,
+        confirmButtonText: "Yes, upload it!",
+      });
+
+
+
+
+
       //after init variables (view init : Scope Access)
       @ViewChild('webcamFeed') videoplayer: ElementRef;
       @ViewChild('Canvas') canvasElement:ElementRef;
 
-      constructor(public elementRef: ElementRef,private sharedService:SharedService,private ajaxService:AjaxService,private user:User) {}
+      constructor(public elementRef: ElementRef,private sharedService:SharedService,private ajaxService:AjaxService) {
+
+
+
+      }
         ngOnInit(): void {
 
           //let features = ml5.featureExtractor('MobileNet', model);
@@ -69,7 +85,7 @@ export class CustomGestureComponent implements OnInit,AfterViewInit {
             //save button
             this.elementRef.nativeElement.querySelector('#download').addEventListener('click', this.saveFile.bind(this));
 
-
+            this.elementRef.nativeElement.querySelector('#load').addEventListener('click', this.loadFile.bind(this));
           this.sharedService.openSideNavDrawer(true);
 
 
@@ -82,6 +98,7 @@ export class CustomGestureComponent implements OnInit,AfterViewInit {
             console.log(this.actionSelected.label+"added");
 
            });
+
           }
 
 
@@ -90,15 +107,14 @@ export class CustomGestureComponent implements OnInit,AfterViewInit {
       this.videoConstraints = {
         audio: false,
         video: {
-            facingMode: 'user',
-             width:{
+         width:{
                min:120,
-               max:480
+               max:400
             },
 
             height:{
                min:120,
-               max:360,
+               max:300,
             },
             frameRate: { max: 20 }
         }
@@ -187,31 +203,103 @@ export class CustomGestureComponent implements OnInit,AfterViewInit {
 
       const file = this.elementRef.nativeElement.querySelector('#fileUpload');
       file.addEventListener('change',()=>{
-         fileReader = new FileReader();
-         fileReader.readAsText(file.files[0]);
+        this.cofirmUpload.fire({
+          title: "Are you sure you want to upload this file?" + file.files[0].name,
+        }).then((res)=>{
+          if(res.isConfirmed && file.files[0].type=="application/json")
+          {
 
-
-
-
+            // check for already uploaded files
+          fileReader = new FileReader();
+          fileReader.readAsText(file.files[0]);
          fileReader.onload= ()=>{
           jsonContent=JSON.parse(fileReader.result);
           this.gestureConfig.configId = parseInt(localStorage.getItem('configId'));
-          this.gestureConfig.configJsonData = jsonContent;
-          this.ajaxService.updateGestureConfig(this.gestureConfig).subscribe(data =>{
-             if(data!=null && data.message==="Training Model saved Succesfully")
-             {
-               alert("saved success");
-             }
-          }),
+          this.gestureConfig.configJsonData = fileReader.result;
 
-            error => {
-               alert("error");
-            }
+          this.ajaxService.getGestureConfig(this.gestureConfig.configId).subscribe(data=>{
+                 if(data!=null &&  data.responseObj.configData==null)
+                 {
+                    this.ajaxService.updateGestureConfig(this.gestureConfig).subscribe(data =>{
+                       if(data!=null && data.message==="Training Model saved Succesfully")
+                       {
+                         Swal.fire("Uploaded!", "Your file has been uploaded.", "success");
+                       }
+                     },
+                      error => {
+                           Swal.fire("Failed!", "Your file could not be uploaded.", error);
+                      })
+
+                 }
+                 else if(data!=null && data.responseObj.configData!=null)
+                 {
+                   if(data.responseObj.configData!='')
+                   {
+                    this.cofirmUpload.fire({
+                      //Swal.fire("Warning!", "You already have uploaded data.", "success");
+                      title:"Warning! You already have uploaded data. Do you want to replace it"
+                      //update json config data
+                    }).then((res1)=>{
+                      if(res1.isConfirmed && file.files[0].type=="application/json")
+                      {
+                        this.ajaxService.updateGestureConfig(this.gestureConfig).subscribe(data =>{
+                          if(data!=null && data.message==="Training Model saved Succesfully")
+                          {
+                            Swal.fire("Uploaded!", "Your file has been uploaded.", "success");
+                            Swal.fire("File Replaced");
+                          }
+                        },
+                         error => {
+                              Swal.fire("Failed!", "Your file could not be uploaded.", error);
+                         })
+                      }
+                      else if(res.dismiss==Swal.DismissReason.cancel)
+                        {
+                          Swal.fire("Upload Cancelled!", "Please upload the model file", "error");
+                        }
+
+                   })
+
+
+
+                 }
+
+             }
+            },
+          error => {
+            Swal.fire("Error!", "Some problem in fetching", error);
+          })
+
 
 
           // blob = new Blob([JSON.stringify(fileReader.result)], {type:"application/json"});
 
         }
+
+
+      }
+      //referred cancel swal usage
+      else if(res.dismiss==Swal.DismissReason.cancel)
+      {
+        Swal.fire("Upload Cancelled!", "Please upload the model file", "error");
+      }
+
+        else{
+          Swal.fire("Upload Cancelled!", "Please upload the downloaded file of json format", "error");
+        }
+
+
+
+
+
+
+
+        });
+
+
+
+
+
         console.log(jsonContent);
       });
 
@@ -222,6 +310,37 @@ export class CustomGestureComponent implements OnInit,AfterViewInit {
       let fileName = 'model.json';
        this.knnClassifier.save(fileName);
     }
+
+loadFile(){
+    this.knnClassifier.load('./../../../assets/model/model3.json',()=> {
+      console.log("knn loaded");
+      //  setInterval(() => goClassify(), 20)
+      this.goClassify();
+  });
+
+}
+
+ goClassify() {
+let logitsInfer = this.mobileNetFeatureExtractor.infer(this.videoplayer.nativeElement);
+ const predictions =this.knnClassifier.predict();
+  this.knnClassifier.classify(logitsInfer, 3, function(err, result) {
+    let confidence,label;
+      if (err) {
+          console.log(err);
+      } else if (result) {
+          alert(result);
+          confidence = result.confidencesByLabel;
+          label = Object.keys(confidence).reduce(function(a, b) { return confidence[a] > confidence[b] ? a : b });
+          console.log(confidence);
+          console.log(label);
+        //  const res=this.mobileNetFeatureExtractor.predict(this.goClassify());
+          //this.goClassify();
+      }
+      else{
+
+      }
+  });
+}
 
 
 

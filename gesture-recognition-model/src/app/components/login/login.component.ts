@@ -80,7 +80,7 @@ export class LoginComponent implements OnInit {
                   icon: 'success',
                   title: 'Signed in successfully'
                 })
-                this.sharedService.openSideNavDrawer(true);
+
                 this.router.navigate(['/home']);
 
 

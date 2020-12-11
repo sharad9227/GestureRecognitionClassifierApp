@@ -8,19 +8,24 @@
                     <fa-icon class="links-color" [icon]="['fas', 'sign-language']"></fa-icon>
                     <span class="links-color">  Universal Control</span>
                 </a>
-
-
-
             </li>
             <!-- custom gesture -->
             <li class="navbar-align-center">
                 <a (click)="customClick()" mat-fab class="dimension">
                     <fa-icon class="links-color" [icon]="['fas', 'tools']"></fa-icon>
-                    <span class="links-color"> Custom Control</span>
+                    <span class="links-color"> Training Mode</span>
                 </a>
-
-
             </li>
+
+            <li class="navbar-align-center">
+                <a (click)="testClick()" mat-fab class="dimension">
+                    <img src="https://img.icons8.com/office/34/000000/learning.png" />
+                    <span class="links-color"> Testing Mode</span>
+                </a>
+            </li>
+
+
+
             <li class="navbar-align-center">
                 <a mat-fab class="dimension">
                     <fa-icon class="links-color" [icon]="['fas', 'user-circle']"></fa-icon>

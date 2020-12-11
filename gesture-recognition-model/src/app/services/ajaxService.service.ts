@@ -8,9 +8,9 @@ import { premiumGestureConfig } from '../models/premiumGestureConfig';
 @Injectable({ providedIn: 'root' })
 export class AjaxService {
 
-
-
-    constructor(private http: HttpClient, private validUser: User,private premiumConfig:premiumGestureConfig) { }
+  private validUser=new User();
+  private premiumConfig =new premiumGestureConfig();
+    constructor(private http: HttpClient) { }
     //admin use
     getAllUsers(): Observable<any> {
         return this.http.get<User[]>(`/users`);
@@ -32,7 +32,13 @@ export class AjaxService {
 
      //send json string data :put request
     updateGestureConfig(premiumConfig) : Observable<any> {
-      return this.http.post('http://localhost:8084/testjpa_war_exploded/users/update/gestureconfig',premiumConfig);
+      return this.http.put('http://localhost:8084/testjpa_war_exploded/users/update/gestureconfig',premiumConfig);
+    }
+
+    //get config data
+    getGestureConfig(configId:number): Observable<any>
+    {
+      return this.http.get<User>(`http://localhost:8084/testjpa_war_exploded/users/get/${configId}`);
     }
 
 
