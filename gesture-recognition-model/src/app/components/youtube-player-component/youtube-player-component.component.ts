@@ -43,30 +43,32 @@ public bind()
 }
 
 
-
-
-
-
-
-
-
-
   selectState(vd:string){
-    if(vd=="onReady")
-    {
+    //switch case implementation
 
-      this.onReady();
+    switch(vd) {
+      case "onReady": {
+        this.onReady();
+        break;
+      }
+      case "onPause": {
+        this.onPause();
+        break;
+      }
+      case "vol_down":
+      case "vol_up" :{
+        this.volumeControl(vd);
+        break;
+      }
+      case "seekForward" :
+        this.seekForward();
+        break;
+      case "seekBackward":
+        this.seekBackward();
+
+      default:
     }
-    else if(vd=="onPause")
-    {
 
-       this.onPause();
-    }
-
-        else if(vd=="vol_up" || vd=="vol_down"){
-        // alert(vd);
-          this.volumeControl(vd);
-        }
 
   }
   onReady() {
@@ -85,9 +87,7 @@ public bind()
     if(volumeLevel<100 && v=="vol_up")
     {
       volumeLevel=this.youtubeplayer.getVolume();
-
-      volumeLevel=volumeLevel+20;
-
+      volumeLevel=volumeLevel+10;
       this.youtubeplayer.setVolume(volumeLevel);
       this.popUpModalInfo.fire({
         icon: 'info',
@@ -104,7 +104,7 @@ public bind()
     }
     else if(volumeLevel<=100 && v=="vol_down"){
       volumeLevel=this.youtubeplayer.getVolume();
-      volumeLevel=volumeLevel-20;
+      volumeLevel=volumeLevel-10;
       this.youtubeplayer.setVolume(volumeLevel);
       this.popUpModalInfo.fire({
         icon: 'info',
@@ -112,9 +112,38 @@ public bind()
       })
     }
     else{
-      alert(volumeLevel);
+      this.popUpModalInfo.fire({
+        icon: 'info',
+        title: 'Volume is at max ,Volume level:'+volumeLevel +'%'
+      })
     }
   }
+
+
+  seekForward()
+  {
+    //playing state is defined by 1
+    let elapsedSeconds;
+      if(this.youtubeplayer.getPlayerState()==1)
+      {
+        elapsedSeconds=this.youtubeplayer.getCurrentTime();
+        elapsedSeconds= elapsedSeconds +5;
+        this.youtubeplayer.seekTo(elapsedSeconds,true);
+      }
+  }
+
+  seekBackward()
+  {
+    let elapsedSeconds;
+    if(this.youtubeplayer.getPlayerState()==1)
+    {
+      elapsedSeconds=this.youtubeplayer.getCurrentTime();
+      if(elapsedSeconds>5)
+      this.youtubeplayer.seekTo(elapsedSeconds-5,true);
+    }
+  }
+
+
 
 
 

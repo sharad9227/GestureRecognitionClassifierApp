@@ -26,13 +26,17 @@ import {MatButtonModule } from '@angular/material/button';
 import {MatExpansionModule} from '@angular/material/expansion';
 import {MatSidenavModule} from '@angular/material/sidenav';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
+import { MatCardModule } from '@angular/material/card';
+import {MatBadgeModule} from '@angular/material/badge';
+import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 //youtube module for embedding videos
 import {YouTubePlayerModule} from '@angular/youtube-player';
 import {YoutubePlayerComponent} from './components/youtube-player-component/youtube-player-component.component';
 import { CustomGestureComponent } from './components/custom-gesture/custom-gesture.component';
-import { CommonVideoComponent } from './components/common-video/common-video.component';
+
 import { premiumGestureConfig } from './models/premiumGestureConfig';
 import { CustomGestureTestingComponent } from './components/custom-gesture-testing/custom-gesture-testing.component';
+import { UserProfileComponent } from './components/user-profile/user-profile.component';
 
 @NgModule({
   declarations: [
@@ -43,8 +47,8 @@ import { CustomGestureTestingComponent } from './components/custom-gesture-testi
     RoutedSuccessComponent,
     YoutubePlayerComponent,
     CustomGestureComponent,
-    CommonVideoComponent,
-    CustomGestureTestingComponent
+    CustomGestureTestingComponent,
+    UserProfileComponent
   ],
   imports: [
     BrowserModule,
@@ -54,14 +58,18 @@ import { CustomGestureTestingComponent } from './components/custom-gesture-testi
     MatButtonModule,
     ReactiveFormsModule,
     HttpClientModule,
+    MatBadgeModule,
     appRoutingModule,
     MatExpansionModule,
+    MatCardModule,
     MatSelectModule,
     MatSidenavModule,
     FontAwesomeModule,
     MatButtonToggleModule,
     MatIconModule,
-    YouTubePlayerModule
+    MatSlideToggleModule,
+    YouTubePlayerModule,
+
   ],
   providers: [
     AjaxService,

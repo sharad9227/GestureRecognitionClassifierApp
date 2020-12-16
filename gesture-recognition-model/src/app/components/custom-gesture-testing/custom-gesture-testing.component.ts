@@ -1,16 +1,27 @@
 import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { interval } from 'rxjs';
 import { AjaxService } from 'src/app/services/ajaxService.service';
 import { SharedService } from 'src/app/services/shared.service';
 
+declare let ml5: any;
 @Component({
   selector: 'app-custom-gesture-testing',
   templateUrl: './custom-gesture-testing.component.html',
   styleUrls: ['./custom-gesture-testing.component.css']
 })
 export class CustomGestureTestingComponent implements OnInit,AfterViewInit {
+ //member variables
   public webcamFeed;
   public videoConstraints;
   public navigator;
+  public knnClassifier;
+  public mobileNetFeatureExtractor;
+  public interbval;
+  //default initialization
+  public videoState="";
+  public volControl:number;
+  public loadLocalVideo=false;
+    public loadIframe=false;
   public localAction='';
   localVideoActions = {
     'peaceGesture': '▶️',
@@ -22,8 +33,11 @@ export class CustomGestureTestingComponent implements OnInit,AfterViewInit {
     'fourFingers':'',
     'index_up':''
 }
+public  abortRequest = new AbortController();
+public abortSignal=this.abortRequest.signal;
   @ViewChild('webcamFeed') videoplayer: ElementRef;
   @ViewChild('mediaTarget') targetMedia:ElementRef;
+  @ViewChild('videoYouTube') mediaElement:any;
   constructor(public elementRef: ElementRef,private sharedService:SharedService,private ajaxService:AjaxService) { }
 
   ngOnInit(): void {
@@ -32,7 +46,26 @@ export class CustomGestureTestingComponent implements OnInit,AfterViewInit {
 
       //stop webcam
       this.elementRef.nativeElement.querySelector('#stop').addEventListener('click', this.stopWebcam.bind(this));
-  }
+
+     //load media
+     this.elementRef.nativeElement.querySelector('#load').addEventListener('click', this.loadModel.bind(this));
+
+
+
+     //initialise knn classsifier
+
+          //initialise knn classifier
+          this.knnClassifier = ml5.KNNClassifier();
+          this.mobileNetFeatureExtractor = ml5.featureExtractor('MobileNet', res => {
+            console.log("feature extractor loaded");
+           //   this.logits = this.mobileNetFeatureExtractor.infer(this.videoplayer.nativeElement);
+           //  this.knnClassifier.addExample(this.logits, this.actionSelected.label);
+          //  console.log(this.actionSelected.label+"added");
+
+           });
+
+
+    }
 
 
   ngAfterViewInit() :void{
@@ -91,16 +124,147 @@ export class CustomGestureTestingComponent implements OnInit,AfterViewInit {
                     tracks.stop();
                   });
                   this.webcamFeed.srcObject=null;
-
+                  this.interbval.unsubscribe();
+                  this.abortRequest.abort();
+                  this.webcamFeed.pause();
                 }
               }
 
 
+        loadModel()
+        {
+          let configId,jsonContent;
+          configId = parseInt(localStorage.getItem('configId'));
+          this.ajaxService.getGestureConfig(configId).subscribe(data=>{
+            if(data!=null &&  data.responseObj.configData!=null)
+            {
+              jsonContent=JSON.parse(data.responseObj.configData);
+                this.knnClassifier.load(jsonContent,()=> {
+                  console.log("loaded");
+                })
+                this.interbval = interval(100).subscribe(() => { this.asyncFunction(this.abortSignal); });
+            }
+            else if(data.responseObj.configData==null)
+            {
+              alert("No training set available");
+            }
+
+          },)
+        }
 
 
 
 
+        asyncFunction = async (abortSignal)=>  {
+          if(this.webcamFeed.srcObject.active){
+          let logitsInfer = this.mobileNetFeatureExtractor.infer(this.videoplayer.nativeElement);
+
+          this.knnClassifier.classify(logitsInfer, 8, (err, response)=> {
+            let accuracyScore,label;
+              if (err) {
+                  console.log(err);
+              } else if (response) {
+
+                  accuracyScore =response.confidencesByLabel;
+                  label = Object.keys(accuracyScore).reduce(function(a, b) { return accuracyScore[a] > accuracyScore[b] ? a : b });
+                  this.actionMapper(label);
+                  this.localAction=this.localVideoActions[label];
+                  console.log(label);
+              }
+              else{
+
+              }
+          });
+        }
+        else{
+          alert("please switch on your webcam");
+        }
+
+        abortSignal.addEventListener('abort',() => {
+          this.interbval.unsubscribe();
+      });
+        }
+
+        public actionMapper(res){
+
+          switch(res) {
+                  case "play": {
+                    if(this.loadLocalVideo)
+                    {
+                      this.targetMedia.nativeElement.play();
+                    }
+                     else if(this.loadIframe) {
+                       this.videoState="onReady";
+                      }
+                    break;
+                  }
+                  case "pause": {
+                    if(this.loadLocalVideo)
+                      {
+                       this.targetMedia.nativeElement.pause();
+                      }
+                     else if(this.loadIframe) {
+                             this.videoState="onPause";
+                       }
+                      break;
+                  }
+                  case "vol_down": {
+
+                    //implement slider
+                    if(this.loadLocalVideo && (this.targetMedia.nativeElement.volume-0.1)>0)
+                    {
+                      this.targetMedia.nativeElement.volume = this.targetMedia.nativeElement.volume - 0.1;
+                      this.volControl=this.targetMedia.nativeElement.volume;
+                    }
+                    else if(this.loadIframe){
+                      this.videoState="res";
+                    }
+                    break;
+                  }
+                  case "vol_up": {
+                    //implement slider
+                    if(this.loadLocalVideo && (this.targetMedia.nativeElement.volume+0.1)<1)
+                    {
+                    this.targetMedia.nativeElement.volume = this.targetMedia.nativeElement.volume + 0.1;
+                    this.volControl=this.targetMedia.nativeElement.volume;
+                    }
+                    else if(this.loadIframe){
+                    this.videoState=res;
+                    }
+                    break;
+                  }
+                  case "localVideo"  :{
+                      this.loadLocalVideo =true;
+                      this.loadIframe=false;
+                      if(this.videoState=="onReady") this.videoState="onPause";
+                      break;
+                  }
+                  case "iFrame" :{
+                    this.loadIframe = true;
+                    this.loadLocalVideo =false;
+                    if(!this.targetMedia.nativeElement.paused) this.targetMedia.nativeElement.pause();
+                    break;
+                  }
+                  case "seekForward":{
+                    if(this.targetMedia.nativeElement.seekable.length>0){
+                      this.targetMedia.nativeElement.currentTime =this.targetMedia.nativeElement.currentTime+ 5;
+                    };
+                  }
+                  case "seekBackward":{
+                   if( this.targetMedia.nativeElement.currentTime>5)
+                     this.targetMedia.nativeElement.currentTime =this.targetMedia.nativeElement.currentTime- 5;
+                  }
+                  default: {
+                    this.videoState="";
+                    break;
+                  }
+        }
+        }
 
 
+
+        ngOnDestroy() {
+          this.stopWebcam();
+       }
 
 }

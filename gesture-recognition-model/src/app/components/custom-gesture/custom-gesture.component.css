@@ -126,3 +126,7 @@ footer {
     flex: 1;
     justify-content: center;
 }
+
+.buttons-padding {
+    padding-top: 10%
+}

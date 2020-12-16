@@ -58,6 +58,11 @@ testClick()
   this.route.navigate(['custom-gesture/test'],{relativeTo:this.activatedRoute});
 }
 
+profileReq()
+{
+  this.route.navigate(['home/user-profile'],{relativeTo:this.activatedRoute});
+}
+
 
 
 

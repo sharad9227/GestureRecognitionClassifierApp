@@ -74,6 +74,7 @@ export class LoginComponent implements OnInit {
                 this.responseData.id = data.responseObj.userId;
                 this.responseData.userFirstName = data.responseObj.user_first_name;
                 let configId=data.responseObj.configId;
+                localStorage.setItem('userInformation',JSON.stringify(data.responseObj));
                 localStorage.setItem('configId',JSON.stringify(configId));
                 localStorage.setItem('loggedInUser',this.responseData.userFirstName);
                 this.popUpModalSuccess.fire({

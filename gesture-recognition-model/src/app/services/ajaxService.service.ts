@@ -43,6 +43,20 @@ export class AjaxService {
 
 
 
+    getUserDetails(userId:number): Observable<any>
+    {
+      return this.http.get<User>(`http://localhost:8084/testjpa_war_exploded/users/get/user/${userId}`);
+    }
+
+     updateUserDetails(userDetails): Observable<any>
+     {
+       return this.http.put('http://localhost:8084/testjpa_war_exploded/users/update/updateUserDetails',userDetails);
+     }
+
+
+
+
+
 
 
 

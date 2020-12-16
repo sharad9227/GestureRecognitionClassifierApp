@@ -21,7 +21,11 @@
                       <label id="span-webcam">Stop Webcam </label>
                      </button>
                     </div>
-
+                    <div>
+                        <button id="load" mat-raised-button>
+                        <label style="margin-top: 8px;">   Load Model  </label>
+                      </button>
+                    </div>
 
 
 
@@ -41,7 +45,7 @@
 
     <div class="column2">
         <div class="app-vdo-container">
-            <div class="media">
+            <div [hidden]='!loadLocalVideo' class="media">
                 <video preload="auto" class="slim-padding" height="640" width="480" #mediaTarget controls> -->
                 <source  src="../../../assets/video/high.mp4">
             </video>
@@ -53,7 +57,9 @@
     </div>
     <div class="column3">
 
-
+        <div [hidden]='!loadIframe' class="utubeContainer">
+            <app-youtube-player-component #videoYouTube [videoState]="videoState"></app-youtube-player-component>
+        </div>
     </div>
 
 

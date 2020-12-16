@@ -6,6 +6,7 @@ import { LoginSuccessComponent } from './components/login-success/login-success.
 import { LoginComponent } from './components/login/login.component';
 import { RoutedSuccessComponent } from './components/routed-success/routed-success.component';
 import { SignUpComponent } from './components/sign-up-login/sign-up-login.component';
+import { UserProfileComponent } from './components/user-profile/user-profile.component';
 
 
 const routes: Routes = [
@@ -19,12 +20,13 @@ const routes: Routes = [
     children:[
       { path: 'login-success', component: LoginSuccessComponent},
       { path:'custom-gesture',component: CustomGestureComponent},
-      { path:'custom-gesture/test',component:CustomGestureTestingComponent}
+      { path:'custom-gesture/test',component:CustomGestureTestingComponent},
+      { path:'home/user-profile',component:UserProfileComponent},
     ]
-
   },
     { path:'custom-gesture',component: CustomGestureComponent},
     { path:'custom-gesture/test',component:CustomGestureTestingComponent},
+
     // otherwise redirect to login
     { path: 'login', component: LoginComponent}
 

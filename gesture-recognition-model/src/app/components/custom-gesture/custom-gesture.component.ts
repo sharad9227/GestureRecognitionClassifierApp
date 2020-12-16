@@ -1,5 +1,6 @@
 import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import * as p5 from "p5";
+// import * as ml5 from "ml5";
 import { User } from 'src/app/models/ValidUserComponent';
 import { AjaxService } from 'src/app/services/ajaxService.service';
 import { SharedService } from 'src/app/services/shared.service';
@@ -24,6 +25,7 @@ export class CustomGestureComponent implements OnInit,AfterViewInit {
       public actionSelected;
       public canvas;
       public logits;
+      public counter=0;
       public snaps=[];
       public canvasEnabled=false;
       public showUploadButton=false;
@@ -35,10 +37,10 @@ export class CustomGestureComponent implements OnInit,AfterViewInit {
      gestureAction: GestureActions[] = [
         {label: 'localVideo', action: 'Select app videos'},
         {label: 'iFrame',     action: 'Select your own videos'},
-        {label: 'volUp',      action: 'Increase Volume'},
-        {label: 'volDown',    action: 'Decrease Volume'},
-        {label: 'fastForward',action:'Seek Forward'},
-        {label:'goBack',      action:'Seek Backward'},
+        {label: 'vol_up',      action: 'Increase Volume'},
+        {label: 'vol_down',    action: 'Decrease Volume'},
+        {label: 'seekForward', action:'Seek Forward'},
+        {label:'seekBackward', action:'Seek Backward'},
         {label:'play',        action:'Play Media'},
         {label:'pause',       action:'Pause Media'},
         {label:'default',     action:'No Action'}
@@ -95,7 +97,7 @@ export class CustomGestureComponent implements OnInit,AfterViewInit {
             console.log("feature extractor loaded");
            //   this.logits = this.mobileNetFeatureExtractor.infer(this.videoplayer.nativeElement);
            //  this.knnClassifier.addExample(this.logits, this.actionSelected.label);
-            console.log(this.actionSelected.label+"added");
+          //  console.log(this.actionSelected.label+"added");
 
            });
 
@@ -192,6 +194,7 @@ export class CustomGestureComponent implements OnInit,AfterViewInit {
         this.canvas.getContext('2d').drawImage(this.videoplayer.nativeElement, 0, 0, 200, 200);
         this.logits = this.mobileNetFeatureExtractor.infer(this.videoplayer.nativeElement);
         this.knnClassifier.addExample(this.logits, this.actionSelected.label);
+        this.counter++;
       }
 
    }
@@ -322,7 +325,7 @@ loadFile(){
 
  goClassify() {
 let logitsInfer = this.mobileNetFeatureExtractor.infer(this.videoplayer.nativeElement);
- const predictions =this.knnClassifier.predict();
+ //const predictions =this.knnClassifier.predict();
   this.knnClassifier.classify(logitsInfer, 3, function(err, result) {
     let confidence,label;
       if (err) {
@@ -341,7 +344,9 @@ let logitsInfer = this.mobileNetFeatureExtractor.infer(this.videoplayer.nativeEl
       }
   });
 }
-
+getBadgeCount():number{
+return this.counter;
+}
 
 
 }

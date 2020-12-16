@@ -8,6 +8,7 @@ import * as indexUpGesture from './../../models/gestureSet/indexUpGesture';
 import * as threeFingersUpGesture from'./../../models/gestureSet/threeUpGesture';
 import * as fourFingersUpGesture  from'./../../models/gestureSet/fourUpGesture';
 import * as stopGesture  from'./../../models/gestureSet/stopGesture';
+import * as fistGesture  from'./../../models/gestureSet/fistGesture';
 import { Observable } from 'rxjs';
 import { interval } from 'rxjs';
 import { SharedService } from 'src/app/services/shared.service';
@@ -61,7 +62,7 @@ export class LoginSuccessComponent implements OnInit,AfterViewInit {
                   'threeFingers':'YoutubeVdo',
                   'fourFingers':'four',
                   'index_up':'appVideo',
-
+                  'fist':'fist'
                 };
 
        localVideoActions = {
@@ -107,10 +108,10 @@ async GestureEstimationFunction() {
       peaceGesture.default,
       indexUpGesture.default,
       threeFingersUpGesture.default,
-      fourFingersUpGesture.default,
       volUpGesture.default,
       volDownGesture.default,
-      stopGesture.default
+      stopGesture.default,
+      fistGesture.default
   ];
    /*referenced fingerpose https://www.npmjs.com/package/fingerpose :Usage section */
   const GE = new fp.GestureEstimator(gestures);
@@ -182,13 +183,17 @@ async GestureEstimationFunction() {
              }
               if(this.result)
             {
+              if(this.result.name==="threeFingers")
+              {
+               console.log(est.gestures);
+              }
                   this.actionMapper(this.result.name);
             }
 
 
 
 
-                 if(this.xcor.length!=0 && this.ycor.length!=0)
+                 if(this.result.name =='fist' && this.xcor.length!=0 && this.ycor.length!=0)
                   {
                 //     //values are not empty and have populated
                     let xcortemp=this.xcor[0];
@@ -206,17 +211,18 @@ async GestureEstimationFunction() {
                       {
                         const difference=this.xcor[i+1] - this.xcor[i];
                           console.log(difference);
-                          if(difference>30 && xcortemp>0  )
+                          if(difference>30 ||(xcortemp<0 && xcorlast>0))
                           {
                             descending=true;
                             descCounter++;
-
+                            console.log(descCounter);
                     //         console.log(true);
                           }
-                      else if(difference<-30){
+                      else if(difference<-30 || (xcortemp>0 && xcorlast<0)){
                               console.log(false);
                               ascCounter++;
                               ascending=true;
+
                        }
 
                        //do not use
@@ -240,14 +246,14 @@ async GestureEstimationFunction() {
                       if(ascCounter<descCounter)
                       {
                         //seek backward
-                       alert("Horizontal Swipe from right to left");
+                      alert("Horizontal Swipe from right to left");
                        this.actionMapper('seekBackward');
                       }
                       else{
                         if(descCounter<ascCounter)
                         {
                           //seek forward
-                         alert("Horizontal Swipe from left to right");
+                        alert("Horizontal Swipe from left to right");
                          this.actionMapper('seekForward');
                         }
 
@@ -387,18 +393,30 @@ public actionMapper(res){
             break;
           }
           case "seekForward":{
+            if(this.loadLocalVideo)
+            {
             if(this.targetMedia.nativeElement.seekable.length>0){
               this.targetMedia.nativeElement.currentTime =this.targetMedia.nativeElement.currentTime+ 5;
             };
           }
-          case "seekBackward":{
-           if( this.targetMedia.nativeElement.currentTime>5)
-         this.targetMedia.nativeElement.currentTime =this.targetMedia.nativeElement.currentTime- 5;
+          else{
+            this.videoState = res;
           }
-
+            break;
+          }
+          case "seekBackward":{
+            if(this.loadLocalVideo)
+            {
+             if( this.targetMedia.nativeElement.currentTime>5)
+              this.targetMedia.nativeElement.currentTime =this.targetMedia.nativeElement.currentTime- 5;
+             }
+             else{
+               this.videoState = res;
+            }
+            break;
+        }
 
           default: {
-
             this.videoState='';
             break;
           }
