@@ -29,14 +29,16 @@ import {MatButtonToggleModule} from '@angular/material/button-toggle';
 import { MatCardModule } from '@angular/material/card';
 import {MatBadgeModule} from '@angular/material/badge';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
+import { MatTableModule } from '@angular/material/table';
 //youtube module for embedding videos
 import {YouTubePlayerModule} from '@angular/youtube-player';
 import {YoutubePlayerComponent} from './components/youtube-player-component/youtube-player-component.component';
 import { CustomGestureComponent } from './components/custom-gesture/custom-gesture.component';
-
+import {CdkTableModule} from '@angular/cdk/table';
 import { premiumGestureConfig } from './models/premiumGestureConfig';
 import { CustomGestureTestingComponent } from './components/custom-gesture-testing/custom-gesture-testing.component';
 import { UserProfileComponent } from './components/user-profile/user-profile.component';
+import { AdminPanelComponent } from './components/admin-panel/admin-panel.component';
 
 @NgModule({
   declarations: [
@@ -48,7 +50,8 @@ import { UserProfileComponent } from './components/user-profile/user-profile.com
     YoutubePlayerComponent,
     CustomGestureComponent,
     CustomGestureTestingComponent,
-    UserProfileComponent
+    UserProfileComponent,
+    AdminPanelComponent
   ],
   imports: [
     BrowserModule,
@@ -69,7 +72,8 @@ import { UserProfileComponent } from './components/user-profile/user-profile.com
     MatIconModule,
     MatSlideToggleModule,
     YouTubePlayerModule,
-
+    MatTableModule,
+    CdkTableModule
   ],
   providers: [
     AjaxService,

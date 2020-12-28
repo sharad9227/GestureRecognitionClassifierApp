@@ -1,49 +1,38 @@
  /* Bootstrap general template copied from "https://www.tutorialrepublic.com/codelab.php?topic=bootstrap&file=simple-login-form" */
- 
+
  .login-form {
      width: 340px;
      margin: 50px auto;
      font-size: 15px;
-     /* background-image: linear-gradient(120deg, #a6c0fe 0%, #f68084 100%); */
  }
- 
+
  .login-form form {
      margin-bottom: 15px;
      background-image: linear-gradient(to top, #a8edea 0%, #fed6e3 100%);
      box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
      padding: 30px;
  }
- 
+
  .login-form h2 {
      margin: 0 0 15px;
  }
- 
+
  .form-control,
  .btn {
      min-height: 38px;
      border-radius: 2px;
  }
- 
+
  .btn {
      font-size: 15px;
      font-weight: bold;
  }
- 
+ /* Bootstrap general template copied till here*/
+
  .slim-padding-bottom {
      padding-bottom: 10px;
  }
- /* body {
-     background-image: url('../../../assets/images/dribbble.png') !important;
-     background-repeat: no-repeat;
-     height: 100%;
-     margin: 0;
-     padding: 0;
- }
 
- html {
-     height: 100%;
- } */
- 
  body {
      margin: 0;
      padding: 0;
@@ -51,14 +40,12 @@
      font-family: Roboto, "Helvetica Neue", sans-serif;
      overflow: hidden;
      font-family: Arial, sans-serif;
-     /* webgradients.com */
-     /* background-image: linear-gradient(120deg, #a6c0fe 0%, #f68084 100%); */
      background-image: url('./../../../assets/images/hand-gesture2.png');
      background-size: 100% 100%;
      background-color: rgb(225 228 217);
      background-repeat: no-repeat;
  }
- 
+
  html {
      height: 100%;
  }

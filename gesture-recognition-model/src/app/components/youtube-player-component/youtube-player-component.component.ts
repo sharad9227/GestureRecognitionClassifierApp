@@ -126,9 +126,10 @@ public bind()
     let elapsedSeconds;
       if(this.youtubeplayer.getPlayerState()==1)
       {
+
         elapsedSeconds=this.youtubeplayer.getCurrentTime();
-        elapsedSeconds= elapsedSeconds +5;
-        this.youtubeplayer.seekTo(elapsedSeconds,true);
+        elapsedSeconds= elapsedSeconds +10;
+        this.youtubeplayer.seekTo(elapsedSeconds+10,true);
       }
   }
 

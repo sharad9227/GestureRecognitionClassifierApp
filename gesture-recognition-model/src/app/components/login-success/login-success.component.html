@@ -1,9 +1,12 @@
+<!-- <header>
+    <h2>
+        Experience Interactive Gesture Control
+    </h2>
+</header> -->
+<!-- <br> -->
 <div class="container">
 
-
     <div id="webcam-props">
-
-
         <div>
             <div class="webcam-container">
                 <video controls #webcamFeed class="video-props"></video>
@@ -20,18 +23,13 @@
 
     </div>
 
-    <div [hidden]='!loadLocalVideo' class="media">
-        <video preload="auto" class="slim-padding" height="{{videoConfiguration.height}}" width="{{videoConfiguration.width}}" #mediaTarget controls> 
-                <source  src="../../../assets/video/high.mp4">
+    <div id="local" [hidden]='!loadLocalVideo' class="media">
+        <video preload="auto" class="slim-padding" height="{{videoConfiguration.height}}" width="{{videoConfiguration.width}}" #mediaTarget controls>
+                <source  src="../../../assets/video/ml.mp4">
             </video>
 
         <div id="action" class="local-video-props">{{localAction}}</div>
 
-        <!-- <div style="width: 560px; height: 315px; float: none; clear: both; margin: 2px auto;">
-                <iframe #iframe width="560" height="315" src="https://www.youtube.com/embed/A8gDQ-x1Fko" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-            </div> -->
-        <!-- <iframe  src="https://www.youtube.com/embed/AASd5ewKNSw?enablejsapi=1&html5=1" frameborder="0" allowfullscreen></iframe> -->
-        <!-- <iframe #iframe controls width="640" height="360" src="https://web.microsoftstream.com/embed/video/c5af2d8e-5443-45ab-9685-0006acf4ba72?autoplay=false&amp;showinfo=true" allowfullscreen style="border:none;"></iframe> -->
 
 
     </div>
@@ -43,6 +41,53 @@
     </div> -->
 
 </div>
-<div [hidden]='!loadIframe' class="utubeContainer">
-    <app-youtube-player-component #videoYouTube [videoState]="videoState"></app-youtube-player-component>
+<br>
+
+
+
+<div class="container">
+    <div>
+        <mat-card>
+            <mat-card-header>
+                <label class="emoticons">☝ </label>
+                <mat-card-title>Choose Application Video</mat-card-title>
+            </mat-card-header>
+            <mat-card-header>
+                <label class="emoticons"><img src="https://img.icons8.com/doodle/35/000000/three-fingers--v1.png"/> </label>
+                <mat-card-title>Choose YouTube Video</mat-card-title>
+            </mat-card-header>
+            <mat-card-header>
+                <label class="emoticons">✌ </label>
+                <mat-card-title>Play Video</mat-card-title>
+            </mat-card-header>
+            <mat-card-header>
+                <label class="emoticons">🖐 </label>
+                <mat-card-title>Pause Video</mat-card-title>
+            </mat-card-header>
+            <mat-card-header>
+                <label class="emoticons">👆 </label>
+                <mat-card-title>Increase Volume</mat-card-title>
+            </mat-card-header>
+            <mat-card-header>
+                <label class="emoticons">👇 </label>
+                <mat-card-title>Decrease Volume</mat-card-title>
+            </mat-card-header>
+
+            <mat-card-header>
+                <label class="emoticons">✊ ➡️ </label>
+                <mat-card-title>Seek Forward</mat-card-title>
+            </mat-card-header>
+            <mat-card-header>
+                <label class="emoticons">⬅️ ✊ </label>
+                <mat-card-title>Seek Backward</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+
+            </mat-card-content>
+        </mat-card>
+
+    </div>
+    <div id="youtube" [hidden]='!loadIframe' class="utubeContainer">
+        <app-youtube-player-component #videoYouTube [videoState]="videoState"></app-youtube-player-component>
+    </div>
 </div>

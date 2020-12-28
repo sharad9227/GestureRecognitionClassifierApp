@@ -13,7 +13,7 @@ import { Observable } from 'rxjs';
 import { interval } from 'rxjs';
 import { SharedService } from 'src/app/services/shared.service';
 //import * as fp from 'fingerpose';
-
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-login-success',
@@ -46,7 +46,11 @@ export class LoginSuccessComponent implements OnInit,AfterViewInit {
     public videoConfiguration = {  width: 640, height: 480};
     public  abortRequest = new AbortController();
     public abortSignal=this.abortRequest.signal;
-
+    fastForwardAlert =  Swal.mixin({
+      icon:'info',
+      showConfirmButton:false,
+      timer:1000
+    });
     //co-ordinates for dynamic co-ordinate tracking
        xcor=[];
        ycor=[];
@@ -88,7 +92,7 @@ export class LoginSuccessComponent implements OnInit,AfterViewInit {
         }
 
 
-        constructor(private element:ElementRef,private sharedService:SharedService){
+        constructor(private elementRef:ElementRef,private sharedService:SharedService){
 
         }
           ngOnInit(): void {
@@ -246,14 +250,16 @@ async GestureEstimationFunction() {
                       if(ascCounter<descCounter)
                       {
                         //seek backward
-                      alert("Horizontal Swipe from right to left");
+                        this.fastForwardAlert.fire({text: "Seeked Backwards by 5 seconds!"});
+
                        this.actionMapper('seekBackward');
                       }
                       else{
                         if(descCounter<ascCounter)
                         {
                           //seek forward
-                        alert("Horizontal Swipe from left to right");
+                          this.fastForwardAlert.fire({text: "Fast Forwarded by 5 seconds!"});
+
                          this.actionMapper('seekForward');
                         }
 
@@ -389,6 +395,11 @@ public actionMapper(res){
           case "threeFingers" :{
             this.loadIframe = true;
             this.loadLocalVideo =false;
+            // let local=this.elementRef.nativeElement.querySelector('#local');
+            // let utube= this.elementRef.nativeElement.querySelector('#youtube');
+            // local.style.display="none";
+            // utube.style.display="block";
+
             if(!this.targetMedia.nativeElement.paused) this.targetMedia.nativeElement.pause();
             break;
           }

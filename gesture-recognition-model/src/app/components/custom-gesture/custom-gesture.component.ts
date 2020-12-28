@@ -43,7 +43,7 @@ export class CustomGestureComponent implements OnInit,AfterViewInit {
         {label:'seekBackward', action:'Seek Backward'},
         {label:'play',        action:'Play Media'},
         {label:'pause',       action:'Pause Media'},
-        {label:'default',     action:'No Action'}
+        {label:'noAction',     action:'No Action'}
 
       ];
 
@@ -310,14 +310,13 @@ export class CustomGestureComponent implements OnInit,AfterViewInit {
     }
 
     saveFile(){
-      let fileName = 'model.json';
+      let fileName = 'dataset.json';
        this.knnClassifier.save(fileName);
     }
 
 loadFile(){
     this.knnClassifier.load('./../../../assets/model/model3.json',()=> {
       console.log("knn loaded");
-      //  setInterval(() => goClassify(), 20)
       this.goClassify();
   });
 
@@ -336,6 +335,7 @@ let logitsInfer = this.mobileNetFeatureExtractor.infer(this.videoplayer.nativeEl
           label = Object.keys(confidence).reduce(function(a, b) { return confidence[a] > confidence[b] ? a : b });
           console.log(confidence);
           console.log(label);
+          console.log(confidence[label]);
         //  const res=this.mobileNetFeatureExtractor.predict(this.goClassify());
           //this.goClassify();
       }

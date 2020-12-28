@@ -4,16 +4,17 @@ import { HttpClient } from '@angular/common/http';
 import { User } from './../models/ValidUserComponent';
 import { Observable } from 'rxjs';
 import { premiumGestureConfig } from '../models/premiumGestureConfig';
-
+import { RegisteredUser } from '../models/registeredUserComponent';
 @Injectable({ providedIn: 'root' })
 export class AjaxService {
 
-  private validUser=new User();
-  private premiumConfig =new premiumGestureConfig();
+  //private validUser=new User();
+  // private premiumConfig =new premiumGestureConfig();
+  // private registeredUser = new RegisteredUser();
     constructor(private http: HttpClient) { }
     //admin use
-    getAllUsers(): Observable<any> {
-        return this.http.get<User[]>(`/users`);
+    getAllUsers(userId:number):Observable<any> {
+        return this.http.get<RegisteredUser[]>(`http://localhost:8084/testjpa_war_exploded/users/getall/${userId}`);
     }
 
     signUpUser(validUser): Observable<any> {

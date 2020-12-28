@@ -2,7 +2,7 @@ import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angula
 import { interval } from 'rxjs';
 import { AjaxService } from 'src/app/services/ajaxService.service';
 import { SharedService } from 'src/app/services/shared.service';
-
+import Swal from 'sweetalert2';
 declare let ml5: any;
 @Component({
   selector: 'app-custom-gesture-testing',
@@ -32,7 +32,13 @@ export class CustomGestureTestingComponent implements OnInit,AfterViewInit {
     'threeFingers':'',
     'fourFingers':'',
     'index_up':''
+
 }
+testAlert =  Swal.mixin({
+  icon:'info',
+  showConfirmButton:false,
+  timer:1000
+});
 public  abortRequest = new AbortController();
 public abortSignal=this.abortRequest.signal;
   @ViewChild('webcamFeed') videoplayer: ElementRef;
@@ -142,7 +148,7 @@ public abortSignal=this.abortRequest.signal;
                 this.knnClassifier.load(jsonContent,()=> {
                   console.log("loaded");
                 })
-                this.interbval = interval(100).subscribe(() => { this.asyncFunction(this.abortSignal); });
+                this.interbval = interval(5000).subscribe(() => { this.asyncFunction(this.abortSignal); });
             }
             else if(data.responseObj.configData==null)
             {
@@ -159,7 +165,8 @@ public abortSignal=this.abortRequest.signal;
           if(this.webcamFeed.srcObject.active){
           let logitsInfer = this.mobileNetFeatureExtractor.infer(this.videoplayer.nativeElement);
 
-          this.knnClassifier.classify(logitsInfer, 8, (err, response)=> {
+          this.knnClassifier.classify(logitsInfer, 10 , (err, response)=> {
+
             let accuracyScore,label;
               if (err) {
                   console.log(err);
@@ -167,9 +174,19 @@ public abortSignal=this.abortRequest.signal;
 
                   accuracyScore =response.confidencesByLabel;
                   label = Object.keys(accuracyScore).reduce(function(a, b) { return accuracyScore[a] > accuracyScore[b] ? a : b });
-                  this.actionMapper(label);
-                  this.localAction=this.localVideoActions[label];
+                  let maxScore= accuracyScore[label];
                   console.log(label);
+                  console.log(accuracyScore[label]);
+                  if(maxScore>=0.6)
+                  {
+                    this.testAlert.fire({text: "Predicted Gesture:- " + label});
+
+                    //this.actionMapper(label);
+                  }
+                  else{
+                    label="noAction"
+                  }
+                  this.localAction=this.localVideoActions[label];
               }
               else{
 
@@ -264,6 +281,8 @@ public abortSignal=this.abortRequest.signal;
 
 
         ngOnDestroy() {
+          if(this.webcamFeed.srcObject && this.webcamFeed.srcObject.active)
+
           this.stopWebcam();
        }
 

@@ -44,11 +44,17 @@
 
 
 
-        <h3>Welcome {{loggedInUser}}</h3>
+
         <!-- <div class="main-container"> -->
         <div>
 
-
+            <header *ngIf="show">
+                <br>
+                <h2 class="centered">
+                    Experience Interactive Gesture Control
+                </h2>
+                <br>
+            </header>
             <router-outlet></router-outlet>
             <!-- <app-login-success class="login-success-align-items-row"></app-login-success> -->
             <!-- </div> -->

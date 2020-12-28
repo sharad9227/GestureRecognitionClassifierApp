@@ -1,16 +1,25 @@
-<nav class="navbar navbar-dark bg-dark nav-link" style="height:9%">
+<nav class="navbar navbar-dark nav-link main-navbar">
 
     <mat-button-toggle *ngIf="showSideNav" (click)="toggle()">
-        <fa-icon class="links-color" [icon]="['fas', 'angle-right']"></fa-icon>
+        <fa-icon class="emoticons" [icon]="['fas', 'bars']"></fa-icon>
         <!-- <mat-icon >home</mat-icon> -->
     </mat-button-toggle>
 
     <!-- <span>
         <a class="block-display" routerLink="/">Home</a>
         </span> -->
-    <span *ngIf="showSideNav" class="float-right">
-        <a class="block-display" (click)="logout()">Logout</a>
-</span>
+
+
+    <!-- <span *ngIf="showSideNav" class="float-right"> -->
+    <h5 *ngIf="showSideNav" class="username-css">Welcome {{loggedInUser}}</h5>
+    <div *ngIf="showSideNav" class="header-nav">
+        <div class="nav-item" (click)="home()">Home</div>
+        <div class="nav-item" (click)="logout()">Logout</div>
+
+    </div>
+
+
+
 </nav>
 
 <router-outlet></router-outlet>

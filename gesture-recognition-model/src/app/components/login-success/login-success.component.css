@@ -61,5 +61,13 @@
 
 .utubeContainer {
     justify-items: flex-end;
-    margin-left: 50%;
+    flex: 0.65;
+}
+
+mat-card {
+    margin-left: 5%
+}
+
+.emoticons {
+    font-size: 25px;
 }

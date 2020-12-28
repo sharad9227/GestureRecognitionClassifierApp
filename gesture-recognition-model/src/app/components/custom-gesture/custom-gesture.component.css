@@ -8,7 +8,7 @@ body {
     grid-template-columns: 3fr 1fr;
     grid-template-rows: 0.2fr 3.4fr 0.2fr;
     /* grid-gap: 1px; */
-    grid-template-areas: "header header" "column1 column2" "footer footer"
+    grid-template-areas: "header header-right" "column1 column2" "footer footer"
 }
 
 * {
@@ -19,7 +19,12 @@ header {
     grid-area: header;
     border-style: double;
     border-color: rgba(128, 160, 43, 0.801);
-    ;
+}
+
+.header-right {
+    grid-area: header-right;
+    border-style: double;
+    border-color: rgba(128, 160, 43, 0.801);
 }
 
 footer {
@@ -45,6 +50,12 @@ footer {
 .webcam-container {
     display: flex;
     height: 78% !important;
+}
+
+.header-container {
+    display: flex;
+    padding: 0;
+    justify-content: space-between;
 }
 
 .button-container-2 {
@@ -129,4 +140,29 @@ footer {
 
 .buttons-padding {
     padding-top: 10%
+}
+
+.mat-download {
+    background-color: #4CAF50;
+    color: initial;
+    padding-left: 5%;
+    padding-right: 5%;
+}
+
+.mat-export {
+    background-color: #37a8ced7;
+    color: initial;
+    padding-left: 5%;
+    padding-right: 5%;
+}
+
+button mat-button {
+    margin: 0;
+    padding: 1%;
+    line-height: 30px;
+}
+
+.mat-badge-content {
+    width: auto;
+    min-width: 20px;
 }

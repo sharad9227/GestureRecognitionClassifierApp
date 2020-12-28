@@ -111,7 +111,7 @@ export class SignUpComponent implements OnInit {
         }
 
 
-       this.error.errMessage='Please fill the fields : ' + invalidFields +' fields and try again.'
+       this.error.errMessage='Please fill the fields appropriately: ' + invalidFields +' fields and try again.'
        this.popUpModalError.fire({
         icon: 'error',
         title: this.error.errMessage

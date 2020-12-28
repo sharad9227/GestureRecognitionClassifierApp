@@ -14,26 +14,39 @@ export class RoutedSuccessComponent implements OnInit {
   fonts=fonts;
   show=false;
   openPanel=false;
-  loggedInUser;
+  //loggedInUser;
+  routeUrl:string;
+  constructor(private renderer: Renderer2, public sharedService:SharedService ,private route:Router,private activatedRoute:ActivatedRoute) {
+    this.routeUrl=route.url;
 
-  constructor(private renderer: Renderer2, public navService:SharedService ,private route:Router,private activatedRoute:ActivatedRoute) {
-   // this.renderer.setStyle(document.body, 'background-image', ' linear-gradient(to top, #a8edea 0%, #fed6e3 100%) !important');
    }
 
 
   ngOnInit(): void {
-    this.loggedInUser=localStorage.getItem('loggedInUser');
-    this.navService.openSideNavDrawer(true);
-    console.log(this.show);
+    //this.route.cha
+   // console.log(this.route);
+    //this.loggedInUser=localStorage.getItem('loggedInUser');
+    setTimeout(()=>{
+      this.sharedService.openSideNavDrawer(true);
+    },100)
+
+    this.route.events.subscribe((res:any) =>{
+      if(res.url==="/home")
+    {
+      this.show=true;
+    }
+    })
+    if(this.routeUrl==="/home")
+    {
+      this.show=true;
+    }
   }
-
-
 
 
 
   ngAfterViewInit()
   {
-    this.navService.getMenuToggle().subscribe(()=>
+    this.sharedService.getMenuToggle().subscribe(()=>
     {
         this.sidePanel.toggle();
     });
@@ -44,23 +57,27 @@ export class RoutedSuccessComponent implements OnInit {
 
 defaultClick()
 {
-      this.route.navigate(['login-success'],{relativeTo:this.activatedRoute});
+  this.show=false;
+  this.route.navigate(['login-success'],{relativeTo:this.activatedRoute});
 }
 
 customClick()
 
 {
-  this.route.navigate(['custom-gesture'],{relativeTo:this.activatedRoute});
+  this.show=false;
+  this.route.navigate(['custom-gesture/train'],{relativeTo:this.activatedRoute});
 }
 
 testClick()
 {
+  this.show=false;
   this.route.navigate(['custom-gesture/test'],{relativeTo:this.activatedRoute});
 }
 
 profileReq()
 {
-  this.route.navigate(['home/user-profile'],{relativeTo:this.activatedRoute});
+  this.show=false;
+  this.route.navigate(['user-profile'],{relativeTo:this.activatedRoute});
 }
 
 

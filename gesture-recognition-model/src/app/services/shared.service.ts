@@ -7,6 +7,8 @@ export class SharedService {
 
    menuToggle = new Subject<boolean>();
    showSideNavDrawer = new BehaviorSubject<boolean>(false);
+   setLocalStorage= new BehaviorSubject<string>(null);
+
 
 setMenuToggle(){
   this.menuToggle.next();
@@ -23,6 +25,18 @@ this.showSideNavDrawer.next(isOpen);
 closeSideNavDrawer() :Observable<any>{
   return this.showSideNavDrawer.asObservable();
 }
+
+setUser(isSet:string){
+  this.setLocalStorage.next(isSet);
+  }
+
+getUser() :Observable<any>{
+    return this.setLocalStorage.asObservable();
+  }
+
+
+
+
 
 
 

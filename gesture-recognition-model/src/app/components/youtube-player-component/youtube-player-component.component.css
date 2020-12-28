@@ -8,4 +8,18 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    padding: 1%;
+}
+
+.mat-load {
+    background-color: #37a8ced7;
+    color: initial;
+    padding-left: 5%;
+    padding-right: 5%;
+}
+
+.label-align {
+    margin-top: 8px;
+    padding: 1%;
+    line-height: 10px;
 }
