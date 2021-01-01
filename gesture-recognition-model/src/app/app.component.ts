@@ -28,6 +28,11 @@ ngOnInit():void{
   this.sharedService.getUser().subscribe((res)=>{
     this.loggedInUser=res;
   });
+
+  if(localStorage.getItem('loggedInUser')!=null)
+  {
+    this.loggedInUser=localStorage.getItem('loggedInUser');
+  }
 }
 
 

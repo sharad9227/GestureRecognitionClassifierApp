@@ -20,7 +20,7 @@ export class CustomGestureTestingComponent implements OnInit,AfterViewInit {
   //default initialization
   public videoState="";
   public volControl:number;
-  public loadLocalVideo=false;
+
     public loadIframe=false;
   public localAction='';
   localVideoActions = {
@@ -56,17 +56,10 @@ public abortSignal=this.abortRequest.signal;
      //load media
      this.elementRef.nativeElement.querySelector('#load').addEventListener('click', this.loadModel.bind(this));
 
-
-
-     //initialise knn classsifier
-
           //initialise knn classifier
           this.knnClassifier = ml5.KNNClassifier();
           this.mobileNetFeatureExtractor = ml5.featureExtractor('MobileNet', res => {
             console.log("feature extractor loaded");
-           //   this.logits = this.mobileNetFeatureExtractor.infer(this.videoplayer.nativeElement);
-           //  this.knnClassifier.addExample(this.logits, this.actionSelected.label);
-          //  console.log(this.actionSelected.label+"added");
 
            });
 
@@ -179,9 +172,9 @@ public abortSignal=this.abortRequest.signal;
                   console.log(accuracyScore[label]);
                   if(maxScore>=0.6)
                   {
-                    this.testAlert.fire({text: "Predicted Gesture:- " + label});
+                   // this.testAlert.fire({text: "Predicted Gesture:- " + label});
 
-                    //this.actionMapper(label);
+                    this.actionMapper(label);
                   }
                   else{
                     label="noAction"
@@ -206,71 +199,58 @@ public abortSignal=this.abortRequest.signal;
 
           switch(res) {
                   case "play": {
-                    if(this.loadLocalVideo)
-                    {
-                      this.targetMedia.nativeElement.play();
-                    }
-                     else if(this.loadIframe) {
+
+                      if(this.loadIframe) {
                        this.videoState="onReady";
                       }
                     break;
                   }
                   case "pause": {
-                    if(this.loadLocalVideo)
-                      {
-                       this.targetMedia.nativeElement.pause();
-                      }
-                     else if(this.loadIframe) {
+
+                      if(this.loadIframe) {
                              this.videoState="onPause";
                        }
                       break;
                   }
                   case "vol_down": {
 
-                    //implement slider
-                    if(this.loadLocalVideo && (this.targetMedia.nativeElement.volume-0.1)>0)
-                    {
-                      this.targetMedia.nativeElement.volume = this.targetMedia.nativeElement.volume - 0.1;
-                      this.volControl=this.targetMedia.nativeElement.volume;
-                    }
-                    else if(this.loadIframe){
+                   if(this.loadIframe){
                       this.videoState="res";
                     }
                     break;
                   }
                   case "vol_up": {
                     //implement slider
-                    if(this.loadLocalVideo && (this.targetMedia.nativeElement.volume+0.1)<1)
-                    {
-                    this.targetMedia.nativeElement.volume = this.targetMedia.nativeElement.volume + 0.1;
-                    this.volControl=this.targetMedia.nativeElement.volume;
-                    }
-                    else if(this.loadIframe){
+                   if(this.loadIframe){
                     this.videoState=res;
                     }
                     break;
                   }
                   case "localVideo"  :{
-                      this.loadLocalVideo =true;
+
                       this.loadIframe=false;
                       if(this.videoState=="onReady") this.videoState="onPause";
                       break;
                   }
                   case "iFrame" :{
                     this.loadIframe = true;
-                    this.loadLocalVideo =false;
+
                     if(!this.targetMedia.nativeElement.paused) this.targetMedia.nativeElement.pause();
                     break;
                   }
                   case "seekForward":{
-                    if(this.targetMedia.nativeElement.seekable.length>0){
-                      this.targetMedia.nativeElement.currentTime =this.targetMedia.nativeElement.currentTime+ 5;
-                    };
+
+                    this.videoState = res;
+
+                    break;
                   }
                   case "seekBackward":{
-                   if( this.targetMedia.nativeElement.currentTime>5)
-                     this.targetMedia.nativeElement.currentTime =this.targetMedia.nativeElement.currentTime- 5;
-                  }
+
+                       this.videoState = res;
+
+                    break;
+                }
+
                   default: {
                     this.videoState="";
                     break;

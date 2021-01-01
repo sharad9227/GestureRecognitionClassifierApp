@@ -14,15 +14,15 @@ export class AjaxService {
     constructor(private http: HttpClient) { }
     //admin use
     getAllUsers(userId:number):Observable<any> {
-        return this.http.get<RegisteredUser[]>(`http://localhost:8084/testjpa_war_exploded/users/getall/${userId}`);
+        return this.http.get<RegisteredUser[]>(`http://localhost:8086/testjpa_war_exploded/users/getall/${userId}`);
     }
 
     signUpUser(validUser): Observable<any> {
-        return this.http.post(`http://localhost:8084/testjpa_war_exploded/users/register`, validUser);
+        return this.http.post(`http://localhost:8086/testjpa_war_exploded/users/register`, validUser);
     }
 
     loginUser(validUser): Observable<any> {
-      return this.http.post(`http://localhost:8084/testjpa_war_exploded/users/login`, validUser);
+      return this.http.post(`http://localhost:8086/testjpa_war_exploded/users/login`, validUser);
     }
 
 
@@ -33,25 +33,25 @@ export class AjaxService {
 
      //send json string data :put request
     updateGestureConfig(premiumConfig) : Observable<any> {
-      return this.http.put('http://localhost:8084/testjpa_war_exploded/users/update/gestureconfig',premiumConfig);
+      return this.http.put('http://localhost:8086/testjpa_war_exploded/users/update/gestureconfig',premiumConfig);
     }
 
     //get config data
     getGestureConfig(configId:number): Observable<any>
     {
-      return this.http.get<User>(`http://localhost:8084/testjpa_war_exploded/users/get/${configId}`);
+      return this.http.get<User>(`http://localhost:8086/testjpa_war_exploded/users/get/${configId}`);
     }
 
 
 
     getUserDetails(userId:number): Observable<any>
     {
-      return this.http.get<User>(`http://localhost:8084/testjpa_war_exploded/users/get/user/${userId}`);
+      return this.http.get<User>(`http://localhost:8086/testjpa_war_exploded/users/get/user/${userId}`);
     }
 
      updateUserDetails(userDetails): Observable<any>
      {
-       return this.http.put('http://localhost:8084/testjpa_war_exploded/users/update/updateUserDetails',userDetails);
+       return this.http.put('http://localhost:8086/testjpa_war_exploded/users/update/updateUserDetails',userDetails);
      }
 
 

@@ -93,10 +93,10 @@ public bind()
         icon: 'info',
         title: 'Volume increased ,Volume level:-'+ volumeLevel +'%'
       })
-     // alert(volumeLevel+"increased");
+
     }
     else if (volumeLevel<=0 && v=="vol_down"){
-      //alert("volume is at lowest.cannot decrease vol");
+
       this.popUpModalInfo.fire({
         icon: 'info',
         title: 'Volume lowest,cannot decrease vol level'

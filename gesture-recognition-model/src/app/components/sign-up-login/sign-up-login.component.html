@@ -57,7 +57,7 @@
             </mat-form-field>
 
             <mat-form-field color="primary" class="col-md-12 slight-padding">
-                <!-- added pattern validation :need to modify special characters later on -->
+                <!-- added pattern validation  -->
                 <input matInput type="password" [(ngModel)]="userdata.password" #password="ngModel" name="password" placeholder="Password" pattern="^(?=.*([a-z]))(?=.*([0-9]))(?=.*([A-Z]))(?=.*[!@~#$%^&*()-+]).{1,}$" maxlength="30" minlength="8" required="required">
                 <mat-error *ngIf="password.invalid && (password.dirty || password.touched)">
                     <mat-error *ngIf="password.errors.required">

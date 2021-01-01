@@ -61,7 +61,6 @@ export class SignUpComponent implements OnInit {
 
              this.submittedValues.userType = 'Normal';
              this.signUpService.signUpUser(this.submittedValues).subscribe(data => {
-             // this.responseData = data;
               alert(data.message);
               if (data != null && data.status === 200)
               {

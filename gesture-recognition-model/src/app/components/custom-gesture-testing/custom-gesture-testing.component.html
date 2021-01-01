@@ -43,22 +43,11 @@
 
     </div>
 
-    <div class="column2">
-        <div class="app-vdo-container">
-            <div [hidden]='!loadLocalVideo' class="media">
-                <video preload="auto" class="slim-padding" height="640" width="480" #mediaTarget controls> -->
-                <source  src="../../../assets/video/ml.mp4">
-            </video>
 
-                <div id="action" class="local-video-props">{{localAction}}</div>
-            </div>
-
-        </div>
-    </div>
     <div class="column3">
-
         <div [hidden]='!loadIframe' class="utubeContainer">
             <app-youtube-player-component #videoYouTube [videoState]="videoState"></app-youtube-player-component>
+            <div id="action" class="local-video-props">{{localAction}}</div>
         </div>
     </div>
 

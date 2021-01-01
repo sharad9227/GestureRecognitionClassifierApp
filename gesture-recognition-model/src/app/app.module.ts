@@ -39,7 +39,7 @@ import { premiumGestureConfig } from './models/premiumGestureConfig';
 import { CustomGestureTestingComponent } from './components/custom-gesture-testing/custom-gesture-testing.component';
 import { UserProfileComponent } from './components/user-profile/user-profile.component';
 import { AdminPanelComponent } from './components/admin-panel/admin-panel.component';
-
+import {MatPaginatorModule} from '@angular/material/paginator';
 @NgModule({
   declarations: [
     AppComponent,
@@ -73,7 +73,8 @@ import { AdminPanelComponent } from './components/admin-panel/admin-panel.compon
     MatSlideToggleModule,
     YouTubePlayerModule,
     MatTableModule,
-    CdkTableModule
+    CdkTableModule,
+    MatPaginatorModule
   ],
   providers: [
     AjaxService,

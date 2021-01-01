@@ -33,15 +33,13 @@
 
 
                 <mat-form-field color="primary" class="col-md-6" style="padding-bottom: 2%;">
-                    <input id="last_name" matInput type="text" [(ngModel)]="userdata.userLastName" name="userLastName" #userLastName="ngModel" placeholder="Last Name" maxlength="30" minlength="3">
+                    <input id="last_name" matInput type="text" [(ngModel)]="userdata.userLastName" name="userLastName" #userLastName="ngModel" placeholder="Last Name" maxlength="30">
 
                     <mat-error *ngIf="userLastName.invalid && (userLastName.dirty || userLastName.touched)">
                         <mat-error *ngIf="userLastName.errors.maxlength">
                             Last Name cannot be more than 30 characters long.
                         </mat-error>
-                        <mat-error *ngIf="userLastName.errors.minlength">
-                            Last Name must be at least 3 characters long.
-                        </mat-error>
+
                     </mat-error>
                 </mat-form-field>
 

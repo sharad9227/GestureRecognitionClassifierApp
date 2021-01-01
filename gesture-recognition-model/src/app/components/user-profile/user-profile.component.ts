@@ -103,8 +103,12 @@ export class UserProfileComponent implements OnInit {
                 {
                   this.userChangesSubmissionValues.reqStatus=true;
                 }
+                else{
+                  this.userChangesSubmissionValues.reqStatus=false;
+                }
 
                 //put call
+
                 this.userProfileService.updateUserDetails(this.userChangesSubmissionValues).subscribe(data=>{
                   if (data != null && data.status === 200)
                   {

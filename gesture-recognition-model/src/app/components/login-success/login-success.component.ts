@@ -6,13 +6,10 @@ import * as volUpGesture from '../../models/gestureSet/volUpGesture';
 import * as peaceGesture from './../../models/gestureSet/twoUpGesture';
 import * as indexUpGesture from './../../models/gestureSet/indexUpGesture';
 import * as threeFingersUpGesture from'./../../models/gestureSet/threeUpGesture';
-import * as fourFingersUpGesture  from'./../../models/gestureSet/fourUpGesture';
 import * as stopGesture  from'./../../models/gestureSet/stopGesture';
 import * as fistGesture  from'./../../models/gestureSet/fistGesture';
-import { Observable } from 'rxjs';
 import { interval } from 'rxjs';
 import { SharedService } from 'src/app/services/shared.service';
-//import * as fp from 'fingerpose';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -21,7 +18,7 @@ import Swal from 'sweetalert2';
   styleUrls: ['./login-success.component.css']
 })
 export class LoginSuccessComponent implements OnInit,AfterViewInit {
-  //own
+
 
     @ViewChild('webcamFeed') videoplayer: ElementRef;
     @ViewChild('iframe') iframe: ElementRef;
@@ -36,7 +33,6 @@ export class LoginSuccessComponent implements OnInit,AfterViewInit {
     public volControl:number;
     public action='';
     public localAction='';
-      // public vid='Y8ETNh_IQjs';
       //output
     public result={'name':'','confidence':0.0 };
     public videoState="initial";
@@ -46,7 +42,8 @@ export class LoginSuccessComponent implements OnInit,AfterViewInit {
     public videoConfiguration = {  width: 640, height: 480};
     public  abortRequest = new AbortController();
     public abortSignal=this.abortRequest.signal;
-    fastForwardAlert =  Swal.mixin({
+    public localMediaElement;
+    seekAlert =  Swal.mixin({
       icon:'info',
       showConfirmButton:false,
       timer:1000
@@ -54,9 +51,7 @@ export class LoginSuccessComponent implements OnInit,AfterViewInit {
     //co-ordinates for dynamic co-ordinate tracking
        xcor=[];
        ycor=[];
-       xcor1=[];
-       ycor1=[];
-      //own
+
        actions = {
                   'no_gesture':'No hands',
                   'vol_up': '👆',
@@ -93,14 +88,14 @@ export class LoginSuccessComponent implements OnInit,AfterViewInit {
 
 
         constructor(private elementRef:ElementRef,private sharedService:SharedService){
-
         }
-          ngOnInit(): void {
-        //    this.sharedService.openSideNavDrawer(true);
-           // this.element.nativeElement.querySelector('#stop').addEventListener('click', this.stopWebcam.bind(this));
-          }
+          ngOnInit(): void {}
 
-
+/*
+async function for estimating hand gestures
+contains nested function that is subscribed after 100 ms for continuos video evaluation
+dynamic gestures implemented with bounding box co-ordinates
+*/
 
 
 
@@ -126,12 +121,9 @@ async GestureEstimationFunction() {
 
        //Erasing the whole canvas
       canvasContext.clearRect(0, 0, this.videoConfiguration.width, this.videoConfiguration.height);
-      // get hand landmarks from video
+      //hand landmarks obtained from video
       const predictions = await this.model.estimateHands(this.webcamConfig, false);
-
-
-
-       //setting default no hand gesture
+      //setting default no hand gesture
        this.result.name='no_gesture';
        this.action=this.actions[this.result.name];
        this.localAction=this.localVideoActions[this.result.name];
@@ -161,10 +153,7 @@ async GestureEstimationFunction() {
               const moveY=landmarks[item][1];
               const lineX =landmarks[item+1][0];
               const lineY=landmarks[item+1][1];
-              //  console.log(predictions[0].handInViewConfidence);
-
               //creating rectangle box around hand
-
              this.drawLines(canvasContext, jointPoints[0], jointPoints[1], 'blue', moveX, moveY, lineX, lineY);
 
             }
@@ -177,20 +166,14 @@ async GestureEstimationFunction() {
           /* referenced fingerpose https://www.npmjs.com/package/fingerpose */
           const est = GE.estimate(predictions[0].landmarks, 7.5);
           if (est.gestures.length > 0) {
-              // find gesture with highest confidence
+              // result gesture that has max confidence
               this.result = est.gestures.reduce((p, c) => {return (p.confidence > c.confidence) ? p : c;});
               /*reference end*/
               this.action = this.actions[this.result.name];
               this.localAction=this.localVideoActions[this.result.name];
-
-
              }
               if(this.result)
             {
-              if(this.result.name==="threeFingers")
-              {
-               console.log(est.gestures);
-              }
                   this.actionMapper(this.result.name);
             }
 
@@ -199,11 +182,9 @@ async GestureEstimationFunction() {
 
                  if(this.result.name =='fist' && this.xcor.length!=0 && this.ycor.length!=0)
                   {
-                //     //values are not empty and have populated
+                 //values are not empty and have populated
                     let xcortemp=this.xcor[0];
                     let xcorlast=this.xcor[this.xcor.length-1];
-                    let ycortemp=this.ycor[0];
-                    let ycorlast=this.ycor[this.ycor.length-1];
                     let descending=false;
                     let ascending =false;
                     let descCounter=0;
@@ -214,35 +195,16 @@ async GestureEstimationFunction() {
                       if(this.xcor.length>10)
                       {
                         const difference=this.xcor[i+1] - this.xcor[i];
-                          console.log(difference);
                           if(difference>30 ||(xcortemp<0 && xcorlast>0))
                           {
                             descending=true;
                             descCounter++;
-                            console.log(descCounter);
-                    //         console.log(true);
                           }
                       else if(difference<-30 || (xcortemp>0 && xcorlast<0)){
-                              console.log(false);
                               ascCounter++;
                               ascending=true;
 
                        }
-
-                       //do not use
-                //       else if(difference<20 && xcortemp>0)
-                //       {
-                //         descCounter--;
-                //         descending=false;
-                //       }
-                //       else if(difference>-20 && difference<0){
-                //         console.log(false);
-                //         ascCounter--;
-                //         ascending=false;
-                //  }
-
-
-
                      }
                   }
 
@@ -250,17 +212,15 @@ async GestureEstimationFunction() {
                       if(ascCounter<descCounter)
                       {
                         //seek backward
-                        this.fastForwardAlert.fire({text: "Seeked Backwards by 5 seconds!"});
-
-                       this.actionMapper('seekBackward');
+                        this.seekAlert.fire({text: "Seeked Backwards by 5 seconds!"});
+                        this.actionMapper('seekBackward');
                       }
                       else{
                         if(descCounter<ascCounter)
                         {
                           //seek forward
-                          this.fastForwardAlert.fire({text: "Fast Forwarded by 5 seconds!"});
-
-                         this.actionMapper('seekForward');
+                          this.seekAlert.fire({text: "Fast Forwarded by 5 seconds!"});
+                          this.actionMapper('seekForward');
                         }
 
                       }
@@ -268,37 +228,7 @@ async GestureEstimationFunction() {
                }
   }
 
-                //     if(xcortemp>0 && xcorlast<0)
-                //     {
-                //      // alert("Horizontal Swipe from left to right");
-                //     }
-                //     else if (xcortemp<0 && xcorlast>0)
-                //     {
-                //   //    alert("Horizontal Swipe from right to left");
-                //     }
-                //    else if(ycortemp>0 && ycorlast<0)
-                //     {
-                //   //    alert("Vertical Swipe from down to up");
-                //     }
-                //     else if (ycortemp<0 && ycorlast>0)
-                //     {
-                //       alert("Vertical Swipe from up to down");
-                //     }
-                //     // else if(ycortemp>0 && ycorlast<0 && xcortemp>0 && xcorlast<0 )
-                //     // {
-                //     //   alert("Horizontal Swipe from left to right");
-                //     // }
-                //     // else if (ycortemp<0 && ycorlast>0 && xcortemp<0 && xcorlast>0)
-                //     // {
-                //     //   alert("Horizontal Swipe from right to left");
-                //     // }
-                //   }
-                //     else {
-                //           console.log(this.xcor+"x");
-                //           console.log(this.ycor+"Y");
-                //           this.xcor=[];
-                //           this.ycor=[];
-                // }
+
                 else {
 
                             this.xcor=[];
@@ -312,44 +242,42 @@ async GestureEstimationFunction() {
                               this.localAction=this.localVideoActions[this.result.name];
                             }
                   }
-
-
                         abortSignal.addEventListener('abort',() => {
                                  this.interbval.unsubscribe();
                           });
 
-
-
-
-// calling async function after every 100 milliseconds
-
 };
-
+// calling async function after every 100 milliseconds
 this.interbval = interval(100).subscribe(() => { asyncFunction(this.abortSignal); });
-console.log('Starting predictions');
 }
 
 
+/*
+Takes evaluated gesture result as input
+contains Switch case for mapping results with media actions
+action passed to youtube module whenever associated gesture received
+*/
+
 
 public actionMapper(res){
-
+  this.localMediaElement=this.targetMedia.nativeElement;
   switch(res) {
           case "peaceGesture": {
             if(this.loadLocalVideo)
             {
-              this.targetMedia.nativeElement.play();
+              this.localMediaElement.play();
             }
            else if(this.loadIframe) {
 
               this.videoState="onReady";
             }
-            //  this.iframe.nativeElementcontentWindow.document.addEventListener()
+
             break;
           }
           case "stopGesture": {
             if(this.loadLocalVideo)
               {
-               this.targetMedia.nativeElement.pause();
+               this.localMediaElement.pause();
               }
              else if(this.loadIframe) {
 
@@ -360,10 +288,10 @@ public actionMapper(res){
           case "vol_down": {
 
             //implement slider
-            if(this.loadLocalVideo && (this.targetMedia.nativeElement.volume-0.1)>0)
+            if(this.loadLocalVideo && (this.localMediaElement.volume-0.1)>0)
             {
 
-              this.targetMedia.nativeElement.volume = this.targetMedia.nativeElement.volume - 0.1;
+              this.localMediaElement.volume = this.localMediaElement.volume - 0.1;
               this.volControl=this.targetMedia.nativeElement.volume;
             }
             else if(this.loadIframe){
@@ -374,9 +302,9 @@ public actionMapper(res){
           case "vol_up": {
 
             //implement slider
-            if(this.loadLocalVideo && (this.targetMedia.nativeElement.volume+0.1)<1)
+            if(this.loadLocalVideo && (this.localMediaElement.volume+0.1)<1)
             {
-            this.targetMedia.nativeElement.volume = this.targetMedia.nativeElement.volume + 0.1;
+            this.localMediaElement.volume = this.localMediaElement.volume + 0.1;
             this.volControl=this.targetMedia.nativeElement.volume;
             }
             else if(this.loadIframe){
@@ -395,11 +323,6 @@ public actionMapper(res){
           case "threeFingers" :{
             this.loadIframe = true;
             this.loadLocalVideo =false;
-            // let local=this.elementRef.nativeElement.querySelector('#local');
-            // let utube= this.elementRef.nativeElement.querySelector('#youtube');
-            // local.style.display="none";
-            // utube.style.display="block";
-
             if(!this.targetMedia.nativeElement.paused) this.targetMedia.nativeElement.pause();
             break;
           }
@@ -434,9 +357,6 @@ public actionMapper(res){
 }
 }
 
-
-
-//own
     public drawLines(ctx, x, y, color,mx1,my1,l1,l2) {
     ctx.beginPath();
     ctx.lineWidth = 2;
@@ -467,12 +387,12 @@ public actionMapper(res){
         frameRate: { max: 10 }
     }
 };
-//own
-        this.webcamFeed = this.videoplayer.nativeElement;
-        this.webcamFeed.width=640;
-        this. webcamFeed.height=480;
 
-// get video stream ::own
+        this.webcamFeed = this.videoplayer.nativeElement;
+        this.webcamFeed.width=this.constraints.video.width.max;
+        this. webcamFeed.height=this.constraints.video.height.max;
+
+// get video stream
     if(navigator.mediaDevices)
     {
          navigator.mediaDevices.getUserMedia(this.constraints).then((feedData)=>
@@ -497,9 +417,8 @@ public actionMapper(res){
 
  }
 
-
+/*Method to stop webcam and exit endless async loop */
  stopWebcam()
-
              {
                 this.interbval.unsubscribe();
                 this.abortRequest.abort();
@@ -508,24 +427,18 @@ public actionMapper(res){
                   {
                     const stream = this.webcamFeed.srcObject;
                     const videoTracks = stream.getTracks();
-
                     videoTracks.forEach(function(track) {
                       track.stop();
                     });
-
                     this.webcamFeed.srcObject = null;
-
                   }
                 this.interbval.unsubscribe();
-              //  this.interbval=0;
+            }
 
 
-                 }
-  ngOnDestroy() {
-
-    this.stopWebcam();
-
- }
+                 ngOnDestroy() {
+                  this.stopWebcam();
+                }
 
 
 

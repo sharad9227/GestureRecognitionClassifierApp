@@ -27,6 +27,7 @@ closeSideNavDrawer() :Observable<any>{
 }
 
 setUser(isSet:string){
+  localStorage.setItem('loggedInUser',isSet);
   this.setLocalStorage.next(isSet);
   }
 
