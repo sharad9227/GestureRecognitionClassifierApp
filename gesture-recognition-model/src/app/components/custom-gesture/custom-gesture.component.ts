@@ -27,13 +27,17 @@ export class CustomGestureComponent implements OnInit,AfterViewInit {
       public snaps=[];
       public canvasEnabled=false;
       public showUploadButton=false;
+      public successMessage:string="Training Model saved Successfully";
+      public uploadFailure:string="Your file could not be uploaded.";
+      public uploadRequest:string="Please upload the training dataset";
+      public adviseMessage:string= "Please upload the downloaded file named dataset";
+      public uploadMessage:string ="Your file has been uploaded";
        //creating private model for data security
       private gestureConfig:premiumGestureConfig =new premiumGestureConfig();
 
       //assigning values
 
      gestureAction: GestureActions[] = [
-        {label: 'iFrame',      action: 'Select your own videos'},
         {label: 'vol_up',      action: 'Increase Volume'},
         {label: 'vol_down',    action: 'Decrease Volume'},
         {label: 'seekForward', action:'Seek Forward'},
@@ -47,11 +51,17 @@ export class CustomGestureComponent implements OnInit,AfterViewInit {
 
       cofirmUpload =  Swal.mixin({
         icon:'info',
-        text: "Your will not be able to reverse this action!",
+        text: "You will not be able to reverse this action!",
         showCancelButton: true,
         confirmButtonText: "Yes, upload it!",
       });
 
+      confirmDelete=  Swal.mixin({
+          icon:'warning',
+          text: "You will not be able to reverse this action!",
+          showCancelButton: true,
+          confirmButtonText: "Delete Samples",
+      });
 
 
       //after init variables (view init : Scope Access)
@@ -79,6 +89,9 @@ export class CustomGestureComponent implements OnInit,AfterViewInit {
             this.elementRef.nativeElement.querySelector('#export').addEventListener('click', this.uploadFile.bind(this));
             //save button
             this.elementRef.nativeElement.querySelector('#download').addEventListener('click', this.saveFile.bind(this));
+            //clear labels button
+            this.elementRef.nativeElement.querySelector('#sampleRemove').addEventListener('click', this.removeImages.bind(this));
+
 
            this.sharedService.openSideNavDrawer(true);
 
@@ -168,12 +181,36 @@ export class CustomGestureComponent implements OnInit,AfterViewInit {
 
    }
 
+
+   removeImages(event)
+   {
+    this.confirmDelete.fire({
+      title: "Are you sure you want to delete the samples for action : "+ this.actionSelected.action
+    }).then((res)=>{
+    if(this.actionSelected!=undefined && this.actionSelected.action!="" && res.isConfirmed)
+    {
+       let deletedLabel=this.knnClassifier.getCountByLabel();
+       let label=this.actionSelected.label;
+       console.log(deletedLabel);
+       if(deletedLabel[label]>0)
+       {
+      this.knnClassifier.clearLabel(this.actionSelected.label);
+      this.counter=this.counter-deletedLabel[label];
+  }
+   }
+   else
+   {
+    Swal.fire("Delete Cancelled!");
+   }
+  })
+  }
+
     uploadFile()
     {
       let jsonContent,fileReader;
       this.showUploadButton=true;
 
-      const file = this.elementRef.nativeElement.querySelector('#fileUpload');
+      let file = this.elementRef.nativeElement.querySelector('#fileUpload');
       file.addEventListener('change',()=>{
         this.cofirmUpload.fire({
           title: "Are you sure you want to upload this file?" + file.files[0].name,
@@ -183,7 +220,7 @@ export class CustomGestureComponent implements OnInit,AfterViewInit {
             // check for already uploaded files
           fileReader = new FileReader();
           fileReader.readAsText(file.files[0]);
-         fileReader.onload= ()=>{
+          fileReader.onload= ()=>{
           jsonContent=JSON.parse(fileReader.result);
           this.gestureConfig.configId = parseInt(localStorage.getItem('configId'));
           this.gestureConfig.configJsonData = fileReader.result;
@@ -192,13 +229,13 @@ export class CustomGestureComponent implements OnInit,AfterViewInit {
                  if(data!=null &&  data.responseObj.configData==null)
                  {
                     this.ajaxService.updateGestureConfig(this.gestureConfig).subscribe(data =>{
-                       if(data!=null && data.message==="Training Model saved Succesfully")
+                       if(data!=null && data.message===this.successMessage)
                        {
-                         Swal.fire("Uploaded!", "Your file has been uploaded.", "success");
+                         Swal.fire("Uploaded!", this.uploadRequest, "success");
                        }
                      },
                       error => {
-                           Swal.fire("Failed!", "Your file could not be uploaded.", error);
+                           Swal.fire("Failed!", this.uploadFailure, error);
                       })
 
                  }
@@ -213,19 +250,19 @@ export class CustomGestureComponent implements OnInit,AfterViewInit {
                       if(res1.isConfirmed && file.files[0].type=="application/json")
                       {
                         this.ajaxService.updateGestureConfig(this.gestureConfig).subscribe(data =>{
-                          if(data!=null && data.message==="Training Model saved Succesfully")
+                          if(data!=null && data.message===this.successMessage)
                           {
-                            Swal.fire("Uploaded!", "Your file has been uploaded and replaced.", "success");
-                            //Swal.fire("File Replaced");
+                            Swal.fire("Uploaded!", this.uploadRequest, "success");
+
                           }
                         },
                          error => {
-                              Swal.fire("Failed!", "Your file could not be uploaded.", error);
+                              Swal.fire("Failed!", this.uploadFailure , error);
                          })
                       }
-                      else if(res.dismiss==Swal.DismissReason.cancel)
+                      else if(res1.dismiss==Swal.DismissReason.cancel)
                         {
-                          Swal.fire("Upload Cancelled!", "Please upload the model file", "error");
+                          Swal.fire("Upload Cancelled!", this.uploadRequest, "error");
                         }
 
                    })
@@ -237,17 +274,18 @@ export class CustomGestureComponent implements OnInit,AfterViewInit {
              }
             },
           error => {
-            Swal.fire("Error!", "Some problem in fetching", error);
+            Swal.fire("Error!", "Some problem in retreiving", error);
           })
         }
       }
       //referred cancel swal usage
       else if(res.dismiss==Swal.DismissReason.cancel)
       {
-        Swal.fire("Upload Cancelled!", "Please upload the model file", "error");
+        Swal.fire("Upload Cancelled!", this.uploadRequest, "error");
+
       }
         else{
-          Swal.fire("Upload Cancelled!", "Please upload the downloaded file of json format", "error");
+          Swal.fire("Upload Cancelled!",this.adviseMessage, "error");
         }
 
         });
@@ -255,6 +293,10 @@ export class CustomGestureComponent implements OnInit,AfterViewInit {
         console.log(jsonContent);
       });
 
+      //clearing file value on cancel
+      file.onclick = function () {
+        this.value = null;
+    };
 
     }
 

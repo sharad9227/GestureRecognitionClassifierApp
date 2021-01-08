@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { LoginSuccessComponent } from './login-success.component';
+import { UniversalGestureComponent } from './universal-gesture.component';
 
-describe('LoginSuccessComponent', () => {
-  let component: LoginSuccessComponent;
-  let fixture: ComponentFixture<LoginSuccessComponent>;
+describe('UniversalGestureComponent', () => {
+  let component: UniversalGestureComponent;
+  let fixture: ComponentFixture<UniversalGestureComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ LoginSuccessComponent ]
+      declarations: [ UniversalGestureComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(LoginSuccessComponent);
+    fixture = TestBed.createComponent(UniversalGestureComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

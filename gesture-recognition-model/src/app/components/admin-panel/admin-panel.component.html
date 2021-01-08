@@ -47,7 +47,7 @@
 
         <ng-container matColumnDef="Actions">
             <th mat-header-cell *matHeaderCellDef>Actions</th>
-            <td mat-cell *matCellDef="let item">
+            <td (click)="approvePremiumAccess(item)" mat-cell *matCellDef="let item">
                 <button [disabled]="item.disabled">Approve</button>
                 <button>  Deactivate   </button>
             </td>

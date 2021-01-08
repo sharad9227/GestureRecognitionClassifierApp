@@ -13,7 +13,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 //Material Inputs
 
 import { User } from './models/ValidUserComponent';
-import { LoginSuccessComponent } from './components/login-success/login-success.component';
+import { UniversalGestureComponent } from './components/universal-gesture/universal-gesture.component';
  import { SharedService } from './services/shared.service';
 import { RoutedSuccessComponent } from './components/routed-success/routed-success.component';
 import {  FaIconLibrary } from '@fortawesome/angular-fontawesome';
@@ -45,7 +45,7 @@ import {MatPaginatorModule} from '@angular/material/paginator';
     AppComponent,
     SignUpComponent,
     LoginComponent,
-    LoginSuccessComponent,
+    UniversalGestureComponent,
     RoutedSuccessComponent,
     YoutubePlayerComponent,
     CustomGestureComponent,

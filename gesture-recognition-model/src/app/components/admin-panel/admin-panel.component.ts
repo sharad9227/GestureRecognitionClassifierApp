@@ -3,11 +3,12 @@ import { MatTableDataSource } from '@angular/material/table';
 import { Subscription } from 'rxjs';
 import { RegisteredUser } from 'src/app/models/registeredUserComponent';
 import { AjaxService } from 'src/app/services/ajaxService.service';
-
+import Swal from 'sweetalert2';
 import {DataSource} from '@angular/cdk/collections';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { MatPaginator } from '@angular/material/paginator';
 import { count } from 'rxjs/operators';
+import { SharedService } from 'src/app/services/shared.service';
 @Component({
   selector: 'app-admin-panel',
   templateUrl: './admin-panel.component.html',
@@ -17,13 +18,18 @@ import { count } from 'rxjs/operators';
 export class AdminPanelComponent implements OnInit {
   sub: Subscription;
   userId;
+  private userDetails={'userId':0};
   userData: MatTableDataSource<RegisteredUser[]>;
  receivedData;
   headerColumns: string[] = ['SlNo','userId','userFirstName', 'userLastName','userType','email','activeStatus','approvedStatus','latestUpdated','reqStatus','Actions'];
 
-  constructor(private adminService:AjaxService) { }
+  constructor(private adminService:AjaxService,private sharedService:SharedService) { }
   @ViewChild(MatPaginator) adminPaginator: MatPaginator;
   ngOnInit(): void {
+    setTimeout(()=>{
+      this.sharedService.openSideNavDrawer(true);
+    },100)
+
     this.userId=localStorage.getItem('userId');
     this.userData=new MatTableDataSource();
     this.sub  =  this.adminService.getAllUsers(this.userId).subscribe(response=>{
@@ -61,11 +67,36 @@ export class AdminPanelComponent implements OnInit {
 
   }
 
-
-  ngOnChanges(changes:SimpleChanges)
+//method for updating user as Premium user
+  public approvePremiumAccess(row)
   {
-    this.receivedData.paginator = this.adminPaginator;
+    console.log(row);
+    if(row!=null)
+    {
+      this.userDetails.userId=row.userId;
+      this.adminService.updateUserType(this.userDetails).subscribe(response=>{
+        if(response!=null && response.status === 200)
+        {
+          row.disabled=true;
+          Swal.fire({
+            title:response.message,
+            timer:2000
+          })
+        }
+      },
+
+      error => {
+
+        Swal.fire({
+          title:error.message
+        })
+      })
+
+    }
+
   }
+
+
 
 }
 

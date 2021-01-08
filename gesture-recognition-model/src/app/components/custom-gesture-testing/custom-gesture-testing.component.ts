@@ -20,8 +20,7 @@ export class CustomGestureTestingComponent implements OnInit,AfterViewInit {
   //default initialization
   public videoState="";
   public volControl:number;
-
-    public loadIframe=false;
+  public loadSuccess:string="Training Model loaded";
   public localAction='';
   localVideoActions = {
     'peaceGesture': '▶️',
@@ -140,8 +139,10 @@ public abortSignal=this.abortRequest.signal;
               jsonContent=JSON.parse(data.responseObj.configData);
                 this.knnClassifier.load(jsonContent,()=> {
                   console.log("loaded");
+                  Swal.fire("Uploaded!",this.loadSuccess,"success");
+                  this.interbval = interval(5000).subscribe(() => { this.asyncFunction(this.abortSignal); });
                 })
-                this.interbval = interval(5000).subscribe(() => { this.asyncFunction(this.abortSignal); });
+
             }
             else if(data.responseObj.configData==null)
             {
@@ -199,55 +200,28 @@ public abortSignal=this.abortRequest.signal;
 
           switch(res) {
                   case "play": {
-
-                      if(this.loadIframe) {
                        this.videoState="onReady";
-                      }
                     break;
                   }
                   case "pause": {
-
-                      if(this.loadIframe) {
-                             this.videoState="onPause";
-                       }
+                      this.videoState="onPause";
                       break;
                   }
                   case "vol_down": {
-
-                   if(this.loadIframe){
-                      this.videoState="res";
-                    }
+                      this.videoState=res;
                     break;
                   }
                   case "vol_up": {
-                    //implement slider
-                   if(this.loadIframe){
                     this.videoState=res;
-                    }
-                    break;
-                  }
-                  case "localVideo"  :{
-
-                      this.loadIframe=false;
-                      if(this.videoState=="onReady") this.videoState="onPause";
-                      break;
-                  }
-                  case "iFrame" :{
-                    this.loadIframe = true;
-
-                    if(!this.targetMedia.nativeElement.paused) this.targetMedia.nativeElement.pause();
                     break;
                   }
                   case "seekForward":{
-
                     this.videoState = res;
 
                     break;
                   }
                   case "seekBackward":{
-
                        this.videoState = res;
-
                     break;
                 }
 

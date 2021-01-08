@@ -50,7 +50,7 @@ footer {
 
 .webcam-container {
     display: flex;
-    height: 78% !important;
+    height: 80% !important;
 }
 
 .header-container {
@@ -126,7 +126,9 @@ footer {
 
 .action-container {
     display: flex;
-    height: 30%;
+    height: 20%;
+    padding: 0;
+    padding-left: 1%;
 }
 
 .convas-config {
@@ -167,4 +169,14 @@ button mat-button {
 .mat-badge-content {
     width: auto;
     min-width: 20px;
+}
+
+.mat-safe {
+    background-color: #4CAF50;
+    color: initial;
+}
+
+.mat-warn {
+    background-color: #af684c;
+    color: initial;
 }

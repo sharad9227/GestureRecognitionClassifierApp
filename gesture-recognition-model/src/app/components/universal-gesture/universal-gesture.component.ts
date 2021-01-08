@@ -3,21 +3,21 @@ import * as fp from 'fingerpose';
 import * as handpose from '@tensorflow-models/handpose';
 import * as volDownGesture from '../../models/gestureSet/volDownGesture';
 import * as volUpGesture from '../../models/gestureSet/volUpGesture';
-import * as peaceGesture from './../../models/gestureSet/twoUpGesture';
-import * as indexUpGesture from './../../models/gestureSet/indexUpGesture';
-import * as threeFingersUpGesture from'./../../models/gestureSet/threeUpGesture';
-import * as stopGesture  from'./../../models/gestureSet/stopGesture';
-import * as fistGesture  from'./../../models/gestureSet/fistGesture';
+import * as peaceGesture from '../../models/gestureSet/twoUpGesture';
+import * as indexUpGesture from '../../models/gestureSet/indexUpGesture';
+import * as threeFingersUpGesture from'../../models/gestureSet/threeUpGesture';
+import * as stopGesture  from'../../models/gestureSet/stopGesture';
+import * as fistGesture  from'../../models/gestureSet/fistGesture';
 import { interval } from 'rxjs';
 import { SharedService } from 'src/app/services/shared.service';
 import Swal from 'sweetalert2';
 
 @Component({
-  selector: 'app-login-success',
-  templateUrl: './login-success.component.html',
-  styleUrls: ['./login-success.component.css']
+  selector: 'app-universal-gesture',
+  templateUrl: './univeral-gesture.component.html',
+  styleUrls: ['./universal-gesture.component.css']
 })
-export class LoginSuccessComponent implements OnInit,AfterViewInit {
+export class UniversalGestureComponent implements OnInit,AfterViewInit {
 
 
     @ViewChild('webcamFeed') videoplayer: ElementRef;

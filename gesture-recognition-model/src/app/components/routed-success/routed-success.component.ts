@@ -58,7 +58,7 @@ export class RoutedSuccessComponent implements OnInit {
 defaultClick()
 {
   this.show=false;
-  this.route.navigate(['login-success'],{relativeTo:this.activatedRoute});
+  this.route.navigate(['universal-gesture'],{relativeTo:this.activatedRoute});
 }
 
 customClick()

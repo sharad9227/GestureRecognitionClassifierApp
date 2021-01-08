@@ -8,52 +8,55 @@ import { RegisteredUser } from '../models/registeredUserComponent';
 @Injectable({ providedIn: 'root' })
 export class AjaxService {
 
-  //private validUser=new User();
-  // private premiumConfig =new premiumGestureConfig();
-  // private registeredUser = new RegisteredUser();
+  private baseUrl=`http://localhost:8086/testjpa_war_exploded`;
     constructor(private http: HttpClient) { }
     //admin use
     getAllUsers(userId:number):Observable<any> {
-        return this.http.get<RegisteredUser[]>(`http://localhost:8086/testjpa_war_exploded/users/getall/${userId}`);
+        return this.http.get<RegisteredUser[]>(this.baseUrl+`/users/getall/${userId}`);
     }
 
     signUpUser(validUser): Observable<any> {
-        return this.http.post(`http://localhost:8086/testjpa_war_exploded/users/register`, validUser);
+        return this.http.post(this.baseUrl+`/users/register`, validUser);
     }
 
     loginUser(validUser): Observable<any> {
-      return this.http.post(`http://localhost:8086/testjpa_war_exploded/users/login`, validUser);
+      return this.http.post(this.baseUrl+`/users/login`, validUser);
     }
 
 
-    //admin use
-    deleteUser(id: number): Observable<any>{
-        return this.http.delete(`/users/${id}`);
-    }
 
      //send json string data :put request
     updateGestureConfig(premiumConfig) : Observable<any> {
-      return this.http.put('http://localhost:8086/testjpa_war_exploded/users/update/gestureconfig',premiumConfig);
+      return this.http.put(this.baseUrl+'/users/update/gestureconfig',premiumConfig);
     }
 
     //get config data
     getGestureConfig(configId:number): Observable<any>
     {
-      return this.http.get<User>(`http://localhost:8086/testjpa_war_exploded/users/get/${configId}`);
+      return this.http.get<User>(this.baseUrl+`/users/get/${configId}`);
     }
 
 
 
     getUserDetails(userId:number): Observable<any>
     {
-      return this.http.get<User>(`http://localhost:8086/testjpa_war_exploded/users/get/user/${userId}`);
+      return this.http.get<User>(this.baseUrl+`/users/get/user/${userId}`);
     }
 
      updateUserDetails(userDetails): Observable<any>
      {
-       return this.http.put('http://localhost:8086/testjpa_war_exploded/users/update/updateUserDetails',userDetails);
+       return this.http.put(this.baseUrl+'/users/update/updateUserDetails',userDetails);
      }
 
+
+     updateUserType(userDetails): Observable<any>
+     {
+       return this.http.put(this.baseUrl+'/users/update/upgradeUser',userDetails);
+     }
+     updateUserStatus(userDetails): Observable<any>
+     {
+       return this.http.put(this.baseUrl+'/users/update/deactivateUser',userDetails);
+     }
 
 
 
