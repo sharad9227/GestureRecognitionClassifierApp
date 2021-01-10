@@ -62,7 +62,7 @@ export class UserProfileComponent implements OnInit {
       }
     },
     error => {
-      alert('Error occured'+error);
+      alert('Error occurred'+error);
  })
 
     //this.elementRef.nativeElement.querySelector('#first_name').addEventListener('change', this.saveFile.bind(this));

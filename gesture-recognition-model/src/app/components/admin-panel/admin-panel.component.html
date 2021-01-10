@@ -1,4 +1,15 @@
 <div>
+
+    <header>
+        <li style="padding-left:42%" class="navbar-align-center">
+
+            <fa-icon class="links-color" [icon]="['fas', 'user-cog']"></fa-icon>
+            <strong><h2 class="centered">Admin Panel </h2></strong>
+        </li>
+
+    </header>
+
+
     <table mat-table [dataSource]="userData">
         <ng-container matColumnDef="SlNo">
             <th mat-header-cell *matHeaderCellDef> SlNo </th>
@@ -49,10 +60,16 @@
             <th mat-header-cell *matHeaderCellDef>Actions</th>
             <td (click)="approvePremiumAccess(item)" mat-cell *matCellDef="let item">
                 <button [disabled]="item.disabled">Approve</button>
+            </td>
+
+        </ng-container>
+
+        <ng-container matColumnDef="Deactivate">
+            <th mat-header-cell *matHeaderCellDef>Deactivate</th>
+            <td (click)="deactivateUser(item)" mat-cell *matCellDef="let item">
                 <button>  Deactivate   </button>
             </td>
         </ng-container>
-
         <mat-header-row *cdkHeaderRowDef="headerColumns"></mat-header-row>
         <mat-row *cdkRowDef="let row; columns: headerColumns;"></mat-row>
 

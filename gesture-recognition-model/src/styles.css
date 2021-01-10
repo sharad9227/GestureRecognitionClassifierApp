@@ -139,3 +139,7 @@ html {
 .emoticons {
     font-size: 25px;
 }
+
+.centered {
+    text-align: center;
+}

@@ -1,12 +1,18 @@
 <div class="grid-container">
-    <header>Testing Phase</header>
+    <header>
+        <strong>Testing Mode</strong>
+
+    </header>
     <div class="column1">
         <div class="webcam-container">
 
 
             <div class="button-container-2">
+                <div>
+                    <video width="100%" height=auto style="padding:0" controls #webcamFeed class="video-props" playsinline></video>
 
-                <video width="100%" height=auto style="padding:0" controls #webcamFeed class="video-props" playsinline></video>
+                    <div id="action" class="action-header">{{action}}</div>
+                </div>
                 <div class="button-container-1">
                     <div>
                         <button id="webcam">

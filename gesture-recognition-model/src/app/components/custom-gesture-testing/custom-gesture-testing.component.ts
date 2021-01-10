@@ -22,15 +22,23 @@ export class CustomGestureTestingComponent implements OnInit,AfterViewInit {
   public volControl:number;
   public loadSuccess:string="Training Model loaded";
   public localAction='';
+  public action='';
+  actions = {
+    'noAction':'No hands',
+    'vol_up': 'vol up',
+    'play': 'Play',
+    'vol_down' : 'vol down',
+    'pause':'Pause',
+    'seekForward':'seekForward',
+    'seekBackward':'seekBackward'
+  };
   localVideoActions = {
-    'peaceGesture': '▶️',
-    'stopGesture':'⏸️',
+    'play': '▶️',
+    'pause':'⏸️',
     'vol_up': '🔊',
     'vol_down' : '🔉',
     'no_gesture':'',
-    'threeFingers':'',
-    'fourFingers':'',
-    'index_up':''
+
 
 }
 testAlert =  Swal.mixin({
@@ -139,14 +147,15 @@ public abortSignal=this.abortRequest.signal;
               jsonContent=JSON.parse(data.responseObj.configData);
                 this.knnClassifier.load(jsonContent,()=> {
                   console.log("loaded");
-                  Swal.fire("Uploaded!",this.loadSuccess,"success");
+                  Swal.fire("Loaded!",this.loadSuccess,"success");
                   this.interbval = interval(5000).subscribe(() => { this.asyncFunction(this.abortSignal); });
                 })
 
             }
             else if(data.responseObj.configData==null)
             {
-              alert("No training set available");
+              let message="No Training Set found";
+              Swal.fire("Error!", message,"error");
             }
 
           },)
@@ -159,7 +168,7 @@ public abortSignal=this.abortRequest.signal;
           if(this.webcamFeed.srcObject.active){
           let logitsInfer = this.mobileNetFeatureExtractor.infer(this.videoplayer.nativeElement);
 
-          this.knnClassifier.classify(logitsInfer, 10 , (err, response)=> {
+          this.knnClassifier.classify(logitsInfer, 8 , (err, response)=> {
 
             let accuracyScore,label;
               if (err) {
@@ -174,11 +183,12 @@ public abortSignal=this.abortRequest.signal;
                   if(maxScore>=0.6)
                   {
                    // this.testAlert.fire({text: "Predicted Gesture:- " + label});
-
+                   this.action=this.actions[label];
                     this.actionMapper(label);
                   }
                   else{
-                    label="noAction"
+                    label="noAction";
+                    this.action=this.actions[label];
                   }
                   this.localAction=this.localVideoActions[label];
               }
@@ -236,7 +246,6 @@ public abortSignal=this.abortRequest.signal;
 
         ngOnDestroy() {
           if(this.webcamFeed.srcObject && this.webcamFeed.srcObject.active)
-
           this.stopWebcam();
        }
 

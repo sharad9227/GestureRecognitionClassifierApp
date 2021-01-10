@@ -231,7 +231,7 @@ export class CustomGestureComponent implements OnInit,AfterViewInit {
                     this.ajaxService.updateGestureConfig(this.gestureConfig).subscribe(data =>{
                        if(data!=null && data.message===this.successMessage)
                        {
-                         Swal.fire("Uploaded!", this.uploadRequest, "success");
+                         Swal.fire("Uploaded!", this.uploadMessage, "success");
                        }
                      },
                       error => {
@@ -252,7 +252,7 @@ export class CustomGestureComponent implements OnInit,AfterViewInit {
                         this.ajaxService.updateGestureConfig(this.gestureConfig).subscribe(data =>{
                           if(data!=null && data.message===this.successMessage)
                           {
-                            Swal.fire("Uploaded!", this.uploadRequest, "success");
+                            Swal.fire("Uploaded!", this.uploadMessage, "success");
 
                           }
                         },
@@ -310,5 +310,9 @@ getBadgeCount():number{
 return this.counter;
 }
 
+ngOnDestroy() {
+  if(this.webcamFeed.srcObject && this.webcamFeed.srcObject.active)
+  this.stopWebcam();
+}
 
 }

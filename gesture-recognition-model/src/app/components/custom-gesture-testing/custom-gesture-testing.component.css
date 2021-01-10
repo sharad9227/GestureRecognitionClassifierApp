@@ -156,3 +156,9 @@ footer {
     color: mediumvioletred;
     padding: 20px 30px 0 0;
 }
+
+.action-header {
+    position: absolute;
+    top: 5%;
+    padding: 1%;
+}

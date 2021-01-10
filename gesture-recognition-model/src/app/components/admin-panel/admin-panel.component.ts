@@ -21,7 +21,7 @@ export class AdminPanelComponent implements OnInit {
   private userDetails={'userId':0};
   userData: MatTableDataSource<RegisteredUser[]>;
  receivedData;
-  headerColumns: string[] = ['SlNo','userId','userFirstName', 'userLastName','userType','email','activeStatus','approvedStatus','latestUpdated','reqStatus','Actions'];
+  headerColumns: string[] = ['SlNo','userId','userFirstName', 'userLastName','userType','email','activeStatus','approvedStatus','latestUpdated','reqStatus','Actions','Deactivate'];
 
   constructor(private adminService:AjaxService,private sharedService:SharedService) { }
   @ViewChild(MatPaginator) adminPaginator: MatPaginator;
@@ -57,8 +57,6 @@ export class AdminPanelComponent implements OnInit {
     });
 
 
-//filtering process
-
 
 
 
@@ -77,7 +75,7 @@ export class AdminPanelComponent implements OnInit {
       this.adminService.updateUserType(this.userDetails).subscribe(response=>{
         if(response!=null && response.status === 200)
         {
-          row.disabled=true;
+
           Swal.fire({
             title:response.message,
             timer:2000
@@ -95,7 +93,33 @@ export class AdminPanelComponent implements OnInit {
     }
 
   }
+  public deactivateUser(row)
+  {
+    console.log(row);
+    if(row!=null)
+    {
+      this.userDetails.userId=row.userId;
+      this.adminService.updateUserStatus(this.userDetails).subscribe(response=>{
+        if(response!=null && response.status === 200)
+        {
 
+          Swal.fire({
+            title:response.message,
+            timer:2000
+          })
+        }
+      },
+
+      error => {
+
+        Swal.fire({
+          title:error.message
+        })
+      })
+
+    }
+
+  }
 
 
 }

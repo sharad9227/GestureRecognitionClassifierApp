@@ -1,4 +1,4 @@
-/* https://stackoverflow.com/questions/63032941/increase-gap-between-mat-rows-in-mat-table-angular*/
+/* referenced table spacing style from https://stackoverflow.com/questions/63032941/increase-gap-between-mat-rows-in-mat-table-angular*/
 
 .mat-table {
     overflow-x: scroll;
@@ -20,4 +20,13 @@
 .mat-row,
 .mat-header-row {
     display: table-row;
+}
+
+
+/* own styles */
+
+.links-color {
+    font-size: 25px;
+    color: black;
+    margin-right: 1%;
 }

@@ -3,7 +3,7 @@
         Experience Interactive Gesture Control
     </h2>
 </header> -->
-<!-- <br> -->
+<br>
 <div class="container">
 
     <div id="webcam-props">
@@ -82,5 +82,6 @@
     </div>
     <div id="youtube" [hidden]='!loadIframe' class="utubeContainer">
         <app-youtube-player-component #videoYouTube [videoState]="videoState"></app-youtube-player-component>
+        <div id="action" class="youtube-video-props">{{localAction}}</div>
     </div>
 </div>
