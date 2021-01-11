@@ -35,11 +35,9 @@ export class CustomGestureTestingComponent implements OnInit,AfterViewInit {
   localVideoActions = {
     'play': '▶️',
     'pause':'⏸️',
-    'vol_up': '🔊',
-    'vol_down' : '🔉',
+    'vol_up': '',
+    'vol_down' : '',
     'no_gesture':'',
-
-
 }
 testAlert =  Swal.mixin({
   icon:'info',
@@ -130,8 +128,11 @@ public abortSignal=this.abortRequest.signal;
                     tracks.stop();
                   });
                   this.webcamFeed.srcObject=null;
+                  if(this.interbval)
+                  {
                   this.interbval.unsubscribe();
                   this.abortRequest.abort();
+                  }
                   this.webcamFeed.pause();
                 }
               }
@@ -148,7 +149,7 @@ public abortSignal=this.abortRequest.signal;
                 this.knnClassifier.load(jsonContent,()=> {
                   console.log("loaded");
                   Swal.fire("Loaded!",this.loadSuccess,"success");
-                  this.interbval = interval(5000).subscribe(() => { this.asyncFunction(this.abortSignal); });
+                  this.interbval = interval(1000).subscribe(() => { this.asyncFunction(this.abortSignal); });
                 })
 
             }
@@ -168,7 +169,7 @@ public abortSignal=this.abortRequest.signal;
           if(this.webcamFeed.srcObject.active){
           let logitsInfer = this.mobileNetFeatureExtractor.infer(this.videoplayer.nativeElement);
 
-          this.knnClassifier.classify(logitsInfer, 8 , (err, response)=> {
+          this.knnClassifier.classify(logitsInfer, 10 , (err, response)=> {
 
             let accuracyScore,label;
               if (err) {
@@ -180,7 +181,7 @@ public abortSignal=this.abortRequest.signal;
                   let maxScore= accuracyScore[label];
                   console.log(label);
                   console.log(accuracyScore[label]);
-                  if(maxScore>=0.6)
+                  if(maxScore>=0.7)
                   {
                    // this.testAlert.fire({text: "Predicted Gesture:- " + label});
                    this.action=this.actions[label];

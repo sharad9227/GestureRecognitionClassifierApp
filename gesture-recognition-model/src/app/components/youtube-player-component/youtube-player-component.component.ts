@@ -9,6 +9,7 @@ import Swal from 'sweetalert2';
 export class YoutubePlayerComponent implements OnInit,OnChanges {
   videoId: string;
   textId:string;
+  load:boolean=false;
   @ViewChild('youtubeplayer') youtubeplayer: any;
   @Input() videoState:string;
 
@@ -24,10 +25,10 @@ export class YoutubePlayerComponent implements OnInit,OnChanges {
 
 
   ngOnChanges():void{
-
- this.selectState(this.videoState);
-
-
+    if(this.load)
+    {
+    this.selectState(this.videoState);
+    }
 }
 ngOnInit(): void {
   //referred code https://github.com/angular/components/tree/master/src/youtube-player
@@ -40,6 +41,7 @@ ngOnInit(): void {
 public bind()
 {
   this.videoId=this.textId;
+  this.load=true;
 }
 
 
@@ -72,7 +74,6 @@ public bind()
 
   }
   onReady() {
-   // this.youtubeplayer.mute();
     this.youtubeplayer.playVideo();
   }
 
@@ -91,7 +92,7 @@ public bind()
       this.youtubeplayer.setVolume(volumeLevel);
       this.popUpModalInfo.fire({
         icon: 'info',
-        title: 'Volume increased ,Volume level:-'+ volumeLevel +'%'
+        title: 'Volume increased ,Volume level:'+ Math.round(volumeLevel) +'%'
       })
 
     }
@@ -108,13 +109,13 @@ public bind()
       this.youtubeplayer.setVolume(volumeLevel);
       this.popUpModalInfo.fire({
         icon: 'info',
-        title: 'Volume lowered ,Volume level:'+volumeLevel +'%'
+        title: 'Volume lowered ,Volume level:'+Math.round(volumeLevel) +'%'
       })
     }
     else{
       this.popUpModalInfo.fire({
         icon: 'info',
-        title: 'Volume is at max ,Volume level:'+volumeLevel +'%'
+        title: 'Volume is at max ,Volume level:'+Math.round(volumeLevel) +'%'
       })
     }
   }
@@ -126,10 +127,8 @@ public bind()
     let elapsedSeconds;
       if(this.youtubeplayer.getPlayerState()==1)
       {
-
         elapsedSeconds=this.youtubeplayer.getCurrentTime();
-        elapsedSeconds= elapsedSeconds +10;
-        this.youtubeplayer.seekTo(elapsedSeconds+10,true);
+        this.youtubeplayer.seekTo(elapsedSeconds+5,true);
       }
   }
 

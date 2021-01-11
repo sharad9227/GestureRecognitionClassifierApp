@@ -77,9 +77,8 @@ export class LoginComponent implements OnInit {
                 this.responseData.userType=data.responseObj.userType;
                 localStorage.setItem('userInformation',JSON.stringify(data.responseObj));
                 localStorage.setItem('configId',JSON.stringify(configId));
-             //   localStorage.setItem('loggedInUser',this.responseData.userFirstName);
-                 this.sharedService.setUser(this.responseData.userFirstName);
-              //  this.sharedService.setUser(true);
+                localStorage.setItem('userId',JSON.stringify(data.responseObj.userId));
+                this.sharedService.setUser(this.responseData.userFirstName);
                 this.popUpModalSuccess.fire({
                   icon: 'success',
                   title: 'Signed in successfully'

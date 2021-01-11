@@ -14,7 +14,7 @@ export class RoutedSuccessComponent implements OnInit {
   fonts=fonts;
   show=false;
   openPanel=false;
-  //loggedInUser;
+  loggedInUserType;
   routeUrl:string;
   constructor(private renderer: Renderer2, public sharedService:SharedService ,private route:Router,private activatedRoute:ActivatedRoute) {
     this.routeUrl=route.url;
@@ -23,9 +23,8 @@ export class RoutedSuccessComponent implements OnInit {
 
 
   ngOnInit(): void {
-    //this.route.cha
-   // console.log(this.route);
-    //this.loggedInUser=localStorage.getItem('loggedInUser');
+
+    this.loggedInUserType=JSON.parse(localStorage.getItem('userInformation')).userType;
     setTimeout(()=>{
       this.sharedService.openSideNavDrawer(true);
     },100)

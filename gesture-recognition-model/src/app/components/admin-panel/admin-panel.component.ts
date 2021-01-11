@@ -9,6 +9,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { MatPaginator } from '@angular/material/paginator';
 import { count } from 'rxjs/operators';
 import { SharedService } from 'src/app/services/shared.service';
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-admin-panel',
   templateUrl: './admin-panel.component.html',
@@ -21,9 +22,15 @@ export class AdminPanelComponent implements OnInit {
   private userDetails={'userId':0};
   userData: MatTableDataSource<RegisteredUser[]>;
  receivedData;
+ popUpModalError =Swal.mixin({
+  toast:true,
+  position:'center',
+  showCloseButton:true
+
+});
   headerColumns: string[] = ['SlNo','userId','userFirstName', 'userLastName','userType','email','activeStatus','approvedStatus','latestUpdated','reqStatus','Actions','Deactivate'];
 
-  constructor(private adminService:AjaxService,private sharedService:SharedService) { }
+  constructor(private adminService:AjaxService,private sharedService:SharedService,private route:Router) { }
   @ViewChild(MatPaginator) adminPaginator: MatPaginator;
   ngOnInit(): void {
     setTimeout(()=>{
@@ -53,6 +60,13 @@ export class AdminPanelComponent implements OnInit {
             console.log(this.receivedData);
            // this.userData.data=this.receivedData;
             this.userData.paginator = this.adminPaginator;
+        }
+        else{
+          this.popUpModalError.fire({
+            icon: 'error',
+            title:  "UnAuthorized User."
+          })
+          this.route.navigate(['/home']);
         }
     });
 
