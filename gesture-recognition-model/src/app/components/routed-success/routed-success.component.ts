@@ -16,6 +16,8 @@ export class RoutedSuccessComponent implements OnInit {
   openPanel=false;
   loggedInUserType;
   routeUrl:string;
+  vid1:string="NBk3LP6edDk";
+  vid2:string="K1WnPvsjmHg";
   constructor(private renderer: Renderer2, public sharedService:SharedService ,private route:Router,private activatedRoute:ActivatedRoute) {
     this.routeUrl=route.url;
 
@@ -23,7 +25,9 @@ export class RoutedSuccessComponent implements OnInit {
 
 
   ngOnInit(): void {
-
+    const tag = document.createElement('script');
+    tag.src = 'https://www.youtube.com/iframe_api';
+    document.body.appendChild(tag);
     this.loggedInUserType=JSON.parse(localStorage.getItem('userInformation')).userType;
     setTimeout(()=>{
       this.sharedService.openSideNavDrawer(true);

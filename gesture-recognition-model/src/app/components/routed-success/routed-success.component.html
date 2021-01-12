@@ -55,6 +55,13 @@
                 </h2>
                 <br>
             </header>
+
+            <div *ngIf="show">
+
+                <youtube-player #youtubeplayer [videoId]="vid1"></youtube-player>
+                <youtube-player #youtubeplayer [videoId]="vid2"></youtube-player>
+
+            </div>
             <router-outlet></router-outlet>
 
         </div>
