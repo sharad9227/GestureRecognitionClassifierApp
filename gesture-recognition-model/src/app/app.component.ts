@@ -4,8 +4,6 @@ import { BehaviorSubject } from 'rxjs';
 import { User } from './models/ValidUserComponent';
 import { SharedService } from './services/shared.service';
 
-// Referred https://github.com/FortAwesome/angular-fontawesome
-
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',

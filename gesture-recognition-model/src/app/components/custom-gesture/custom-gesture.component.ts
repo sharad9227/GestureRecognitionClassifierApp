@@ -105,7 +105,7 @@ export class CustomGestureComponent implements OnInit,AfterViewInit {
 
           }
 
-
+/* video constraints configuration */
   ngAfterViewInit(): void {
 
       this.videoConstraints = {
@@ -123,7 +123,7 @@ export class CustomGestureComponent implements OnInit,AfterViewInit {
             frameRate: { max: 20 }
         }
     };
-    //own
+
             this.webcamFeed = this.videoplayer.nativeElement;
             this.webcamFeed.width=this.videoConstraints.video.width.max;
             this.webcamFeed.height=this.videoConstraints.video.height.max;
@@ -168,7 +168,10 @@ export class CustomGestureComponent implements OnInit,AfterViewInit {
 
     }
     }
-
+   /*
+   method to add images for a selected label
+   adds image to knn classifier
+   */
     addImages(event){
       if(this.actionSelected!=undefined && this.actionSelected.action!="")
       {
@@ -180,7 +183,11 @@ export class CustomGestureComponent implements OnInit,AfterViewInit {
       }
 
    }
+  /*
+   method to remove images for a selected label
+   removes image from knn classifier
 
+  */
 
    removeImages(event)
    {
@@ -205,6 +212,11 @@ export class CustomGestureComponent implements OnInit,AfterViewInit {
   })
   }
 
+      /*
+      Reads the fileContent on file change
+      Checks for existing file in database
+      sends config data to the database
+      */
     uploadFile()
     {
       let jsonContent,fileReader;

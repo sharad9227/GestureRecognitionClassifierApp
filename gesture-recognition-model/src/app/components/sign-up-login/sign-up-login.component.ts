@@ -35,7 +35,7 @@ export class SignUpComponent implements OnInit {
 
   });
 
-//  submittedValues :Object = { password :'', confirmPassword:''};
+
   constructor(
               private route: ActivatedRoute,
               private router: Router,
@@ -94,7 +94,7 @@ export class SignUpComponent implements OnInit {
             icon: 'error',
             title: this.error.errMessage
           })
-             // alert('password and confirm password are not same');
+
          }
      }
      else{

@@ -71,7 +71,7 @@ public abortSignal=this.abortRequest.signal;
 
     }
 
-
+  /* video constraints configuration */
   ngAfterViewInit() :void{
     this.videoConstraints = {
       audio: false,
@@ -88,7 +88,7 @@ public abortSignal=this.abortRequest.signal;
           frameRate: { max: 20 }
       }
   };
-  //own
+
           this.webcamFeed = this.videoplayer.nativeElement;
           this.webcamFeed.width=this.videoConstraints.video.width.max;
           this.webcamFeed.height=this.videoConstraints.video.height.max;
@@ -162,7 +162,10 @@ public abortSignal=this.abortRequest.signal;
           },)
         }
 
-
+        /* Starting predictions on successful load of model
+        @param abortSignal the abort request passed on stop webcam
+        maps the action to the media element
+        */
 
 
         asyncFunction = async (abortSignal)=>  {

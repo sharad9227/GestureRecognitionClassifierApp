@@ -42,11 +42,12 @@ export class UserProfileComponent implements OnInit {
     reqStatus:false
   };
   @ViewChild('toggleChecked') toggleChecked: MatSlideToggle;
-  // @ViewChild('userProfile', { static: true }) ngForm: NgForm;
+
   constructor(private userProfileService: AjaxService,public elementRef: ElementRef) { }
 
   ngOnInit(): void {
     this.userInformation=JSON.parse(localStorage.getItem("userInformation"));
+    // fetches user information and updates on request
     this.userProfileService.getUserDetails(this.userInformation.userId).subscribe(data=>{
       if (data != null && data.responseObj!=null)
       {
@@ -61,11 +62,10 @@ export class UserProfileComponent implements OnInit {
           }
       }
     },
-    error => {
-      alert('Error occurred'+error);
- })
+          error => {
+            alert('Error occurred'+error);
+      })
 
-    //this.elementRef.nativeElement.querySelector('#first_name').addEventListener('change', this.saveFile.bind(this));
 
   }
 

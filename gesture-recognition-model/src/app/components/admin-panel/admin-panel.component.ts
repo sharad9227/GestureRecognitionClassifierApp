@@ -32,6 +32,8 @@ export class AdminPanelComponent implements OnInit {
 
   constructor(private adminService:AjaxService,private sharedService:SharedService,private route:Router) { }
   @ViewChild(MatPaginator) adminPaginator: MatPaginator;
+
+
   ngOnInit(): void {
     setTimeout(()=>{
       this.sharedService.openSideNavDrawer(true);
@@ -39,6 +41,7 @@ export class AdminPanelComponent implements OnInit {
 
     this.userId=localStorage.getItem('userId');
     this.userData=new MatTableDataSource();
+    //getting all users for administrator use
     this.sub  =  this.adminService.getAllUsers(this.userId).subscribe(response=>{
       let counter=0;
       if(response!=null )
@@ -107,6 +110,8 @@ export class AdminPanelComponent implements OnInit {
     }
 
   }
+
+//method for deactivating users by admin
   public deactivateUser(row)
   {
     console.log(row);

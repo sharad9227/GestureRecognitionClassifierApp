@@ -417,9 +417,9 @@ public actionMapper(res){
 
  }
 
-/*Method to stop webcam and exit endless async loop */
- stopWebcam()
-             {
+                /* Method to stop webcam and exit endless async loop */
+                 stopWebcam()
+                {
                 this.interbval.unsubscribe();
                 this.abortRequest.abort();
                 this.webcamFeed.pause();
@@ -433,7 +433,7 @@ public actionMapper(res){
                     this.webcamFeed.srcObject = null;
                   }
                 this.interbval.unsubscribe();
-            }
+               }
 
 
                  ngOnDestroy() {
