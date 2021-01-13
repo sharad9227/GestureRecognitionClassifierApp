@@ -163,8 +163,8 @@ public abortSignal=this.abortRequest.signal;
         }
 
         /* Starting predictions on successful load of model
-        @param abortSignal the abort request passed on stop webcam
-        maps the action to the media element
+        * @param abortSignal the abort request passed on stop webcam
+        * maps the action to the media element
         */
 
 

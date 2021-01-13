@@ -169,8 +169,8 @@ export class CustomGestureComponent implements OnInit,AfterViewInit {
     }
     }
    /*
-   method to add images for a selected label
-   adds image to knn classifier
+   * method to add images for a selected label
+   * adds image to knn classifier
    */
     addImages(event){
       if(this.actionSelected!=undefined && this.actionSelected.action!="")
@@ -183,11 +183,12 @@ export class CustomGestureComponent implements OnInit,AfterViewInit {
       }
 
    }
-  /*
-   method to remove images for a selected label
-   removes image from knn classifier
 
-  */
+
+   /*
+   * method to remove images for a selected label
+   * removes image from knn classifier
+   */
 
    removeImages(event)
    {
@@ -212,11 +213,11 @@ export class CustomGestureComponent implements OnInit,AfterViewInit {
   })
   }
 
-      /*
-      Reads the fileContent on file change
-      Checks for existing file in database
-      sends config data to the database
-      */
+  /*
+  Reads the fileContent on file change
+  Checks for existing file in database
+  sends config data to the database
+  */
     uploadFile()
     {
       let jsonContent,fileReader;
