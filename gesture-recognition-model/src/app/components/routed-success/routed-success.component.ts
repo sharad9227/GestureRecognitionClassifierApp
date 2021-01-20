@@ -16,7 +16,7 @@ export class RoutedSuccessComponent implements OnInit {
   openPanel=false;
   loggedInUserType;
   routeUrl:string;
-  vid1:string="NBk3LP6edDk";
+  vid1:string="MI8W-i8g7GE";
   vid2:string="K1WnPvsjmHg";
   constructor(private renderer: Renderer2, public sharedService:SharedService ,private route:Router,private activatedRoute:ActivatedRoute) {
     this.routeUrl=route.url;
