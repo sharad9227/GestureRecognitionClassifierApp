@@ -1,0 +1,61 @@
+<div class="grid-container">
+    <header>
+        <strong>Testing Mode</strong>
+
+    </header>
+    <div class="column1">
+        <div class="webcam-container">
+
+
+            <div class="button-container-2">
+                <div>
+                    <video width="100%" height=auto style="padding:0" controls #webcamFeed class="video-props" playsinline></video>
+
+                    <div id="action" class="action-header">{{action}}</div>
+                </div>
+                <div class="button-container-1">
+                    <div>
+                        <button id="webcam">
+                    <fa-icon class="buttons-css" [icon]="['fas', 'video']"> </fa-icon>
+
+                      <label id="span-webcam">Start Webcam </label>
+                   </button>
+                    </div>
+                    <div>
+                        <button id="stop" class="stop">
+                      <fa-icon class="buttons-css" [icon]="['fas', 'stop']"> </fa-icon>
+                      <label id="span-webcam">Stop Webcam </label>
+                     </button>
+                    </div>
+                    <div>
+                        <button id="load" mat-raised-button>
+                        <label style="margin-top: 8px;">   Load Model  </label>
+                      </button>
+                    </div>
+
+
+
+
+                </div>
+            </div>
+
+
+
+
+        </div>
+
+
+
+
+    </div>
+
+
+    <div class="column3">
+        <div class="utubeContainer">
+            <app-youtube-player-component #videoYouTube [videoState]="videoState"></app-youtube-player-component>
+            <div id="action" class="local-video-props">{{localAction}}</div>
+        </div>
+    </div>
+
+
+</div>

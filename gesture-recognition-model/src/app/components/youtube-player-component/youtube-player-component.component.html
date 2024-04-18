@@ -1,0 +1,18 @@
+<div>
+    <div class="row1" style="border: 5px #333 solid;">
+        <div>
+            <span>Please enter your Youtube ID :- </span>
+
+            <input type="text" [(ngModel)]="textId" name="videoId" placeholder="Enter ID  here" required="required">
+        </div>
+        <button color="load" (click)="bind()" id="sampleClick" mat-raised-button>
+                    <label class="label-align">   Load Video  </label>
+                  </button>
+
+    </div>
+
+
+</div>
+
+
+<youtube-player #youtubeplayer [videoId]="videoId"></youtube-player>

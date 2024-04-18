@@ -1,52 +1,102 @@
-<!-- Bootstrap general template copied from "https://www.tutorialrepublic.com/codelab.php?topic=bootstrap-3&file=simple-sign-up-form-with-blue-background" */-->
-
-
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="https://fonts.googleapis.com/css?family=Roboto:400,700" rel="stylesheet">
-    <title>Bootstrap Simple Login Form with Blue Background</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-
-
-</head>
-
 <body>
     <div class="signup-form">
-        <form action="/examples/actions/confirmation.php" method="post">
-            <h2>Sign Up</h2>
+        <form #form="ngForm" (ngSubmit)="onSubmit(form)" novalidate>
+            <h2>Hand Gesture Recognizer App</h2>
             <p>Please fill in this form to create an account!</p>
             <hr>
-            <div class="form-group">
-                <div class="row">
-                    <div class="col-xs-6"><input type="text" class="form-control" name="first_name" placeholder="First Name" required="required"></div>
-                    <div class="col-xs-6"><input type="text" class="form-control" name="last_name" placeholder="Last Name" required="required"></div>
-                </div>
+
+            <div class="row">
+                <!-- Template-driven forms-->
+                <mat-form-field color="primary" appearance="legacy" class="col-md-6" style="padding-bottom: 2%;">
+                    <input matInput type="text" [(ngModel)]="userdata.userFirstName" name="userFirstName" #userFirstName="ngModel" placeholder="First Name" maxlength="30" minlength="3" required="required">
+
+                    <mat-error *ngIf="userFirstName.invalid && (userFirstName.dirty || userFirstName.touched)">
+                        <mat-error *ngIf="userFirstName.errors.required">
+                            Name is required.
+                        </mat-error>
+                        <mat-error *ngIf="userFirstName.errors.maxlength">
+                            Name cannot be more than 30 characters long.
+                        </mat-error>
+                        <mat-error *ngIf="userFirstName.errors.minlength">
+                            Name must be at least 3 characters long.
+                        </mat-error>
+                    </mat-error>
+                </mat-form-field>
+
+
+
+
+
+                <mat-form-field color="primary" class="col-md-6" style="padding-bottom: 2%;">
+                    <input matInput type="text" [(ngModel)]="userdata.userLastName" name="userLastName" #userLastName="ngModel" placeholder="Last Name" maxlength="30">
+
+                    <mat-error *ngIf="userLastName.invalid && (userLastName.dirty || userLastName.touched)">
+                        <mat-error *ngIf="userLastName.errors.maxlength">
+                            Last Name cannot be more than 30 characters long.
+                        </mat-error>
+                    </mat-error>
+                </mat-form-field>
+
+
             </div>
+
+
+            <mat-form-field color="primary" class="col-md-12 no-padding">
+                <mat-label>Email</mat-label>
+                <input matInput type="text" [(ngModel)]="userdata.email" name="email" #email="ngModel" placeholder="abc@xyz.com" required="required" email>
+
+                <!-- Referred component(mat-form-field) from https://material.angular.io/components/form-field/overviewhttps://material.angular.io/components/form-field/overviewz-->
+                <mat-error *ngIf="email.invalid && (email.dirty || email.touched)">
+                    <mat-error *ngIf="email.errors.required">
+                        Email is required.
+                    </mat-error>
+                    <mat-error *ngIf="email.invalid">
+                        Email is invalid.
+                    </mat-error>
+                </mat-error>
+            </mat-form-field>
+
+            <mat-form-field color="primary" class="col-md-12 slight-padding">
+                <!-- added pattern validation  -->
+                <input matInput type="password" [(ngModel)]="userdata.password" #password="ngModel" name="password" placeholder="Password" pattern="^(?=.*([a-z]))(?=.*([0-9]))(?=.*([A-Z]))(?=.*[!@~#$%^&*()-+]).{1,}$" maxlength="30" minlength="8" required="required">
+                <mat-error *ngIf="password.invalid && (password.dirty || password.touched)">
+                    <mat-error *ngIf="password.errors.required">
+                        Password is required.
+                    </mat-error>
+                    <mat-error *ngIf="password.errors.pattern">
+                        Password is not strong. Password should include at least one lower case ,one uppercase , one digit and one special character .
+                    </mat-error>
+                    <mat-error *ngIf="password.errors.minlength">
+                        Password should have atleast 8 characters
+                    </mat-error>
+                </mat-error>
+            </mat-form-field>
+
+
+
+
+
+
+            <mat-form-field color="primary" class="col-md-12 no-padding">
+
+                <input matInput type="password" [(ngModel)]="userdata.confirmPassword" #confirmPassword="ngModel" name="confirmPassword" placeholder="Confirm Password" maxlength="30" minlength="8" required="required">
+
+            </mat-form-field>
+
+
+
             <div class="form-group">
-                <input type="email" class="form-control" name="email" placeholder="Email" required="required">
+                <label class="checkbox-inline"><input  type="checkbox"[(ngModel)]="userdata.acceptedTerms" #acceptedTerms="ngModel" name="acceptedTerms" required="required"> I accept the <a href="#">Terms of Use</a> &amp; <a href="#">Privacy Policy</a></label>
             </div>
-            <div class="form-group">
-                <input type="password" class="form-control" name="password" placeholder="Password" required="required">
-            </div>
-            <div class="form-group">
-                <input type="password" class="form-control" name="confirm_password" placeholder="Confirm Password" required="required">
-            </div>
-            <div class="form-group">
-                <label class="checkbox-inline"><input type="checkbox" required="required"> I accept the <a href="#">Terms of Use</a> &amp; <a href="#">Privacy Policy</a></label>
-            </div>
+
+
             <div class="form-group">
                 <button type="submit" class="btn btn-primary btn-lg">Sign Up</button>
             </div>
+
+            <!-- Errors Validation Messages-->
         </form>
-        <div class="hint-text">Already have an account? <a href="#">Login here</a></div>
+
+        <div class="hint-text">Already have an account? <a class="hint-text" href="/login">Login here</a></div>
     </div>
 </body>
-
-</html>

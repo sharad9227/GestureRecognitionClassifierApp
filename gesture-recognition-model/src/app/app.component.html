@@ -1,9 +1,20 @@
-<!-- nav -->
-<nav class="navbar navbar-expand navbar-dark bg-dark">
-    <div class="navbar-nav">
-        <a class="nav-item nav-link" routerLink="/">Home</a>
-        <a class="nav-item nav-link" (click)="logout()">Logout</a>
+<nav class="navbar navbar-dark nav-link main-navbar">
+
+    <mat-button-toggle *ngIf="showSideNav" (click)="toggle()">
+        <fa-icon class="emoticons" [icon]="['fas', 'bars']"></fa-icon>
+
+    </mat-button-toggle>
+
+
+    <h5 *ngIf="showSideNav" class="username-css">Welcome {{loggedInUser}}</h5>
+    <div *ngIf="showSideNav" class="header-nav">
+        <div class="nav-item" (click)="home()">Home</div>
+        <div class="nav-item" (click)="logout()">Logout</div>
 
     </div>
+
+
+
 </nav>
+
 <router-outlet></router-outlet>

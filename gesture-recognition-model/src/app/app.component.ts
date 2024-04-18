@@ -1,5 +1,8 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { BehaviorSubject } from 'rxjs';
+import { User } from './models/ValidUserComponent';
+import { SharedService } from './services/shared.service';
 
 @Component({
   selector: 'app-root',
@@ -7,13 +10,49 @@ import { Router } from '@angular/router';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
+  private localStorage ;
   title = 'gesture-recognition-model';
+  showSideNav=false;
+  loggedInUser:string;
   constructor(
-    private router: Router
+    private router: Router,
+    private sharedService:SharedService
 ){}
-logout() {
-   this.router.navigate(['/login']);
+
+ngOnInit():void{
+  this.sharedService.closeSideNavDrawer().subscribe((res)=>{
+    this.showSideNav=res;
+  });
+  this.sharedService.getUser().subscribe((res)=>{
+    this.loggedInUser=res;
+  });
+
+  if(localStorage.getItem('loggedInUser')!=null)
+  {
+    this.loggedInUser=localStorage.getItem('loggedInUser');
+  }
 }
+
+
+
+
+
+
+logout() {
+  localStorage.removeItem('loggedInUser');
+   this.router.navigate(['/login']);
+   this.sharedService.openSideNavDrawer(false);
+   this.sharedService.setUser(null);
+}
+toggle(){
+    this.sharedService.setMenuToggle();
+}
+home()
+{
+  this.router.navigate(['/home']);
+}
+
+
 
 
 

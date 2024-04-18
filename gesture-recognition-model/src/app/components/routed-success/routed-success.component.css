@@ -1,0 +1,16 @@
+.mat-sidenav-container {
+    background-image: linear-gradient(to top, #a8edea 0%, #fed6e3 100%);
+}
+
+.login-success-align-items-row {
+    flex-direction: row;
+    width: 100%;
+    width: -moz-available;
+    /* WebKit-based browsers will ignore this. */
+    width: -webkit-fill-available;
+    width: stretch;
+}
+
+.centered {
+    text-align: center;
+}

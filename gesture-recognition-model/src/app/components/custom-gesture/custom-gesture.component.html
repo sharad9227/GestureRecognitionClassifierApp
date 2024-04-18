@@ -1,0 +1,132 @@
+<div class="grid-container">
+    <header style="padding: 0%;">
+        <div class="header-container">
+
+            <strong> Add Image Samples</strong>
+
+        </div>
+    </header>
+
+
+    <div class="header-right">
+        <div style="padding-top: 2%;">
+
+            <strong>Training Mode</strong>
+
+        </div>
+    </div>
+    <div class="column1">
+        <div class="webcam-container">
+            <div class="button-container-1">
+                <div>
+                    <button id="webcam">
+                      <fa-icon class="buttons-css" [icon]="['fas', 'video']"> </fa-icon>
+
+                        <label id="span-webcam">Start Webcam </label>
+                     </button>
+                </div>
+                <div>
+                    <button id="stop" class="stop">
+                        <fa-icon class="buttons-css" [icon]="['fas', 'stop']"> </fa-icon>
+                        <label id="span-webcam">Stop Webcam </label>
+                       </button>
+                </div>
+
+                <div>
+                    <button id="sampleClick" color="safe" mat-raised-button>
+                    <label style="margin-top: 8px;">    Add Samples  </label>
+                  </button>
+                </div>
+                <div>
+                    <button id="sampleRemove" color="warn" mat-raised-button>
+                  <label style="margin-top: 8px;">    Remove Samples  </label>
+                </button>
+                </div>
+
+            </div>
+
+            <div class="button-container-2">
+
+                <video width="100%" height=auto style="padding:0" controls #webcamFeed class="video-props" playsinline></video>
+
+
+            </div>
+
+
+
+
+        </div>
+
+        <div class="action-container">
+            <div class="button-container">
+                <mat-form-field appearance="fill">
+                    <mat-label>Select Gesture Actions</mat-label>
+                    <mat-select [(ngModel)]="actionSelected" #action>
+
+                        <mat-option *ngFor="let selectedAction of gestureAction" [value]="selectedAction">
+                            {{selectedAction.action}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+            </div>
+        </div>
+
+    </div>
+
+
+
+
+
+
+
+
+
+
+    <div style="padding: 0%" class="column2">
+        <div>
+            <span style="padding: 0%">Training Samples </span>
+            <label style="padding: 0%" *ngIf="actionSelected!=undefined && actionSelected.value!==''"> for {{actionSelected.action}} </label>
+        </div>
+        <div class="center">
+            <canvas [ngClass]="canvasEnabled? 'convas-config':''" #Canvas height="200px" width="200px"></canvas>
+        </div>
+
+
+        <div *ngIf="counter>0" class="buttons-padding">
+            <p>
+                <label [matBadge]="counter" matBadgePosition="after" [matBadgeHidden]="counter==0">Total Samples Added</label>
+
+            </p>
+
+        </div>
+    </div>
+
+
+
+
+
+    <footer>
+
+
+        <div class="footer-container">
+
+            <div>
+                <button id="download" color="download" mat-raised-button>
+                     <label style="margin-top: 8px;">   Download Model  </label>
+                    </button>
+            </div>
+
+            <div>
+                <button color="export" id="export" mat-raised-button>
+                    <label style="margin-top: 8px;">   Export Model  </label>
+                  </button>
+            </div>
+
+        </div>
+
+        <input type="file" name="selectFile" id="fileUpload" [hidden]="!showUploadButton">
+    </footer>
+
+
+</div>

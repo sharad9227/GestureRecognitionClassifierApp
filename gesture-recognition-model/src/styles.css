@@ -1,4 +1,145 @@
 /* You can add global styles to this file, and also import other style files */
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+@import "../node_modules/font-awesome/css/font-awesome.css";
+@import "../node_modules/bootstrap/dist/css/bootstrap.css";
+body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+    overflow: hidden;
+    font-family: Arial, sans-serif;
+    /* webgradients.com */
+    /* background-image: linear-gradient(120deg, #a6c0fe 0%, #f68084 100%); */
+    /* // background-image: url('assets/images/hand-gesture.jpg'); */
+    /* background-size: cover;
+    background-repeat: no-repeat; */
+}
+
+html {
+    height: 100%;
+}
+
+
+/*# sourceMappingURL=bootstrap.css.map */
+
+
+/*Adding custom styles*/
+
+.no-padding {
+    padding-right: 0;
+    padding-left: 0;
+}
+
+.block-display {
+    display: block;
+    padding: 0.5rem 0.5rem;
+}
+
+:root {
+    --textPrimaryColor: #ffffff;
+    --textSecondaryColor: #ececec;
+    --bgPrimaryColor: #23a78a;
+    --bgSecondaryColor: #acacc8;
+}
+
+
+/*Css for custom panel expansion*/
+
+.mat-expansion-panel-body {
+    width: 135px !important;
+    height: 20px !important;
+    flex-direction: column;
+}
+
+.mat-panel-alignment {
+    transform: rotate(-90deg);
+    position: relative;
+    /* margin-top: 1px; */
+    top: 40.7vh;
+    width: 94vh;
+    right: 23%;
+}
+
+.navbarspacing {
+    padding: 0;
+    position: fixed;
+    transition: width 200ms ease-in-out;
+}
+
+.navbar-align-center {
+    padding: 1rem;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    padding-left: 0;
+}
+
+.link-items {
+    padding: 0;
+    margin: 1rem;
+    text-align: center;
+    font-size: 1.5rem;
+}
+
+.mat-container {
+    position: static;
+    height: 90vh;
+    padding: 0;
+}
+
+
+/* .i {
+   background-size: 20px 30px;
+} */
+
+.links-color {
+    color: #236aa7b0;
+    font-size: 31px;
+}
+
+.sidenav-align {
+    display: flex;
+}
+
+.main-container {
+    width: 15%;
+}
+
+.dimension {
+    background-color: #ffd400ad !important;
+    width: 32px !important;
+    height: 58px !important;
+}
+
+.header-nav {
+    float: right;
+    display: flex;
+    color: #ececec;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+}
+
+.header-nav :hover {
+    color: blue;
+}
+
+.nav-item {
+    color: white;
+    margin-left: 10px;
+    cursor: pointer;
+}
+
+.main-navbar {
+    background-color: #343a40 !important;
+    height: 9%;
+}
+
+.emoticons {
+    font-size: 25px;
+}
+
+.centered {
+    text-align: center;
+}

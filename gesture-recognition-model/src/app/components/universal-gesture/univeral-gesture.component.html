@@ -1,0 +1,87 @@
+<!-- <header>
+    <h2>
+        Experience Interactive Gesture Control
+    </h2>
+</header> -->
+<br>
+<div class="container">
+
+    <div id="webcam-props">
+        <div>
+            <div class="webcam-container">
+                <video controls #webcamFeed class="video-props"></video>
+            </div>
+
+        </div>
+
+        <div>
+            <div id="action" class="video-props">{{action}}</div>
+        </div>
+        <div>
+            <canvas #Canvas height="{{videoConfiguration.height}}" width="{{videoConfiguration.width}}" class="video-props"></canvas>
+        </div>
+
+    </div>
+
+    <div id="local" [hidden]='!loadLocalVideo' class="media">
+        <video preload="auto" class="slim-padding" height="{{videoConfiguration.height}}" width="{{videoConfiguration.width}}" #mediaTarget controls>
+                <source  src="../../../assets/video/ml.mp4">
+            </video>
+
+        <div id="action" class="local-video-props">{{localAction}}</div>
+
+
+
+    </div>
+</div>
+<br>
+
+
+
+<div class="container">
+    <div>
+        <mat-card>
+            <mat-card-header>
+                <label class="emoticons">☝ </label>
+                <mat-card-title>Choose Application Video</mat-card-title>
+            </mat-card-header>
+            <mat-card-header>
+                <label class="emoticons"><img src="https://img.icons8.com/doodle/35/000000/three-fingers--v1.png"/> </label>
+                <mat-card-title>Choose YouTube Video</mat-card-title>
+            </mat-card-header>
+            <mat-card-header>
+                <label class="emoticons">✌ </label>
+                <mat-card-title>Play Video</mat-card-title>
+            </mat-card-header>
+            <mat-card-header>
+                <label class="emoticons">🖐 </label>
+                <mat-card-title>Pause Video</mat-card-title>
+            </mat-card-header>
+            <mat-card-header>
+                <label class="emoticons">👆 </label>
+                <mat-card-title>Increase Volume</mat-card-title>
+            </mat-card-header>
+            <mat-card-header>
+                <label class="emoticons">👇 </label>
+                <mat-card-title>Decrease Volume</mat-card-title>
+            </mat-card-header>
+
+            <mat-card-header>
+                <label class="emoticons">✊ ➡️ </label>
+                <mat-card-title>Seek Forward</mat-card-title>
+            </mat-card-header>
+            <mat-card-header>
+                <label class="emoticons">⬅️ ✊ </label>
+                <mat-card-title>Seek Backward</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+
+            </mat-card-content>
+        </mat-card>
+
+    </div>
+    <div id="youtube" [hidden]='!loadIframe' class="utubeContainer">
+        <app-youtube-player-component #videoYouTube [videoState]="videoState"></app-youtube-player-component>
+        <div id="action" class="youtube-video-props">{{localAction}}</div>
+    </div>
+</div>
